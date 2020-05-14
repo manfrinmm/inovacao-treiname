@@ -48,6 +48,7 @@ const Student: React.FC = () => {
           </section>
 
           <Input
+            name="link"
             title="Adicione um link do vídeo da prova prática"
             placeholder="Link do vídeo"
           />

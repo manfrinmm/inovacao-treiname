@@ -4,14 +4,24 @@ import { Link } from "react-router-dom";
 
 import { Container } from "./styles";
 
-const CourseItem: React.FC = () => {
+interface CourseProps {
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface CourseItemProps {
+  data?: CourseProps;
+}
+
+const CourseItem: React.FC<CourseItemProps> = ({ data }) => {
   return (
     <Container>
       <div>
-        <p>Curso Online de CIPA (Comissão Interna de Prevenção de Acidentes)</p>
+        <p>{data?.name}</p>
         <section>
-          <span>Liberado em: 20/03/2020</span>
-          <span>Expira em: 20/08/2020</span>
+          <span>Liberado em: {data?.created_at}</span>
+          <span>Expira em: {data?.updated_at}</span>
         </section>
       </div>
       <Link to="/course">
