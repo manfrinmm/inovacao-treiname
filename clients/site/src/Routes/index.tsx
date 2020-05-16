@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import Certification from "~/pages/Certification";
+import CertificationDetail from "~/pages/CertificationDetail";
 import Course from "~/pages/Course";
 import Home from "~/pages/Home";
 import DefaultLayout from "~/styles/_layouts/DefaultLayout";
@@ -11,7 +12,11 @@ const Routes: React.FC = () => (
     <DefaultLayout>
       <Switch>
         <Route path="/" exact component={Home} />
-        <Route path="/certification" component={Certification} />
+        <Route path="/certification" exact component={Certification} />
+        <Route
+          path="/certification/:certification_id"
+          component={CertificationDetail}
+        />
         <Route path="/course/:course_id" component={Course} />
       </Switch>
     </DefaultLayout>
