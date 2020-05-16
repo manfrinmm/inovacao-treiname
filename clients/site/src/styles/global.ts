@@ -18,13 +18,14 @@ export default createGlobalStyle`
 
   }
 
-  /* html, body{
+  html, body{
     height: 100%;
-  } */
+    overflow-y:auto;
+  }
 
-  /* #root{
-    min-height: 100%;
-  } */
+  #root{
+    height: 100%;
+  }
 
   body, button, input{
     font: 1.6rem "Roboto", sans-serif;
