@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FaFileDownload, FaCertificate } from "react-icons/fa";
-import { MdAccessTime, MdTimelapse } from "react-icons/md";
+import { MdAccessTime, MdTimelapse, MdCheck } from "react-icons/md";
 
 import Button from "~/components/Button";
 
-import { Container, Info } from "./styles";
+import ModuleItem from "./ModuleItem";
+import { Container, Info, WillLearn, LearnItem, Modules } from "./styles";
 
 interface CourseProps {
   name: string;
@@ -13,12 +14,10 @@ interface CourseProps {
   description: string;
   target_audience: string;
   learns: string[];
-  modules: [
-    {
-      name: string;
-      description: string;
-    },
-  ];
+  modules: Array<{
+    name: string;
+    description: string;
+  }>;
   thumbnail: string;
   value: number;
   docs_download: number;
@@ -39,8 +38,24 @@ const Course: React.FC = () => {
         "Instruir, orientar e capacitar trabalhadores em geral, que lidam com formas de energias perigosas, de forma a garantir a segurança dos  funcionários, contratados e subcontratados, protegendo-os contra     energização inesperada, ligações ou fuga das energias residuais      durante a realização de serviços.",
       target_audience:
         "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos energizados, tais como: instalação, construção,      inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
-      learns: ["Ambiente de Trabalho", "Dados estáticos"],
+      learns: [
+        "Ambiente de Trabalho",
+        "Dados estáticos",
+        "Acidentes e Doenças do Trabalho",
+        "Equipamentos Instalados em Linhas de Transmissão",
+        "Energia Elétrica",
+      ],
       modules: [
+        {
+          name: "O ambiente de trabalho",
+          description:
+            "Todas as atividades profissionais que possam imprimir algum tipo de risco físico para o           trabalhador devem ser cumpridas com o auxílio de EPIs – Equipamentos de Proteção Individual,          que incluem óculos, protetores auriculares, máscaras, mangotes, capacetes, luvas, botas, cintos          de segurança, protetor solar e outros itens de proteção. Esses acessórios são indispensáveis em           fábricas e processos industriais em geral.",
+        },
+        {
+          name: "O ambiente de trabalho",
+          description:
+            "Todas as atividades profissionais que possam imprimir algum tipo de risco físico para o           trabalhador devem ser cumpridas com o auxílio de EPIs – Equipamentos de Proteção Individual,          que incluem óculos, protetores auriculares, máscaras, mangotes, capacetes, luvas, botas, cintos          de segurança, protetor solar e outros itens de proteção. Esses acessórios são indispensáveis em           fábricas e processos industriais em geral.",
+        },
         {
           name: "O ambiente de trabalho",
           description:
@@ -95,26 +110,33 @@ const Course: React.FC = () => {
       <article>
         <h1>{course.name}</h1>
         <section>
-          <p>Categoria: {course.category}</p>
-          <p>Modalidade: {course.modality}</p>
+          <p>
+            Categoria: <strong>{course.category}</strong>
+          </p>
+          <p>
+            Modalidade:<strong> {course.modality}</strong>
+          </p>
         </section>
-        <p>{course.description}</p>
+        <p className="description">{course.description}</p>
         <h2>Para quem este curso é direcionado</h2>
-        <p>{course.target_audience}</p>
-        <section>
-          {course.learns?.map(learn => (
-            <p>{learn}</p>
-          ))}
-        </section>
+        <p className="description">{course.target_audience}</p>
+        <WillLearn>
+          <h3>O que você aprenderá</h3>
+          <div>
+            {course.learns?.map(learn => (
+              <LearnItem key={Math.random()}>
+                <MdCheck />
+                <p>{learn}</p>
+              </LearnItem>
+            ))}
+          </div>
+        </WillLearn>
         <h2>Conteúdo do curso</h2>
-        <section>
+        <Modules>
           {course.modules?.map(module => (
-            <div>
-              <p>{module.name}</p>
-              <p>{module.description}</p>
-            </div>
+            <ModuleItem data={module} key={Math.random()} />
           ))}
-        </section>
+        </Modules>
       </article>
     </Container>
   );
