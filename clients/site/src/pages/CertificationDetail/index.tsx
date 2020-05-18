@@ -9,8 +9,6 @@ interface Certification {
   certification: string;
 }
 
-// 8:27 ver https://www.youtube.com/watch?v=89K5D6VX2X4
-
 const CertificationDetail: React.FC = () => {
   const [student, setStudent] = useState({} as Certification);
 
@@ -41,6 +39,7 @@ const CertificationDetail: React.FC = () => {
           <a
             href={student.certification}
             download={`certificado-${student.name}`}
+            target="__blank"
           >
             <MdFileDownload size={24} />
             Baixar certificado
