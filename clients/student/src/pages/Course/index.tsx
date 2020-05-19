@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FaTools } from "react-icons/fa";
 import { MdLink, MdFileDownload } from "react-icons/md";
 
-import { Container, Header, ModuleItem } from "./styles";
+import ModuleItem from "./ModuleItem";
+import { Container, Header } from "./styles";
 
 interface ModuleData {
   id: string;
@@ -21,12 +22,10 @@ interface CourseData {
 
 const Course: React.FC = () => {
   const [course, setCourse] = useState({} as CourseData);
-  const [currentModule, setCurrentModule] = useState({} as ModuleData);
+  const [currentModule, setCurrentModule] = useState({} as ModuleData | null);
 
-  // console.log(decodeURI(encodeURI("maria maario")) === "maria maario");
-  // console.log(encodeURI("maria maario"), decodeURI(encodeURI("maria maario")));
   const handleSetModule = useCallback(
-    id => {
+    (id: string) => {
       const selectedModule = course.modules.find(module => module.id === id);
 
       if (!selectedModule) {
@@ -73,7 +72,8 @@ const Course: React.FC = () => {
         {
           id: "122d2232",
           name: "Acidentes e Doenças do Tasdasd asdasd das dasrabalho",
-          extra_link: null,
+          extra_link:
+            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
           file_link:
             "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
           video_link: null,
@@ -89,30 +89,44 @@ const Course: React.FC = () => {
     <Container>
       <main>
         <Header>
-          <h1>{currentModule.name}</h1>
+          <h1>{currentModule?.name}</h1>
 
           <div>
-            {currentModule.extra_link && (
-              <a href={currentModule.extra_link}>
+            {currentModule?.extra_link && (
+              <a
+                href={currentModule?.extra_link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <MdLink size={20} /> Link extra
               </a>
             )}
-            <a href={currentModule.file_link} download={currentModule.name}>
+            <a
+              href={currentModule?.file_link}
+              download={currentModule?.name}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <MdFileDownload size={20} /> Baixar material
             </a>
           </div>
         </Header>
         <section>
-          {currentModule.video_link ? (
+          {currentModule?.video_link ? (
             <iframe
-              src={currentModule.video_link}
-              title={currentModule.name}
+              src={currentModule?.video_link}
+              title={currentModule?.name}
               allowFullScreen
               frameBorder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             />
           ) : (
-            <iframe src={currentModule.file_link} title={currentModule.name} />
+            <iframe
+              src={currentModule?.file_link}
+              frameBorder="0"
+              allowFullScreen={false}
+              title={currentModule?.name}
+            />
           )}
         </section>
       </main>
@@ -123,15 +137,16 @@ const Course: React.FC = () => {
         </header>
         <ul>
           {course.modules?.map(module => (
-            <ModuleItem key={module.id}>
-              <button type="button" onClick={() => handleSetModule(module.id)}>
-                {module.name}
-              </button>
-            </ModuleItem>
+            <ModuleItem
+              key={module.id}
+              module={module}
+              selectedModule={currentModule?.id}
+              handleSetModule={handleSetModule}
+            />
           ))}
         </ul>
 
-        <button type="button">
+        <button type="button" onClick={() => setCurrentModule(null)}>
           <FaTools size={24} /> Fazer prova
         </button>
         <p>

@@ -9,11 +9,10 @@ export const Container = styled.div`
 
   main {
     width: 100%;
-    /* height: 100%; */
-
     margin-right: 48px;
 
     section {
+      width: 735px;
       height: 100%;
 
       iframe {
@@ -84,18 +83,27 @@ export const Header = styled.header`
   justify-content: space-between;
   align-items: center;
 
+  margin-bottom: 16px;
+
   h1 {
     color: #325bbf;
-    font-size: 3.2rem;
+    font-size: 2.4rem;
+
+    /* max-width: 300px; */
   }
 
   div {
     display: flex;
     align-items: center;
+    justify-items: center;
+
+    margin-left: 16px;
   }
+
   a {
     display: flex;
     align-items: center;
+    justify-items: center;
 
     background: rgba(93, 137, 252, 0.2);
     padding: 8px;
@@ -107,23 +115,7 @@ export const Header = styled.header`
     }
 
     svg {
-      margin-right: 16px;
+      margin-right: 8px;
     }
-  }
-`;
-
-export const ModuleItem = styled.li`
-  button {
-    background: transparent;
-    transition: color 0.2s;
-    /* color: rgba(239, 89, 18, 1); */
-
-    &:hover {
-      color: rgba(239, 89, 18, 0.8);
-    }
-  }
-
-  & + li {
-    margin-top: 8px;
   }
 `;
