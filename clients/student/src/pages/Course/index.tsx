@@ -86,84 +86,11 @@ const Course: React.FC = () => {
             "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
           video_link: null,
         },
-        {
-          id: "12das32",
-          name: "Acidentes e Doenças do Trabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-        {
-          id: "122d2232",
-          name: "Acidentes e Doenças do Tasdasd asdasd das dasrabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-        {
-          id: "12das32",
-          name: "Acidentes e Doenças do Trabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-        {
-          id: "122d2232",
-          name: "Acidentes e Doenças do Tasdasd asdasd das dasrabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-        {
-          id: "12das32",
-          name: "Acidentes e Doenças do Trabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-        {
-          id: "122d2232",
-          name: "Acidentes e Doenças do Tasdasd asdasd das dasrabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-        {
-          id: "12das32",
-          name: "Acidentes e Doenças do Trabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-        {
-          id: "122d2232",
-          name: "Acidentes e Doenças do Tasdasd asdasd das dasrabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
       ],
     };
 
     setCourse(data);
-    // setCurrentModule(data.modules[0]);
-    setCurrentModule(null);
+    setCurrentModule(data.modules[0]);
   }, []);
 
   return (
