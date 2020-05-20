@@ -9,16 +9,29 @@ export const Container = styled.div`
 
   main {
     width: 100%;
-    margin-right: 48px;
+    margin-right: 16px;
 
     section {
+      position: sticky;
+      top: 0;
+
       width: 735px;
       height: 100%;
+      max-height: 468px;
 
       iframe {
         width: 100%;
         height: 100%;
       }
+    }
+  }
+
+  div {
+    > p {
+      margin: 0 auto;
+      max-width: 180px;
+      text-align: center;
+      margin-top: 8px;
     }
   }
 
@@ -35,6 +48,8 @@ export const Container = styled.div`
       align-items: center;
 
       padding: 16px 24px;
+
+      text-align: center;
 
       img {
         border-radius: 4px;
@@ -117,5 +132,45 @@ export const Header = styled.header`
     svg {
       margin-right: 8px;
     }
+  }
+`;
+
+export const ExameDetail = styled.div`
+  section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px 32px;
+
+    border: 1px solid;
+
+    h2 {
+      margin-bottom: 16px;
+      font-size: 2.4rem;
+    }
+
+    ul {
+      list-style: none;
+
+      li {
+        display: flex;
+        align-items: center;
+        font-size: 2.4rem;
+
+        & + li {
+          margin-top: 8px;
+        }
+
+        svg {
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+
+  button {
+    margin-top: 32px;
+    font-size: 2.4rem;
+
+    background: #325bbf;
   }
 `;
