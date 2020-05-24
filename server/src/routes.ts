@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import CourseController from "./app/controllers/CourseController";
 import UserController from "./app/controllers/UserController";
 
 const routes = Router();
@@ -9,5 +10,6 @@ routes.get("/", (req, res) => {
 });
 
 routes.post("/users", UserController.store);
+routes.post("/courses", CourseController.store);
 
 export default routes;

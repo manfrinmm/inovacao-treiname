@@ -1,3 +1,4 @@
+import { hash } from "bcryptjs";
 import request from "supertest";
 import { Connection, getConnection, getRepository } from "typeorm";
 
@@ -12,7 +13,7 @@ describe("User", () => {
 
     // await connection.query("DROP TABLE IF EXISTS orders_products");
     await connection.query("DROP TABLE IF EXISTS users");
-    // await connection.query("DROP TABLE IF EXISTS products");
+    await connection.query("DROP TABLE IF EXISTS courses");
     // await connection.query("DROP TABLE IF EXISTS customers");
     await connection.query("DROP TABLE IF EXISTS migrations");
 
@@ -22,7 +23,7 @@ describe("User", () => {
   beforeEach(async () => {
     // await connection.query("DELETE FROM orders_products");
     await connection.query("DELETE FROM users");
-    // await connection.query("DELETE FROM products");
+    await connection.query("DELETE FROM courses");
     // await connection.query("DELETE FROM customers");
   });
 
@@ -42,7 +43,8 @@ describe("User", () => {
       password: "123",
     };
 
-    console.log(user);
+    delete user.password;
+
     const response = await request(app).post("/users").send(user);
 
     expect(response.status).toBe(201);

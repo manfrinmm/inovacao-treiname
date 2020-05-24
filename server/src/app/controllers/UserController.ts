@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 
+import { classToClass } from "class-transformer";
+
 import CreateUserService from "../services/CreateUserService";
 
 class UserController {
@@ -10,7 +12,7 @@ class UserController {
 
     const user = await createUser.execute({ name, cpf, rg, phone, password });
 
-    return res.status(201).json(user);
+    return res.status(201).json(classToClass(user));
   }
 }
 
