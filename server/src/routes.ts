@@ -10,6 +10,8 @@ routes.get("/", (req, res) => {
 });
 
 routes.post("/users", UserController.store);
+
+routes.get("/courses", CourseController.index);
 routes.post("/courses", CourseController.store);
 
 export default routes;

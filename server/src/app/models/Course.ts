@@ -1,10 +1,12 @@
 import {
+  Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 
+@Entity("courses")
 export default class Course {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -18,10 +20,10 @@ export default class Course {
   @Column()
   modality: string;
 
-  @Column("number")
+  @Column("integer")
   workload: number;
 
-  @Column("number")
+  @Column("integer")
   value: number;
 
   @Column("text")
@@ -33,10 +35,10 @@ export default class Course {
   @Column()
   thumbnail: string;
 
-  @Column("number")
+  @Column("integer")
   course_expiration: number;
 
-  @Column("number")
+  @Column("integer")
   certificate_validity: number;
 
   @Column()
@@ -45,11 +47,11 @@ export default class Course {
   @Column()
   illustrative_video: string;
 
-  @Column({ array: true })
-  learns: string;
+  @Column("varchar", { array: true })
+  learns: string[];
 
-  @Column({ array: true })
-  modules: string;
+  @Column("varchar", { array: true })
+  modules: string[];
 
   @CreateDateColumn()
   created_at: string;

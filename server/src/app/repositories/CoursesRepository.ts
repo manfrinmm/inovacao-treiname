@@ -19,11 +19,17 @@ interface CreateCourseDTO {
   modules: Array<string>;
 }
 
-export default class UsersRepository {
+export default class CoursesRepository {
   private ormRepository: Repository<Course>;
 
   constructor() {
     this.ormRepository = getRepository(Course);
+  }
+
+  public async findAll(): Promise<Course[]> {
+    const courses = await this.ormRepository.find();
+
+    return courses;
   }
 
   public async create(courseData: CreateCourseDTO): Promise<Course> {

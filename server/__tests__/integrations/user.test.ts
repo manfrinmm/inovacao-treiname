@@ -37,15 +37,15 @@ describe("User", () => {
   it("should be able to create a new user", async () => {
     const user = {
       name: "Matheus Menezes",
-      cpf: "12345679912",
-      rg: "4512351",
-      phone: "648851426845",
+      cpf: "00954368126",
+      rg: "5717301",
+      phone: "64996140384",
       password: "123",
     };
 
-    delete user.password;
-
     const response = await request(app).post("/users").send(user);
+
+    delete user.password;
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual(expect.objectContaining(user));

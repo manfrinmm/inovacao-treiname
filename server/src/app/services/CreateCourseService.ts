@@ -1,7 +1,5 @@
-import { hash } from "bcryptjs";
-
-import User from "../models/User";
-import UsersRepository from "../repositories/UsersRepository";
+import Course from "../models/Course";
+import CoursesRepository from "../repositories/CoursesRepository";
 
 interface Request {
   name: string;
@@ -20,7 +18,7 @@ interface Request {
   modules: Array<string>;
 }
 
-export default class CreateUserService {
+export default class CreateCourseService {
   public async execute({
     name,
     category,
@@ -36,19 +34,26 @@ export default class CreateUserService {
     illustrative_video,
     learns,
     modules,
-  }: Request): Promise<User> {
-    const userRepository = new UsersRepository();
+  }: Request): Promise<Course> {
+    const courseRepository = new CoursesRepository();
 
-    const password_hash = await hash(password, 8);
-
-    const user = await userRepository.create({
+    const course = await courseRepository.create({
       name,
-      cpf,
-      rg,
-      phone,
-      password: password_hash,
+      category,
+      modality,
+      workload,
+      value,
+      description,
+      target_audience,
+      thumbnail,
+      course_expiration,
+      certificate_validity,
+      approved_by,
+      illustrative_video,
+      learns,
+      modules,
     });
 
-    return user;
+    return course;
   }
 }

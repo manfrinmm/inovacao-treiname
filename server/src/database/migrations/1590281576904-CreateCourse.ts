@@ -60,10 +60,11 @@ export default class CreateCourse1590281576904 implements MigrationInterface {
           {
             name: "illustrative_video",
             type: "varchar",
+            isNullable: true,
           },
           {
             name: "learns",
-            type: "uuid",
+            type: "varchar",
             isArray: true,
           },
           {
