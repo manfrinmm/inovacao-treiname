@@ -1,6 +1,14 @@
 import Course from "../models/Course";
 import CoursesRepository from "../repositories/CoursesRepository";
 
+interface ModuleData {
+  name: string;
+  description: string;
+  video_link?: string;
+  extra_link?: string;
+  file: string;
+}
+
 interface Request {
   name: string;
   category: string;
@@ -15,7 +23,7 @@ interface Request {
   approved_by: string;
   illustrative_video: string;
   learns: Array<string>;
-  modules: Array<string>;
+  modules: Array<ModuleData>;
 }
 
 export default class CreateCourseService {

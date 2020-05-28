@@ -1,6 +1,15 @@
 import { getRepository, Repository } from "typeorm";
 
 import Course from "../models/Course";
+import ModulesRepository from "./ModulesRepository";
+
+interface ModuleData {
+  name: string;
+  description: string;
+  video_link?: string;
+  extra_link?: string;
+  file: string;
+}
 
 interface CreateCourseDTO {
   name: string;
@@ -16,7 +25,7 @@ interface CreateCourseDTO {
   approved_by: string;
   illustrative_video: string;
   learns: Array<string>;
-  modules: Array<string>;
+  modules: Array<ModuleData>;
 }
 
 export default class CoursesRepository {
@@ -27,15 +36,55 @@ export default class CoursesRepository {
   }
 
   public async findAll(): Promise<Course[]> {
-    const courses = await this.ormRepository.find();
+    const courses = await this.ormRepository.find({
+      relations: ["course_modules"],
+    });
 
     return courses;
   }
 
   public async create(courseData: CreateCourseDTO): Promise<Course> {
-    const course = this.ormRepository.create(courseData);
+    const modulesRepository = new ModulesRepository();
+
+    const course_modules = await modulesRepository.createMany(
+      courseData.modules,
+    );
+
+    const {
+      name,
+      category,
+      modality,
+      workload,
+      value,
+      description,
+      target_audience,
+      thumbnail,
+      course_expiration,
+      certificate_validity,
+      approved_by,
+      illustrative_video,
+      learns,
+    } = courseData;
+
+    const course = this.ormRepository.create({
+      name,
+      category,
+      modality,
+      workload,
+      value,
+      description,
+      target_audience,
+      thumbnail,
+      course_expiration,
+      certificate_validity,
+      approved_by,
+      illustrative_video,
+      learns,
+      course_modules,
+    });
 
     await this.ormRepository.save(course);
+    console.log(course);
 
     return course;
   }

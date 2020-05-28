@@ -85,9 +85,25 @@ describe("User", () => {
       illustrative_video: "",
       learns: ["First learn", "Second learn", "Third learn"],
       modules: [
-        "dc1bfbd5-2f06-4052-b1ce-aab8834cca99",
-        "dc1bfbd5-2f06-4052-b1ce-aab8834cca99",
-        "dc1bfbd5-2f06-4052-b1ce-aab8834cca99",
+        {
+          name: "Introdução",
+          description: "lalalala",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          file: "123easdasdas-indro",
+        },
+        {
+          name: "Aplicação",
+          description: "lalalala",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          extra_link:
+            "https://gist.github.com/diego3g/5f23fb3f8f18fa9ec52669741cd156b3/revisions",
+          file: "123easdasdas-indro",
+        },
+        {
+          name: "Introdução",
+          description: "lalalala",
+          file: "123easdasdas-indro",
+        },
       ],
     };
 
@@ -109,8 +125,11 @@ describe("User", () => {
       illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
       learns: ["First learn", "Second learn", "Third learn"],
       modules: [
-        "dc1bfbd5-2f06-4052-b1ce-aab8834cca99",
-        "dc1bfbd5-2f06-4052-b1ce-aab8834cca99",
+        {
+          name: "Introdução",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          file: "123easdasdas-indro",
+        },
       ],
     };
 
@@ -131,7 +150,13 @@ describe("User", () => {
       approved_by: "Matheus Menezes - CRA 123255",
       illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
       learns: ["First learn"],
-      modules: ["dc1bfbd5-2f06-4052-b1ce-aab8834cca99"],
+      modules: [
+        {
+          name: "Introdução",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          file: "123easdasdas-indro",
+        },
+      ],
     };
 
     const response1 = request(app).post("/courses").send(course1);

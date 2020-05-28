@@ -34,7 +34,7 @@ class CourseController {
       modules,
     } = req.body;
 
-    const user = await createCourse.execute({
+    const course = await createCourse.execute({
       name,
       category,
       modality,
@@ -51,7 +51,7 @@ class CourseController {
       modules,
     });
 
-    return res.status(201).json(classToClass(user));
+    return res.status(201).json(classToClass(course));
   }
 }
 

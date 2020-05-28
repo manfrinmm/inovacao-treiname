@@ -4,7 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
+
+import CoursesModules from "./CoursesModules";
 
 @Entity("courses")
 export default class Course {
@@ -50,12 +53,15 @@ export default class Course {
   @Column("varchar", { array: true })
   learns: string[];
 
-  @Column("varchar", { array: true })
-  modules: string[];
+  @OneToMany(() => CoursesModules, coursesModules => coursesModules.course, {
+    eager: true,
+    cascade: true,
+  })
+  course_modules: CoursesModules[];
 
   @CreateDateColumn()
-  created_at: string;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updated_at: string;
+  updated_at: Date;
 }
