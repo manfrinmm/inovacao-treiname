@@ -4,10 +4,11 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
 } from "typeorm";
 
-import CoursesModules from "./CoursesModules";
+import Course from "./Course";
 
 @Entity("course_modules")
 export default class CourseModule {
@@ -29,8 +30,12 @@ export default class CourseModule {
   @Column()
   file: string;
 
-  // @OneToMany(() => CoursesModules, coursesModules => coursesModules.module)
-  // course_modules: CoursesModules[];
+  @Column()
+  course_id: string;
+
+  @JoinColumn({ name: "course_id" })
+  @ManyToOne(() => Course)
+  course: Course;
 
   @CreateDateColumn()
   created_at: Date;

@@ -1,7 +1,6 @@
 import { getRepository, Repository } from "typeorm";
 
 import Course from "../models/Course";
-import ModulesRepository from "./ModulesRepository";
 
 interface ModuleData {
   name: string;
@@ -37,15 +36,13 @@ export default class CoursesRepository {
 
   public async findAll(): Promise<Course[]> {
     const courses = await this.ormRepository.find({
-      relations: ["course_modules", "course_modules.module"],
+      relations: ["modules"],
     });
 
     return courses;
   }
 
   public async create(courseData: CreateCourseDTO): Promise<Course> {
-    const modulesRepository = new ModulesRepository();
-
     const {
       name,
       category,
@@ -63,12 +60,6 @@ export default class CoursesRepository {
       modules,
     } = courseData;
 
-    const course_modules = await modulesRepository.createMany(modules);
-
-    const course_modulesFormatted = course_modules.map(module => ({
-      module_id: module.id,
-    }));
-
     const course = this.ormRepository.create({
       name,
       category,
@@ -83,7 +74,7 @@ export default class CoursesRepository {
       approved_by,
       illustrative_video,
       learns,
-      course_modules: course_modulesFormatted,
+      modules,
     });
 
     await this.ormRepository.save(course);

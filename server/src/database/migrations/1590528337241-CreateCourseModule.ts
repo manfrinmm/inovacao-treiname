@@ -1,25 +1,43 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export default class CreateCoursesModules1590534514584
+export default class CreateCourseModule1590528337241
   implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "courses_modules",
+        name: "course_modules",
         columns: [
           {
             name: "id",
-            isPrimary: true,
             type: "uuid",
             generationStrategy: "uuid",
+            isPrimary: true,
             default: "uuid_generate_v4()",
           },
           {
-            name: "course_id",
-            type: "uuid",
+            name: "name",
+            type: "varchar",
           },
           {
-            name: "module_id",
+            name: "description",
+            type: "text",
+          },
+          {
+            name: "video_link",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
+            name: "extra_link",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
+            name: "file",
+            type: "varchar",
+          },
+          {
+            name: "course_id",
             type: "uuid",
           },
           {
@@ -42,20 +60,12 @@ export default class CreateCoursesModules1590534514584
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
           },
-          {
-            name: "module",
-            columnNames: ["module_id"],
-            referencedTableName: "course_modules",
-            referencedColumnNames: ["id"],
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-          },
         ],
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("courses_modules");
+    await queryRunner.dropTable("course_modules");
   }
 }
