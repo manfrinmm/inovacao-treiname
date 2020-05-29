@@ -69,11 +69,15 @@ describe("Course", () => {
     };
 
     const response = await request(app).post("/courses").send(course);
-
-    delete course.modules;
-
     expect(response.status).toBe(201);
-    expect(response.body).toEqual(expect.objectContaining(course));
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        ...course,
+        modules: expect.arrayContaining(
+          course.modules.map(module => expect.objectContaining(module)),
+        ),
+      }),
+    );
   });
 
   it("should be able to list all courses", async () => {
@@ -167,19 +171,34 @@ describe("Course", () => {
       ],
     };
 
-    // const response1 = request(app).post("/courses").send(course1);
-    // const response2 = request(app).post("/courses").send(course2);
-    const response3 = await request(app).post("/courses").send(course3);
+    const response1 = request(app).post("/courses").send(course1);
+    const response2 = request(app).post("/courses").send(course2);
+    const response3 = request(app).post("/courses").send(course3);
 
-    // await Promise.all([response1, response2, response3]);
+    await Promise.all([response1, response2, response3]);
 
     const response = await request(app).get("/courses");
 
     expect(response.body).toEqual(
       expect.arrayContaining([
-        // expect.objectContaining(course1),
-        // expect.objectContaining(course2),
-        expect.objectContaining(course3),
+        expect.objectContaining({
+          ...course1,
+          modules: expect.arrayContaining(
+            course1.modules.map(module => expect.objectContaining(module)),
+          ),
+        }),
+        expect.objectContaining({
+          ...course2,
+          modules: expect.arrayContaining(
+            course2.modules.map(module => expect.objectContaining(module)),
+          ),
+        }),
+        expect.objectContaining({
+          ...course3,
+          modules: expect.arrayContaining(
+            course3.modules.map(module => expect.objectContaining(module)),
+          ),
+        }),
       ]),
     );
   });
