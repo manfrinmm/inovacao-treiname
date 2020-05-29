@@ -29,8 +29,8 @@ export default class CourseModule {
   @Column()
   file: string;
 
-  @OneToMany(() => CoursesModules, coursesModules => coursesModules.module)
-  course_modules: CoursesModules[];
+  // @OneToMany(() => CoursesModules, coursesModules => coursesModules.module)
+  // course_modules: CoursesModules[];
 
   @CreateDateColumn()
   created_at: Date;

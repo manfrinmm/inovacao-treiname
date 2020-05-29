@@ -54,7 +54,7 @@ export default class Course {
   learns: string[];
 
   @OneToMany(() => CoursesModules, coursesModules => coursesModules.course, {
-    eager: true,
+    // eager: true,
     cascade: true,
   })
   course_modules: CoursesModules[];

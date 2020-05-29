@@ -27,7 +27,7 @@ export default class CoursesModules {
   module_id: string;
 
   @JoinColumn({ name: "module_id" })
-  @ManyToOne(() => Module, module => module.course_modules)
+  @ManyToOne(() => Module)
   module: Module;
 
   @CreateDateColumn()
