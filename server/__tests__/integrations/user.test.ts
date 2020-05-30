@@ -24,9 +24,9 @@ describe("User", () => {
   it("should be able to create a new user", async () => {
     const user = {
       name: "Matheus Menezes",
-      cpf: "00954368126",
-      rg: "5717301",
-      phone: "64996140384",
+      cpf: "1234567825368126",
+      rg: "1230254",
+      phone: "001234567854",
       password: "123",
     };
 

@@ -1,3 +1,4 @@
+import { Expose } from "class-transformer";
 import {
   Entity,
   Column,
@@ -6,8 +7,10 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  BeforeInsert,
 } from "typeorm";
 
+import diskStorageProvider from "../utils/diskStorageProvider";
 import Course from "./Course";
 
 @Entity("course_modules")
@@ -27,8 +30,22 @@ export default class CourseModule {
   @Column()
   extra_link: string;
 
+  @BeforeInsert()
+  function(): void {
+    if (process.env.NODE_ENV === "test") {
+      return;
+    }
+
+    diskStorageProvider.saveFile(this.file);
+  }
+
   @Column()
   file: string;
+
+  @Expose({ name: "file_url" })
+  getFile_url(): string {
+    return encodeURI(`${process.env.APP_API_URL}/files/uploads/${this.file}`);
+  }
 
   @Column()
   course_id: string;

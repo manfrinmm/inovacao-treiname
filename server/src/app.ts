@@ -1,5 +1,7 @@
 import "reflect-metadata";
 
+import "dotenv/config";
+
 import express, { Request, Response, NextFunction } from "express";
 import "express-async-errors";
 
@@ -16,7 +18,7 @@ app.use(routes);
 
 app.use((err: Error, req: Request, res: Response, _: NextFunction) => {
   if (err instanceof AppError) {
-    return res.status(err.status).json(err.message);
+    return res.status(err.status).json({ message: err.message });
   }
 
   if (

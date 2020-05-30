@@ -1,3 +1,4 @@
+import { Expose } from "class-transformer";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,8 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  BeforeInsert,
 } from "typeorm";
 
+import diskStorageProvider from "../utils/diskStorageProvider";
 import Module from "./Module";
 
 @Entity("courses")
@@ -35,8 +38,24 @@ export default class Course {
   @Column("text")
   target_audience: string;
 
+  @BeforeInsert()
+  function(): void {
+    if (process.env.NODE_ENV === "test") {
+      return;
+    }
+
+    diskStorageProvider.saveFile(this.thumbnail);
+  }
+
   @Column()
   thumbnail: string;
+
+  @Expose({ name: "thumbnail_url" })
+  getThumbnail_url(): string {
+    return encodeURI(
+      `${process.env.APP_API_URL}/files/uploads/${this.thumbnail}`,
+    );
+  }
 
   @Column("integer")
   course_expiration: number;

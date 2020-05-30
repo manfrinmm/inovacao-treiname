@@ -27,6 +27,11 @@ interface CreateCourseDTO {
   modules: Array<ModuleData>;
 }
 
+interface UpdateCourseDTO {
+  course: Course;
+  data: CreateCourseDTO;
+}
+
 export default class CoursesRepository {
   private ormRepository: Repository<Course>;
 
@@ -40,6 +45,14 @@ export default class CoursesRepository {
     });
 
     return courses;
+  }
+
+  public async findOne(course_id: string): Promise<Course | undefined> {
+    const course = await this.ormRepository.findOne(course_id, {
+      relations: ["modules"],
+    });
+
+    return course;
   }
 
   public async create(courseData: CreateCourseDTO): Promise<Course> {
@@ -80,5 +93,17 @@ export default class CoursesRepository {
     await this.ormRepository.save(course);
 
     return course;
+  }
+
+  public async update({ course, data }: UpdateCourseDTO): Promise<Course> {
+    const courseUpdated = this.ormRepository.merge(course, data);
+
+    await this.ormRepository.save(courseUpdated);
+
+    return courseUpdated;
+  }
+
+  public async delete(course: Course): Promise<void> {
+    await this.ormRepository.remove(course);
   }
 }

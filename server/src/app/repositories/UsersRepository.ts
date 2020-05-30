@@ -24,4 +24,10 @@ export default class UsersRepository {
 
     return user;
   }
+
+  public async findByCpf(cpf: string): Promise<User | undefined> {
+    const user = await this.ormRepository.findOne({ cpf });
+
+    return user;
+  }
 }
