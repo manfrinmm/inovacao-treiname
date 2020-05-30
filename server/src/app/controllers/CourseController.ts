@@ -64,7 +64,7 @@ class CourseController {
 
     const course = await showCourse.execute(course_id);
 
-    return res.json(course);
+    return res.json(classToClass(course));
   }
 
   async update(req: Request, res: Response): Promise<Response> {
@@ -75,7 +75,7 @@ class CourseController {
 
     const course = await updateCourse.execute({ course_id, data });
 
-    return res.json(course);
+    return res.json(classToClass(course));
   }
 
   async destroy(req: Request, res: Response): Promise<Response> {

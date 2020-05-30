@@ -96,6 +96,7 @@ describe("Course", () => {
       .post("/courses")
       .send(course)
       .set("Authorization", `Bearer ${token}`);
+
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -310,9 +311,7 @@ describe("Course", () => {
   });
 
   it("should be able to update a course", async () => {
-    let course;
-
-    course = {
+    const course = {
       name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
       category: "N10",
       modality: "Formação",
@@ -356,23 +355,48 @@ describe("Course", () => {
           file: "123easdasdas-indro",
         },
       ],
-    };
+    } as Course;
 
     const courseResponse = await request(app)
       .post("/courses")
       .send(course)
       .set("Authorization", `Bearer ${token}`);
 
-    course = {
-      name: "Title name edit",
+    const courseData = courseResponse.body as Course;
+
+    courseData.name = "Edit title name";
+    courseData.modules[0].name = "Edit name of module";
+
+    // Omit updated_at on edited information
+    delete courseData.modules[0].updated_at;
+    delete courseData.updated_at;
+
+    const courseNewData = {
+      ...courseData,
+      modules: [
+        ...courseData.modules,
+        {
+          name: "New module",
+          description: "New module Description",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          file: "New module-indro",
+        },
+      ],
     };
 
     const response = await request(app)
-      .put(`/courses/${courseResponse.body.id}`)
-      .send(course)
+      .put(`/courses/${courseData.id}`)
+      .send(courseNewData)
       .set("Authorization", `Bearer ${token}`);
 
-    expect(response.body.name).toBe("Title name edit");
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        ...courseNewData,
+        modules: expect.arrayContaining(
+          courseNewData.modules.map(module => expect.objectContaining(module)),
+        ),
+      }),
+    );
   });
 
   it("should be able to delete a course", async () => {
