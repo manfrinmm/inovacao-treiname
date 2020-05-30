@@ -4,6 +4,7 @@ import multer from "multer";
 
 import CourseController from "./app/controllers/CourseController";
 import FileController from "./app/controllers/FileController";
+import ModuleController from "./app/controllers/ModuleController";
 import SessionController from "./app/controllers/SessionController";
 import UserController from "./app/controllers/UserController";
 import Authenticate from "./app/middlewares/Authenticate";
@@ -27,5 +28,7 @@ routes.post("/courses", CourseController.store);
 routes.get("/courses/:course_id", CourseController.show);
 routes.put("/courses/:course_id", CourseController.update);
 routes.delete("/courses/:course_id", CourseController.destroy);
+
+routes.delete("/modules/:module_id", ModuleController.destroy);
 
 export default routes;
