@@ -3,6 +3,7 @@ import express, { Router } from "express";
 import multer from "multer";
 
 import CourseController from "./app/controllers/CourseController";
+import ExamController from "./app/controllers/ExamController";
 import FileController from "./app/controllers/FileController";
 import ModuleController from "./app/controllers/ModuleController";
 import SessionController from "./app/controllers/SessionController";
@@ -30,5 +31,10 @@ routes.put("/courses/:course_id", CourseController.update);
 routes.delete("/courses/:course_id", CourseController.destroy);
 
 routes.delete("/modules/:module_id", ModuleController.destroy);
+
+routes.post("/exams", ExamController.store);
+routes.get("/courses/:course_id/exams", ExamController.show);
+routes.put("/courses/:course_id/exams", ExamController.update);
+routes.delete("/courses/:course_id/exams/:question_id", ExamController.destroy);
 
 export default routes;

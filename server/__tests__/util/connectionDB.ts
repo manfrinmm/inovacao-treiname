@@ -9,6 +9,7 @@ export async function initializeConnection(): Promise<void> {
 
   await connection.query("DROP TABLE IF EXISTS users");
   await connection.query("DROP TABLE IF EXISTS course_modules");
+  await connection.query("DROP TABLE IF EXISTS exam_questions");
   await connection.query("DROP TABLE IF EXISTS courses");
   await connection.query("DROP TABLE IF EXISTS migrations");
 
@@ -18,6 +19,7 @@ export async function initializeConnection(): Promise<void> {
 export async function truncateAll(): Promise<void> {
   await connection.query("DELETE FROM users");
   await connection.query("DELETE FROM courses");
+  await connection.query("DELETE FROM exam_questions");
   await connection.query("DELETE FROM course_modules");
 }
 

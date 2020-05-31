@@ -1,5 +1,4 @@
 import request from "supertest";
-import { getRepository } from "typeorm";
 
 import app from "../../src/app";
 import {
