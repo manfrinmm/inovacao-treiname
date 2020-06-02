@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 import { Container, CourseContainer } from "./styles";
-
+import api from "~/services/api";
 interface CourseProps {
   id: string;
-  thumbnail: string;
+  thumbnail_url: string;
   name: string;
   modality: string;
   category: string;
@@ -13,97 +13,53 @@ interface CourseProps {
 
 const Home: React.FC = () => {
   const [courses, setCourses] = useState<CourseProps[]>([]);
+  const [coursesFiltered, setCoursesFiltered] = useState<CourseProps[]>([]);
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    const data: CourseProps[] = [
-      {
-        id: "123",
-        thumbnail:
-          "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-        name:
-          "Etiquetagem de Fontes dee Fon dee Fon dee Fon dee Fon dee Fontes dee Fontes dee Fontes dee Fontes de Energias Perigosas",
-        modality: "Formação",
-        category: "NR10",
-      },
-      {
-        id: "1232",
-        thumbnail:
-          "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-        name: "Etiquetagem de Fontes de Energias Perigosas",
-        modality: "Formação",
-        category: "NR10",
-      },
-      {
-        id: "12223",
-        thumbnail:
-          "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-        name: "Etiquetagem de Fontes de Energias Perigosas",
-        modality: "Formação",
-        category: "NR10",
-      },
-      {
-        id: "11123",
-        thumbnail:
-          "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-        name: "Etiquetagem de Fontes de Energias Perigosas",
-        modality: "Formação",
-        category: "NR10",
-      },
-      {
-        id: "12323",
-        thumbnail:
-          "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-        name: "Etiquetagem de Fontes de Energias Perigosas",
-        modality: "Formação",
-        category: "NR10",
-      },
-      {
-        id: "112323",
-        thumbnail:
-          "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-        name: "Etiquetagem de Fontes de Energias Perigosas",
-        modality: "Formação",
-        category: "NR10",
-      },
-      {
-        id: "132123",
-        thumbnail:
-          "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-        name: "Etiquetagem de Fontes de Energias Perigosas",
-        modality: "Formação",
-        category: "NR10",
-      },
-      {
-        id: "121233",
-        thumbnail:
-          "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-        name: "Etiquetagem de Fontes de Energias Perigosas",
-        modality: "Formação",
-        category: "NR10",
-      },
-      {
-        id: "1231233",
-        thumbnail:
-          "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-        name: "Etiquetagem de Fontes de Energias Perigosas",
-        modality: "Formação",
-        category: "NR10",
-      },
-    ];
-
-    setCourses(data);
+    api.get("/courses").then(response => {
+      setCourses(response.data);
+      setCoursesFiltered(response.data);
+    });
   }, []);
+
+  const handleFilterInput = useCallback(event => {
+    const filterValue = event.target.value;
+    setFilter(filterValue);
+  }, []);
+
+  useEffect(() => {
+    if (!filter) {
+      setCoursesFiltered(courses);
+    } else {
+      const courseFiltered = courses.filter(course => {
+        const courseName = course.name.toLocaleUpperCase();
+
+        const foundCourse = courseName.includes(filter.toLocaleUpperCase());
+
+        if (foundCourse) {
+          return course;
+        }
+      });
+      setCoursesFiltered(courseFiltered);
+    }
+  }, [filter]);
 
   return (
     <Container>
       <header>
         <h1>Cursos Online</h1>
-        <input type="search" placeholder="Pesquise por um curso" />
+        <input
+          type="search"
+          placeholder="Pesquise por um curso"
+          value={filter}
+          onChange={handleFilterInput}
+        />
       </header>
       <section>
-        {courses.map(course => (
+        {coursesFiltered.map(course => (
           <CourseContainer key={course.id}>
-            <img src={course.thumbnail} alt={course.name} />
+            <img src={course.thumbnail_url} alt={course.name} />
             <p>{course.name}</p>
             <span>
               Modalidade: <strong>{course.modality}</strong>

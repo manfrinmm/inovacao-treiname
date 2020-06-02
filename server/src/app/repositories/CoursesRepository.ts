@@ -40,9 +40,7 @@ export default class CoursesRepository {
   }
 
   public async findAll(): Promise<Course[]> {
-    const courses = await this.ormRepository.find({
-      relations: ["modules"],
-    });
+    const courses = await this.ormRepository.find();
 
     return courses;
   }

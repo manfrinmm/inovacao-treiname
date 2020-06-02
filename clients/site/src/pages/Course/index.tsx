@@ -6,6 +6,8 @@ import Button from "~/components/Button";
 
 import ModuleItem from "./ModuleItem";
 import { Container, Info, WillLearn, LearnItem, Modules } from "./styles";
+import api from "~/services/api";
+import { useParams } from "react-router-dom";
 
 interface CourseProps {
   name: string;
@@ -18,7 +20,7 @@ interface CourseProps {
     name: string;
     description: string;
   }>;
-  thumbnail: string;
+  thumbnail_url: string;
   value: number;
   docs_download: number;
   course_expiration: number;
@@ -28,56 +30,18 @@ interface CourseProps {
 
 const Course: React.FC = () => {
   const [course, setCourse] = useState({} as CourseProps);
+  const { course_id } = useParams();
 
   useEffect(() => {
-    const data: CourseProps = {
-      name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
-      category: "NR10",
-      modality: "Formação",
-      description:
-        "Instruir, orientar e capacitar trabalhadores em geral, que lidam com formas de energias perigosas, de forma a garantir a segurança dos  funcionários, contratados e subcontratados, protegendo-os contra     energização inesperada, ligações ou fuga das energias residuais      durante a realização de serviços.",
-      target_audience:
-        "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos energizados, tais como: instalação, construção,      inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
-      learns: [
-        "Ambiente de Trabalho",
-        "Dados estáticos",
-        "Acidentes e Doenças do Trabalho",
-        "Equipamentos Instalados em Linhas de Transmissão",
-        "Energia Elétrica",
-      ],
-      modules: [
-        {
-          name: "O ambiente de trabalho",
-          description:
-            "Todas as atividades profissionais que possam imprimir algum tipo de risco físico para o           trabalhador devem ser cumpridas com o auxílio de EPIs – Equipamentos de Proteção Individual,          que incluem óculos, protetores auriculares, máscaras, mangotes, capacetes, luvas, botas, cintos          de segurança, protetor solar e outros itens de proteção. Esses acessórios são indispensáveis em           fábricas e processos industriais em geral.",
-        },
-        {
-          name: "O ambiente de trabalho",
-          description:
-            "Todas as atividades profissionais que possam imprimir algum tipo de risco físico para o           trabalhador devem ser cumpridas com o auxílio de EPIs – Equipamentos de Proteção Individual,          que incluem óculos, protetores auriculares, máscaras, mangotes, capacetes, luvas, botas, cintos          de segurança, protetor solar e outros itens de proteção. Esses acessórios são indispensáveis em           fábricas e processos industriais em geral.",
-        },
-        {
-          name: "O ambiente de trabalho",
-          description:
-            "Todas as atividades profissionais que possam imprimir algum tipo de risco físico para o           trabalhador devem ser cumpridas com o auxílio de EPIs – Equipamentos de Proteção Individual,          que incluem óculos, protetores auriculares, máscaras, mangotes, capacetes, luvas, botas, cintos          de segurança, protetor solar e outros itens de proteção. Esses acessórios são indispensáveis em           fábricas e processos industriais em geral.",
-        },
-      ],
-      thumbnail:
-        "https://portal.ifba.edu.br/jequie/noticias/2019/agosto/curso-de-extensao-nr-10-lancado-edital-para-selecao/banner_site.png",
-      value: 124532,
-      docs_download: 12,
-      course_expiration: 60,
-      workload: 8,
-      illustrative_video: "",
-    };
-
-    setCourse(data);
+    api.get(`/courses/${course_id}`).then(response => {
+      setCourse(response.data);
+    });
   }, []);
 
   return (
     <Container>
       <aside>
-        <img src={course.thumbnail} alt={course.name} />
+        <img src={course.thumbnail_url} alt={course.name} />
         <h1>
           {Intl.NumberFormat("pt-br", {
             style: "currency",
@@ -91,7 +55,7 @@ const Course: React.FC = () => {
           <p>Este curso inclui</p>
           <div>
             <FaFileDownload size={24} />
-            <p>{`${course.docs_download} materiais para download`}</p>
+            <p>{`${course.modules?.length} materiais para download`}</p>
           </div>
           <div>
             <MdAccessTime size={24} />

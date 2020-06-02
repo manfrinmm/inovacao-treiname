@@ -20,13 +20,14 @@ routes.post("/sessions", SessionController.store);
 
 routes.post("/users", UserController.store);
 
+routes.get("/courses", CourseController.index);
+routes.get("/courses/:course_id", CourseController.show);
+
 routes.use(Authenticate);
 
 routes.post("/file", upload.single("file"), FileController.store);
 
-routes.get("/courses", CourseController.index);
 routes.post("/courses", CourseController.store);
-routes.get("/courses/:course_id", CourseController.show);
 routes.put("/courses/:course_id", CourseController.update);
 routes.delete("/courses/:course_id", CourseController.destroy);
 
