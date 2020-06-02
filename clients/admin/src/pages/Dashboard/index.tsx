@@ -7,7 +7,7 @@ const Dashboard: React.FC = () => {
     <Container>
       <Link to="students">Listagem de Alunos</Link>
       <Link to="courses">Listagem de Cursos</Link>
-      <Link to="students">Cadastrar Curso</Link>
+      <Link to="/course">Cadastrar Curso</Link>
       <Link to="examination">Cadastrar Prova</Link>
     </Container>
   );

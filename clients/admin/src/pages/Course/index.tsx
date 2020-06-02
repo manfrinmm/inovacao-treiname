@@ -5,56 +5,118 @@ import { Scope, FormHandles } from "@unform/core";
 import { Form } from "@unform/web";
 import Button from "~/components/Button";
 import Input from "~/components/Input";
+import Select from "~/components/Select";
+import TextArea from "~/components/TextArea";
 
 import {
   Container,
   Title,
   StudentLearnContainer,
   StudentLearnContent,
+  Modules,
+  Module,
 } from "./styles";
+
+interface CourseModuleProps {
+  name: string;
+  description: string;
+  video_link: string;
+  extra_link: string;
+  file?: string;
+}
 
 const Course: React.FC = () => {
   const courseForm = useRef<FormHandles>(null);
 
   const [countStudentLearn, setCountStudentLearn] = useState([""]);
-  // const [disableButtonStudentLearn, setDisableButtonStudentLearn] = useState(
-  //   true,
-  // );
+  const [courseModules, setCourseModules] = useState<CourseModuleProps[]>([
+    {
+      name: "",
+      video_link: "",
+      extra_link: "",
+      description: "",
+    },
+  ]);
 
-  const handleAddStudentLearn = useCallback(() => {
-    const inputValue = courseForm.current?.getFieldValue(
-      `learns.${countStudentLearn.length - 1}`,
-    );
+  const getStudentLearnState = useCallback((): string[] => {
+    const inputValues: string[] = [];
 
-    if (countStudentLearn.length === 1) {
-      setCountStudentLearn([inputValue, ""]);
-    } else {
-      setCountStudentLearn(state => {
-        const oldState = state;
-
-        oldState[countStudentLearn.length - 1] = inputValue;
-
-        return [...oldState, ""];
-      });
+    for (let index = 0; index < countStudentLearn.length; index++) {
+      inputValues[index] = courseForm.current?.getFieldValue(`learns.${index}`);
     }
+
+    return inputValues;
   }, [countStudentLearn]);
 
-  // Verificar a remoção de um item antes do final do array
-  const handleRemoveStudentLearn = useCallback(valueToRemove => {
-    setCountStudentLearn(state =>
-      state.filter(studentLearn => studentLearn !== valueToRemove),
-    );
-  }, []);
+  const handleAddStudentLearn = useCallback((): void => {
+    const inputValues = getStudentLearnState();
 
-  // Preciso impedir adicionar mais inputs de `O que aprenderá` quando um estiver vazio
-  // useEffect(() => {
-  //   const checkInputValue = courseForm.current?.getFieldValue(
-  //     `learns.${countStudentLearn.length - 1}`,
-  //   );
-  //   setDisableButtonStudentLearn(checkInputValue === "");
-  // }, [
-  //   courseForm.current?.getFieldValue(`learns.${countStudentLearn.length - 1}`),
-  // ]);
+    setCountStudentLearn([...inputValues, ""]);
+  }, [getStudentLearnState]);
+
+  const handleRemoveStudentLearn = useCallback(
+    (indexToRemove: number): void => {
+      const inputValues = getStudentLearnState();
+
+      setCountStudentLearn(
+        inputValues.filter((_, index) => index !== indexToRemove),
+      );
+    },
+    [getStudentLearnState],
+  );
+
+  const getCourseModulesState = useCallback((): CourseModuleProps[] => {
+    const inputValues: CourseModuleProps[] = [];
+
+    for (let index = 0; index < courseModules.length; index++) {
+      const name = courseForm.current?.getFieldValue(`modules[${index}].name`);
+
+      const video_link = courseForm.current?.getFieldValue(
+        `modules[${index}].video_link`,
+      );
+      const extra_link = courseForm.current?.getFieldValue(
+        `modules[${index}].extra_link`,
+      );
+      const description = courseForm.current?.getFieldValue(
+        `modules[${index}].description`,
+      );
+      const file = courseForm.current?.getFieldValue(`modules[${index}].file`);
+
+      inputValues[index] = {
+        name,
+        video_link,
+        extra_link,
+        description,
+        file,
+      };
+    }
+    console.log(inputValues);
+
+    return inputValues;
+  }, [courseModules]);
+
+  const handleAddModule = useCallback(() => {
+    const modules = getCourseModulesState();
+
+    setCourseModules([
+      ...modules,
+      {
+        name: "",
+        video_link: "",
+        extra_link: "",
+        description: "",
+      },
+    ]);
+  }, [getCourseModulesState]);
+
+  const handleRemoveModule = useCallback(
+    (indexToRemove: number) => {
+      const modules = getCourseModulesState();
+
+      setCourseModules(modules.filter((_, index) => index !== indexToRemove));
+    },
+    [getCourseModulesState],
+  );
 
   return (
     <Container>
@@ -77,7 +139,7 @@ const Course: React.FC = () => {
             title="Categoria"
             placeholder="Digite a categoria"
           />
-          <Input name="modality" title="Modalidade" type="select" />
+          <Select name="modality" title="Modalidade" />
           <Input
             name="workload"
             title="Carga horária"
@@ -90,16 +152,14 @@ const Course: React.FC = () => {
           />
         </section>
         <section>
-          <Input
+          <TextArea
             name="description"
             title="Descrição do curso"
-            type="textarea"
             placeholder="Digite a descrição do curso"
           />
-          <Input
+          <TextArea
             name="target_audience"
             title="Para quem este curso é direcionado"
-            type="textarea"
             placeholder="Digite a descrição"
           />
           <Input
@@ -146,7 +206,7 @@ const Course: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      handleRemoveStudentLearn(studentLearn);
+                      handleRemoveStudentLearn(index);
                     }}
                   >
                     <FaRegTrashAlt size={20} />
@@ -162,11 +222,57 @@ const Course: React.FC = () => {
             />
           </StudentLearnContainer>
         </Scope>
+
+        <Title>Módulos do curso</Title>
+        <Modules>
+          {courseModules.map((module, index) => (
+            <Scope path={`modules[${index}]`} key={Math.random()}>
+              <Button
+                icon={FaRegTrashAlt}
+                onClick={() => {
+                  handleRemoveModule(index);
+                }}
+              >
+                Remover modulo
+              </Button>
+              <Module>
+                <section>
+                  <Input
+                    name="name"
+                    title="Nome do modulo"
+                    placeholder="Digite o nome"
+                    defaultValue={module.name}
+                  />
+                  <Input
+                    name="video_link"
+                    type="url"
+                    title="Link da aula"
+                    placeholder="Digite o link"
+                    defaultValue={module.video_link}
+                  />
+                  <Input
+                    name="extra_link"
+                    type="url"
+                    title="Link extra"
+                    placeholder="Digite o link"
+                    defaultValue={module.extra_link}
+                  />
+                </section>
+                <TextArea
+                  name="description"
+                  title="Descrição do modulo"
+                  placeholder="Digite a descrição do modulo"
+                  defaultValue={module.description}
+                />
+                <Input title="Adicionar material" name="file" type="file" />
+              </Module>
+            </Scope>
+          ))}
+        </Modules>
+        <Button icon={FaPlus} onClick={handleAddModule}>
+          Adicionar modulo
+        </Button>
       </Form>
-
-      {}
-
-      <Title>Módulos do curso</Title>
 
       <Button form="courseForm" type="submit">
         Cadastrar curso

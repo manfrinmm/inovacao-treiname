@@ -6,7 +6,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
 
-    section {
+    > section {
       display: flex;
       flex-direction: row;
 
@@ -27,7 +27,8 @@ export const Container = styled.div`
       }
 
       :nth-child(2) {
-        input {
+        input,
+        textarea {
           height: 185px;
         }
       }
@@ -38,13 +39,29 @@ export const Container = styled.div`
     }
 
     > div {
-      width: 256px;
+      /* width: 256px; */
     }
   }
 
   > button {
     margin: 64px 0 64px auto;
   }
+
+  /* > div + button {
+    align-self: flex-start;
+    font-size: 2rem;
+    margin-top: 24px;
+    padding: 8px;
+    background: rgba(4, 5, 34, 0.8);
+
+    &:hover {
+      background: rgba(4, 5, 34, 0.9);
+    }
+
+    svg {
+      color: #9cbef6;
+    }
+  } */
 `;
 
 export const Title = styled.section`
@@ -88,6 +105,65 @@ export const StudentLearnContent = styled.div`
 
     &:hover {
       color: ${shade(0.2, "#c53200")};
+    }
+  }
+`;
+
+export const Module = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+
+  border-radius: 8px;
+
+  padding: 8px 24px;
+
+  background: rgba(93, 137, 252, 0.2);
+
+  box-shadow: 0 4px 6px rgba(93, 137, 252, 0.2);
+
+  section {
+    display: flex;
+    flex-direction: column;
+
+    div + div {
+      margin-top: 8px;
+    }
+  }
+
+  section + div {
+    margin: 0 32px;
+  }
+
+  div {
+    width: 100%;
+    textarea,
+    input {
+      height: 100%;
+    }
+  }
+`;
+
+export const Modules = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  > div + div {
+    margin-top: 16px;
+  }
+
+  button {
+    align-self: flex-end;
+    margin-bottom: 8px;
+
+    font-size: 2rem;
+    margin-top: 24px;
+    padding: 8px;
+    background: rgba(4, 5, 34, 0.8);
+
+    svg {
+      color: #c53030;
     }
   }
 `;
