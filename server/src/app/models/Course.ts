@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   BeforeInsert,
+  BeforeUpdate,
 } from "typeorm";
 
 import diskStorageProvider from "../utils/diskStorageProvider";
@@ -39,7 +40,16 @@ export default class Course {
   target_audience: string;
 
   @BeforeInsert()
-  function(): void {
+  saveThumbnail(): void {
+    if (process.env.NODE_ENV === "test") {
+      return;
+    }
+
+    diskStorageProvider.saveFile(this.thumbnail);
+  }
+
+  @BeforeUpdate()
+  updateThumbnail(): void {
     if (process.env.NODE_ENV === "test") {
       return;
     }

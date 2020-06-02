@@ -3,13 +3,15 @@ import { getRepository, Repository } from "typeorm";
 import ExamQuestion from "../models/ExamQuestion";
 
 interface CreateExamQuestionDTO {
-  course_id: string;
-  title: string;
-  answer_a: string;
-  answer_b: string;
-  answer_c: string;
-  answer_d: string;
-  correct_answer: string;
+  exam_questions: Array<{
+    course_id: string;
+    title: string;
+    answer_a: string;
+    answer_b: string;
+    answer_c: string;
+    answer_d: string;
+    correct_answer: string;
+  }>;
 }
 
 export default class ExamsRepository {
@@ -19,10 +21,10 @@ export default class ExamsRepository {
     this.ormRepository = getRepository(ExamQuestion);
   }
 
-  public async create(
-    examData: CreateExamQuestionDTO[],
-  ): Promise<ExamQuestion[]> {
-    const exam = this.ormRepository.create(examData);
+  public async create({
+    exam_questions,
+  }: CreateExamQuestionDTO): Promise<ExamQuestion[]> {
+    const exam = this.ormRepository.create(exam_questions);
 
     await this.ormRepository.save(exam);
 

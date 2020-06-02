@@ -20,18 +20,21 @@ export default class CreateExamService {
     course_id,
     questions,
   }: Request): Promise<ExamQuestion[]> {
-    const examsRepository = new ExamsRepository();
     const coursesRepository = new CoursesRepository();
+    const examsRepository = new ExamsRepository();
 
-    const course = coursesRepository.findOne(course_id);
+    const course = await coursesRepository.findOne(course_id);
 
     if (!course) {
       throw new AppError("Course not found");
     }
 
-    const examData = questions.map(question => ({ course_id, ...question }));
+    const exam_questions = questions.map(question => ({
+      course_id,
+      ...question,
+    }));
 
-    const exam = await examsRepository.create(examData);
+    const exam = await examsRepository.create({ exam_questions });
 
     return exam;
   }
