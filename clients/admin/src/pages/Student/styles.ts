@@ -1,4 +1,3 @@
-import { shade, opacify } from "polished";
 import styled, { css } from "styled-components";
 
 interface StudentInfoProps {

@@ -1,60 +1,63 @@
 import React, { useEffect, useState } from "react";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 import { Form } from "@unform/web";
-import CourseItem from "~/components/CourseItem";
-import InputSearch from "~/components/InputSearch";
 
-import { Container } from "./styles";
+import InputSearch from "~/components/InputSearch";
+import api from "~/services/api";
+
+import { Container, CourseList, CourseItem } from "./styles";
 
 interface CourseProps {
-  id: number;
+  id: string;
   name: string;
   created_at: string;
   updated_at: string;
+  created_at_formatted: string;
+  updated_at_formatted: string;
 }
 
 const Courses: React.FC = () => {
   const [courses, setCourses] = useState<CourseProps[]>([]);
 
   useEffect(() => {
-    const data = [
-      {
-        id: 123,
-        name:
-          "Curso Online de CIPA (Comissão Interna de Prevenção de Acidentes)",
-        created_at: new Date(2020, 4, 13).toLocaleDateString(),
-        updated_at: new Date(2020, 4, 24).toLocaleDateString(),
-      },
-      {
-        id: 13,
-        name:
-          "Curso Online de CIPA3 (Comissão Interna de Prevenção de Acidentes)",
-        created_at: new Date(2020, 4, 13).toLocaleDateString(),
-        updated_at: new Date(2020, 4, 24).toLocaleDateString(),
-      },
-      {
-        id: 3,
-        name: "Curso Online de CIPA2 (Comissãs)",
-        created_at: new Date(2020, 4, 13).toLocaleDateString(),
-        updated_at: new Date(2020, 4, 24).toLocaleDateString(),
-      },
-    ];
+    api.get<CourseProps[]>("/courses").then(response => {
+      const coursesFormatted = response.data.map(course => ({
+        ...course,
+        created_at_formatted: new Date(course.created_at).toLocaleDateString(),
+        updated_at_formatted: new Date(course.updated_at).toLocaleDateString(),
+      }));
 
-    setCourses(data);
+      setCourses(coursesFormatted);
+    });
   }, []);
 
   return (
     <Container>
-      <Form
+      {/* <Form
         onSubmit={data => {
           console.log(data);
         }}
       >
         <InputSearch name="course" placeholder="Pesquise por um curso" />
-      </Form>
-      {courses.map(course => (
-        <CourseItem data={course} />
-      ))}
+      </Form> */}
+      <CourseList>
+        {courses.map(course => (
+          <CourseItem key={course.id}>
+            <div>
+              <p>{course.name}</p>
+              <section>
+                <span>Criado em: {course.created_at_formatted}</span>
+                <span>Atualizado em: {course.updated_at_formatted}</span>
+              </section>
+            </div>
+            <Link to={`/course/${course.id}`}>
+              <MdKeyboardArrowRight size={48} />
+            </Link>
+          </CourseItem>
+        ))}
+      </CourseList>
     </Container>
   );
 };

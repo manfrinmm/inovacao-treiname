@@ -30,7 +30,6 @@ const Select: React.FC<InputProps> = ({ title, name, ...rest }) => {
       <select
         id={fieldName}
         ref={inputRef}
-        placeholder="Selecione..."
         defaultValue={defaultValue}
         {...rest}
       >

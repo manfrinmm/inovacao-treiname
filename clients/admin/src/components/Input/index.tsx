@@ -2,7 +2,7 @@ import React, { useEffect, useRef, InputHTMLAttributes } from "react";
 
 import { useField } from "@unform/core";
 
-import { Container } from "./styles";
+import { Container, Error } from "./styles";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   title: string;
@@ -10,11 +10,9 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input: React.FC<InputProps> = ({ title, name, ...rest }) => {
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const { fieldName, registerField, error, defaultValue } = useField(name);
-
-  if (error) console.log(error);
+  const { registerField, fieldName, error, defaultValue } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -25,7 +23,7 @@ const Input: React.FC<InputProps> = ({ title, name, ...rest }) => {
   }, [registerField, fieldName]);
 
   return (
-    <Container>
+    <Container isErrored={!!error}>
       <label htmlFor={fieldName}>{title}</label>
       <input
         type="text"
@@ -34,6 +32,7 @@ const Input: React.FC<InputProps> = ({ title, name, ...rest }) => {
         defaultValue={defaultValue}
         {...rest}
       />
+      {error && <Error>{error}</Error>}
     </Container>
   );
 };

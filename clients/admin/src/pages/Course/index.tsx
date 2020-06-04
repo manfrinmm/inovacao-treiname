@@ -1,12 +1,19 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 
 import { Scope, FormHandles } from "@unform/core";
 import { Form } from "@unform/web";
+import merge from "lodash.merge";
+import * as Yup from "yup";
+
 import Button from "~/components/Button";
+import Dropzone from "~/components/Dropzone";
 import Input from "~/components/Input";
 import Select from "~/components/Select";
 import TextArea from "~/components/TextArea";
+import api from "~/services/api";
+import getValidationErrors from "~/utils/getValidationErrors";
 
 import {
   Container,
@@ -14,61 +21,93 @@ import {
   StudentLearnContainer,
   StudentLearnContent,
   Modules,
+  RemoveModuleButton,
   Module,
+  AddModuleButton,
 } from "./styles";
 
 interface CourseModuleProps {
+  id?: string;
   name: string;
   description: string;
   video_link: string;
   extra_link: string;
-  file?: string;
+  file: string;
 }
 
+interface CourseFormData {
+  name: string;
+  category: string;
+  modality: "Formação" | "Reciclagem";
+  workload: string;
+  value: string;
+  description: string;
+  target_audience: string;
+  thumbnail: string;
+  course_expiration: string;
+  certificate_validity: string;
+  approved_by: string;
+  illustrative_video: string;
+  learns: Array<string>;
+  modules: Array<CourseModuleProps>;
+}
+
+// Falta verificar o input de select (Não é modificado quando o dado vem pela API)
+// Falta verificar o dropzone da thumbnail (Não aparece o nome do arquivo)
 const Course: React.FC = () => {
   const courseForm = useRef<FormHandles>(null);
+  const [courseFormData, setCourseFormData] = useState<CourseFormData>({
+    name: "",
+    category: "",
+    workload: "",
+    value: "",
+    modality: "Formação",
+    description: "",
+    target_audience: "",
+    thumbnail: "",
+    course_expiration: "",
+    certificate_validity: "",
+    approved_by: "",
+    illustrative_video: "",
+    learns: [""],
+    modules: [
+      {
+        name: "",
+        description: "",
+        video_link: "",
+        extra_link: "",
+        file: "",
+      },
+    ],
+  });
 
-  const [countStudentLearn, setCountStudentLearn] = useState([""]);
-  const [courseModules, setCourseModules] = useState<CourseModuleProps[]>([
-    {
-      name: "",
-      video_link: "",
-      extra_link: "",
-      description: "",
-    },
-  ]);
+  const { course_id } = useParams();
+
+  useEffect(() => {
+    if (!course_id) {
+      return;
+    }
+
+    api.get(`/courses/${course_id}`).then(response => {
+      console.log("response.data", response.data);
+      setCourseFormData(response.data);
+    });
+  }, [course_id]);
 
   const getStudentLearnState = useCallback((): string[] => {
     const inputValues: string[] = [];
 
-    for (let index = 0; index < countStudentLearn.length; index++) {
+    for (let index = 0; index < courseFormData.learns.length; index++) {
       inputValues[index] = courseForm.current?.getFieldValue(`learns.${index}`);
     }
 
     return inputValues;
-  }, [countStudentLearn]);
-
-  const handleAddStudentLearn = useCallback((): void => {
-    const inputValues = getStudentLearnState();
-
-    setCountStudentLearn([...inputValues, ""]);
-  }, [getStudentLearnState]);
-
-  const handleRemoveStudentLearn = useCallback(
-    (indexToRemove: number): void => {
-      const inputValues = getStudentLearnState();
-
-      setCountStudentLearn(
-        inputValues.filter((_, index) => index !== indexToRemove),
-      );
-    },
-    [getStudentLearnState],
-  );
+  }, [courseFormData.learns]);
 
   const getCourseModulesState = useCallback((): CourseModuleProps[] => {
     const inputValues: CourseModuleProps[] = [];
 
-    for (let index = 0; index < courseModules.length; index++) {
+    for (let index = 0; index < courseFormData.modules.length; index++) {
       const name = courseForm.current?.getFieldValue(`modules[${index}].name`);
 
       const video_link = courseForm.current?.getFieldValue(
@@ -89,33 +128,131 @@ const Course: React.FC = () => {
         description,
         file,
       };
+
+      const module_id = courseFormData.modules[index].id;
+
+      if (module_id) {
+        Object.assign(inputValues[index], { id: module_id });
+      }
     }
-    console.log(inputValues);
 
     return inputValues;
-  }, [courseModules]);
+  }, [courseFormData.modules]);
+
+  const handleAddStudentLearn = useCallback((): void => {
+    const inputValues = getStudentLearnState();
+    const modules = getCourseModulesState();
+
+    setCourseFormData(state => ({
+      ...state,
+      modules,
+      learns: [...inputValues, ""],
+    }));
+  }, [getStudentLearnState, getCourseModulesState]);
+
+  const handleRemoveStudentLearn = useCallback(
+    (indexToRemove: number): void => {
+      const learnsInputValues = getStudentLearnState();
+      const modules = getCourseModulesState();
+
+      setCourseFormData(state => ({
+        ...state,
+        modules,
+        learns: learnsInputValues.filter((_, index) => index !== indexToRemove),
+      }));
+    },
+    [getStudentLearnState, getCourseModulesState],
+  );
 
   const handleAddModule = useCallback(() => {
     const modules = getCourseModulesState();
+    const learns = getStudentLearnState();
 
-    setCourseModules([
-      ...modules,
-      {
-        name: "",
-        video_link: "",
-        extra_link: "",
-        description: "",
-      },
-    ]);
-  }, [getCourseModulesState]);
+    setCourseFormData(state => ({
+      ...state,
+      learns,
+      modules: [
+        ...modules,
+        { name: "", video_link: "", extra_link: "", description: "", file: "" },
+      ],
+    }));
+  }, [getCourseModulesState, getStudentLearnState]);
 
   const handleRemoveModule = useCallback(
-    (indexToRemove: number) => {
+    async (indexToRemove: number) => {
       const modules = getCourseModulesState();
+      const learns = getStudentLearnState();
 
-      setCourseModules(modules.filter((_, index) => index !== indexToRemove));
+      const module_id = modules[indexToRemove].id;
+
+      if (module_id) {
+        await api.delete(`/modules/${module_id}`);
+        console.log("Modulo deletado.");
+      }
+
+      setCourseFormData(state => ({
+        ...state,
+        learns,
+        modules: modules.filter((_, index) => index !== indexToRemove),
+      }));
     },
-    [getCourseModulesState],
+    [getCourseModulesState, getStudentLearnState],
+  );
+
+  const handleSubmit = useCallback(
+    async (data: CourseFormData) => {
+      try {
+        courseForm.current?.setErrors({});
+
+        const schema = Yup.object().shape({
+          name: Yup.string().required("Nome é obrigatório"),
+          category: Yup.string().required("Categoria é obrigatório."),
+          modality: Yup.string().required("Modalidade é obrigatório."),
+          workload: Yup.string().required("Carga horária é obrigatório."),
+          value: Yup.string().required("Valor é obrigatório."),
+          description: Yup.string().required("Descrição é obrigatório."),
+          target_audience: Yup.string().required("Este campo é obrigatório."),
+          thumbnail: Yup.string().required("Thumbnail é obrigatório."),
+          course_expiration: Yup.string().required("Prazo é obrigatório."),
+          certificate_validity: Yup.string().required(
+            "Validade é obrigatório.",
+          ),
+          approved_by: Yup.string().required("Aprovado por é obrigatório."),
+          illustrative_video: Yup.string(),
+          learns: Yup.array(Yup.string().required()).required("é obrigatório."),
+          modules: Yup.array(
+            Yup.object().shape({
+              name: Yup.string().required("Nome é obrigatório."),
+              description: Yup.string().required("Descrição é obrigatório."),
+              video_link: Yup.string(),
+              extra_link: Yup.string(),
+              file: Yup.string().required("Matérial é obrigatório."),
+            }),
+          ),
+        });
+
+        await schema.validate(data, { abortEarly: false });
+
+        if (course_id) {
+          const courseData = merge(courseFormData, data);
+          const response = await api.put(`/courses/${course_id}`, courseData);
+
+          console.log("curso atualizado", response.data);
+        } else {
+          const response = await api.post("/courses", data);
+
+          console.log("curso criado", response.data);
+        }
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          courseForm.current?.setErrors(errors);
+        }
+        console.log(err);
+      }
+    },
+    [courseFormData, course_id],
   );
 
   return (
@@ -124,9 +261,8 @@ const Course: React.FC = () => {
       <Form
         id="courseForm"
         ref={courseForm}
-        onSubmit={data => {
-          console.log(data);
-        }}
+        onSubmit={handleSubmit}
+        initialData={courseFormData}
       >
         <section>
           <Input
@@ -162,11 +298,10 @@ const Course: React.FC = () => {
             title="Para quem este curso é direcionado"
             placeholder="Digite a descrição"
           />
-          <Input
-            name="thumbnail"
+          <Dropzone
             title="Adicionar foto do curso"
-            type="file"
-            placeholder="Digite a descrição"
+            name="thumbnail"
+            accept="image/*"
           />
         </section>
         <section>
@@ -194,15 +329,14 @@ const Course: React.FC = () => {
         <Title>O que o aluno aprenderá</Title>
         <Scope path="learns">
           <StudentLearnContainer>
-            {countStudentLearn.map((studentLearn, index) => (
+            {courseFormData.learns.map((_, index) => (
               <StudentLearnContent key={Math.random()}>
                 <Input
                   name={`${index}`}
                   title="O que aprenderá"
                   placeholder="Digite o nome"
-                  defaultValue={studentLearn}
                 />
-                {countStudentLearn.length !== 1 && (
+                {courseFormData.learns.length !== 1 && (
                   <button
                     type="button"
                     onClick={() => {
@@ -225,57 +359,55 @@ const Course: React.FC = () => {
 
         <Title>Módulos do curso</Title>
         <Modules>
-          {courseModules.map((module, index) => (
+          {courseFormData.modules.map((_, index) => (
             <Scope path={`modules[${index}]`} key={Math.random()}>
-              <Button
-                icon={FaRegTrashAlt}
-                onClick={() => {
-                  handleRemoveModule(index);
-                }}
-              >
-                Remover modulo
-              </Button>
+              {courseFormData.modules.length !== 1 && (
+                <RemoveModuleButton
+                  icon={FaRegTrashAlt}
+                  onClick={() => {
+                    handleRemoveModule(index);
+                  }}
+                >
+                  Remover modulo
+                </RemoveModuleButton>
+              )}
               <Module>
                 <section>
                   <Input
                     name="name"
                     title="Nome do modulo"
                     placeholder="Digite o nome"
-                    defaultValue={module.name}
                   />
                   <Input
                     name="video_link"
                     type="url"
                     title="Link da aula"
                     placeholder="Digite o link"
-                    defaultValue={module.video_link}
                   />
                   <Input
                     name="extra_link"
                     type="url"
                     title="Link extra"
                     placeholder="Digite o link"
-                    defaultValue={module.extra_link}
                   />
                 </section>
                 <TextArea
                   name="description"
                   title="Descrição do modulo"
                   placeholder="Digite a descrição do modulo"
-                  defaultValue={module.description}
                 />
-                <Input title="Adicionar material" name="file" type="file" />
+                <Dropzone title="Adicionar material" name="file" />
               </Module>
             </Scope>
           ))}
         </Modules>
-        <Button icon={FaPlus} onClick={handleAddModule}>
+        <AddModuleButton icon={FaPlus} onClick={handleAddModule}>
           Adicionar modulo
-        </Button>
+        </AddModuleButton>
       </Form>
 
       <Button form="courseForm" type="submit">
-        Cadastrar curso
+        {course_id ? "Atualizar" : "Cadastrar"} curso
       </Button>
     </Container>
   );

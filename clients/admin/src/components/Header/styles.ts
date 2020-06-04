@@ -1,6 +1,5 @@
 import { Link as Linker } from "react-router-dom";
 
-import { shade } from "polished";
 import styled from "styled-components";
 
 import Button from "../Button";

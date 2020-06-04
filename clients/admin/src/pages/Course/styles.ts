@@ -1,6 +1,8 @@
 import { shade } from "polished";
 import styled from "styled-components";
 
+import Button from "~/components/Button";
+
 export const Container = styled.div`
   form {
     display: flex;
@@ -37,31 +39,11 @@ export const Container = styled.div`
         margin-top: 24px;
       }
     }
-
-    > div {
-      /* width: 256px; */
-    }
   }
 
   > button {
     margin: 64px 0 64px auto;
   }
-
-  /* > div + button {
-    align-self: flex-start;
-    font-size: 2rem;
-    margin-top: 24px;
-    padding: 8px;
-    background: rgba(4, 5, 34, 0.8);
-
-    &:hover {
-      background: rgba(4, 5, 34, 0.9);
-    }
-
-    svg {
-      color: #9cbef6;
-    }
-  } */
 `;
 
 export const Title = styled.section`
@@ -109,6 +91,29 @@ export const StudentLearnContent = styled.div`
   }
 `;
 
+export const Modules = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  > div + div {
+    margin-top: 16px;
+  }
+`;
+
+export const RemoveModuleButton = styled(Button)`
+  align-self: flex-end;
+  margin-bottom: 8px;
+
+  font-size: 2rem;
+  margin-top: 24px;
+  padding: 8px;
+  background: rgba(4, 5, 34, 0.8);
+
+  svg {
+    color: #c53030;
+  }
+`;
+
 export const Module = styled.div`
   display: flex;
   justify-content: space-between;
@@ -121,7 +126,7 @@ export const Module = styled.div`
 
   background: rgba(93, 137, 252, 0.2);
 
-  box-shadow: 0 4px 6px rgba(93, 137, 252, 0.2);
+  box-shadow: 0 4px 6px rgba(93, 137, 252, 0.3);
 
   section {
     display: flex;
@@ -145,25 +150,18 @@ export const Module = styled.div`
   }
 `;
 
-export const Modules = styled.div`
-  display: flex;
-  flex-direction: column;
+export const AddModuleButton = styled(Button)`
+  align-self: flex-start;
+  font-size: 2rem;
+  margin-top: 24px;
+  padding: 8px;
+  background: rgba(4, 5, 34, 0.8);
 
-  > div + div {
-    margin-top: 16px;
+  &:hover {
+    background: rgba(4, 5, 34, 0.9);
   }
 
-  button {
-    align-self: flex-end;
-    margin-bottom: 8px;
-
-    font-size: 2rem;
-    margin-top: 24px;
-    padding: 8px;
-    background: rgba(4, 5, 34, 0.8);
-
-    svg {
-      color: #c53030;
-    }
+  svg {
+    color: #9cbef6;
   }
 `;

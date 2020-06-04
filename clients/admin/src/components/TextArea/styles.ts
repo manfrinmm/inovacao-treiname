@@ -1,17 +1,27 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+interface ContainerProps {
+  isErrored: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
 
   textarea {
     margin-top: 4px;
     padding: 8px 16px;
-    border: 1px solid;
+    border: 1px solid ${props => props.isErrored && "#ed4337"};
     border-radius: 8px;
 
     &::placeholder {
       opacity: 0.4;
     }
   }
+`;
+
+export const Error = styled.span`
+  color: #ed4337;
+  margin-top: 4px;
+  font-weight: 500;
 `;

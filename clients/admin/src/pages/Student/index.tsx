@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { MdKeyboardArrowLeft, MdLink } from "react-icons/md";
 import { useHistory, useParams } from "react-router-dom";
 
 import Button from "~/components/Button";
-import CourseItem from "~/components/CourseItem";
 import Input from "~/components/Input";
 
 import { Container, StudentInfo, Courses } from "./styles";
@@ -12,7 +11,7 @@ import { Container, StudentInfo, Courses } from "./styles";
 const Student: React.FC = () => {
   const { user_id } = useParams();
   const { goBack } = useHistory();
-  const [hasLink, setHashLink] = useState(true);
+  // const [hasLink, setHashLink] = useState(true);
 
   return (
     <Container>
@@ -29,7 +28,7 @@ const Student: React.FC = () => {
       </header>
       {user_id}
       <section>
-        <StudentInfo hasLink={hasLink}>
+        <StudentInfo hasLink>
           <h1>Aluno</h1>
           <section>
             <p>
@@ -54,7 +53,7 @@ const Student: React.FC = () => {
           />
           <Button
             icon={MdLink}
-            disabled={!hasLink}
+            disabled={!true}
             onClick={() => {
               console.log("click");
             }}
@@ -77,9 +76,9 @@ const Student: React.FC = () => {
                 Liberar curso
               </Button>
             </header>
+            {/* <CourseItem />
             <CourseItem />
-            <CourseItem />
-            <CourseItem />
+            <CourseItem /> */}
           </section>
           <footer>
             <Button>Anterior</Button>

@@ -5,26 +5,27 @@ import { Link } from "react-router-dom";
 import { Container } from "./styles";
 
 interface CourseProps {
+  id: string;
   name: string;
-  created_at: string;
-  updated_at: string;
+  created_at_formatted: string;
+  updated_at_formatted: string;
 }
 
 interface CourseItemProps {
-  data?: CourseProps;
+  course: CourseProps;
 }
 
-const CourseItem: React.FC<CourseItemProps> = ({ data }) => {
+const CourseItem: React.FC<CourseItemProps> = ({ course }) => {
   return (
     <Container>
       <div>
-        <p>{data?.name}</p>
+        <p>{course.name}</p>
         <section>
-          <span>Liberado em: {data?.created_at}</span>
-          <span>Expira em: {data?.updated_at}</span>
+          <span>Liberado em: {course.created_at_formatted}</span>
+          <span>Expira em: {course.updated_at_formatted}</span>
         </section>
       </div>
-      <Link to="/course">
+      <Link to={`/course/${course.id}`}>
         <MdKeyboardArrowRight size={48} />
       </Link>
     </Container>

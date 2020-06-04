@@ -14,14 +14,14 @@ interface Props extends SelectProps<OptionTypeBase> {
 
 const InputSearch: React.FC<Props> = ({ name, ...rest }) => {
   const selectRef = useRef(null);
-  const { fieldName, defaultValue, registerField, error } = useField(name);
+  const { fieldName, defaultValue, registerField } = useField(name);
 
   useEffect(() => {
     console.log(selectRef);
     registerField({
       name: fieldName,
       ref: selectRef.current,
-      // path: "state.inputValue",
+      // path: "value",
       getValue: (ref: any) => {
         if (rest.isMulti) {
           if (!ref.state.value) {
