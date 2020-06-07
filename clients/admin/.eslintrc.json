@@ -36,6 +36,7 @@
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
     "no-plusplus": "off",
+    "jsx-a11y/label-has-associated-control": "off",
     "no-unused-expressions": "off",
     "react/jsx-one-expression-per-line": "off",
     "@typescript-eslint/camelcase": "off",

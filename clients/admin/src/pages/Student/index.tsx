@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import { MdKeyboardArrowLeft, MdLink } from "react-icons/md";
 import { useHistory, useParams } from "react-router-dom";
@@ -12,6 +12,8 @@ const Student: React.FC = () => {
   const { user_id } = useParams();
   const { goBack } = useHistory();
   // const [hasLink, setHashLink] = useState(true);
+
+  useEffect(() => {}, []);
 
   return (
     <Container>
@@ -46,11 +48,11 @@ const Student: React.FC = () => {
             </p>
           </section>
 
-          <Input
+          {/* <Input
             name="link"
             title="Adicione um link do vídeo da prova prática"
             placeholder="Link do vídeo"
-          />
+          /> */}
           <Button
             icon={MdLink}
             disabled={!true}

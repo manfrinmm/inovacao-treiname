@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-import { Form } from "@unform/web";
+// import { Form } from "@unform/web";
 
-import InputSearch from "~/components/InputSearch";
+// import InputSearch from "~/components/InputSearch";
 import api from "~/services/api";
 
 import { Container, CourseList, CourseItem } from "./styles";

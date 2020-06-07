@@ -17,13 +17,13 @@ const Route: React.FC<RouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const { user } = useAuth();
+  const { token } = useAuth();
 
-  if (user && !isPrivate) {
+  if (token && !isPrivate) {
     return <Redirect to="/dashboard" />;
   }
 
-  if (!user && isPrivate) {
+  if (!token && isPrivate) {
     return <Redirect to="/" />;
   }
 

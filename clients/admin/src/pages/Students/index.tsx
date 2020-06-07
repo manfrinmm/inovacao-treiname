@@ -3,7 +3,9 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 import { Form } from "@unform/web";
+
 import InputSearch from "~/components/InputSearch";
+import api from "~/services/api";
 
 import { Container, StudentsContainer, StudentContent } from "./styles";
 
@@ -24,14 +26,9 @@ const Students: React.FC = () => {
   ];
 
   useEffect(() => {
-    const data = [
-      { id: "123", name: "Matheus", cpf: "00955045445" },
-      { id: "1233", name: "Jeslaine", cpf: "00845865216" },
-      { id: "1234", name: "Mario", cpf: "12365425816" },
-      { id: "1235", name: "Jordana", cpf: "99944455511" },
-    ];
-
-    setStudents(data);
+    api.get("users").then(response => {
+      setStudents(response.data);
+    });
   }, []);
 
   return (
@@ -41,12 +38,12 @@ const Students: React.FC = () => {
           console.log(data);
         }}
       >
-        <InputSearch
+        {/* <InputSearch
           name="student"
           options={options}
           placeholder="Pesquise por um Aluno"
           isClearable
-        />
+        /> */}
       </Form>
       <StudentsContainer>
         {students.map(student => (

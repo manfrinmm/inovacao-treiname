@@ -2,13 +2,7 @@ import React, { useState, createContext, useCallback, useContext } from "react";
 
 import api from "~/services/api";
 
-interface User {
-  id: string;
-  name: string;
-}
-
 interface AuthState {
-  user: User;
   token: string;
 }
 
@@ -18,20 +12,20 @@ interface SignCredentials {
 }
 
 interface AuthContextData {
-  user: User;
+  token: string;
   signIn(credentials: SignCredentials): Promise<void>;
+  signOut(): void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [authData, setAuthData] = useState<AuthState>(() => {
-    const user = localStorage.getItem("@inovaTreinamentos:user");
     const token = localStorage.getItem("@inovaTreinamentos:token");
 
-    if (user && token) {
+    if (token) {
       api.defaults.headers.authorization = `Bearer ${token}`;
-      return { user: JSON.parse(user), token };
+      return { token };
     }
 
     return {} as AuthState;
@@ -39,23 +33,28 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const signIn = useCallback(async ({ cpf, password }: SignCredentials) => {
     try {
-      const response = await api.post("/sessions", { cpf, password });
+      const response = await api.post("/sessions/admins", { cpf, password });
 
-      const { user, token } = response.data;
+      const { token } = response.data;
 
-      localStorage.setItem("@inovaTreinamentos:user", JSON.stringify(user));
       localStorage.setItem("@inovaTreinamentos:token", token);
 
       api.defaults.headers.authorization = `Bearer ${token}`;
 
-      setAuthData({ user, token });
+      setAuthData({ token });
     } catch (error) {
       console.log(error);
     }
   }, []);
 
+  const signOut = useCallback((): void => {
+    localStorage.removeItem("@inovaTreinamentos:token");
+
+    setAuthData({} as AuthState);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user: authData.user, signIn }}>
+    <AuthContext.Provider value={{ signIn, signOut, token: authData.token }}>
       {children}
     </AuthContext.Provider>
   );

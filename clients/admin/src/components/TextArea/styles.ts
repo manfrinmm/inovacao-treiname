@@ -15,7 +15,7 @@ export const Container = styled.div<ContainerProps>`
     border-radius: 8px;
 
     &::placeholder {
-      opacity: 0.4;
+      opacity: 0.6;
     }
   }
 `;
