@@ -4,6 +4,8 @@ import { classToClass } from "class-transformer";
 
 import CreateUserService from "../services/CreateUserService";
 import ListAllUsersService from "../services/ListAllUsersService";
+import ShowUserService from "../services/ShowUserService";
+import UpdateUserService from "../services/UpdateUserService";
 
 class UserController {
   async index(req: Request, res: Response): Promise<Response> {
@@ -25,11 +27,23 @@ class UserController {
   }
 
   async show(req: Request, res: Response): Promise<Response> {
-    const createUser = new CreateUserService();
+    const showUser = new ShowUserService();
 
     const { user_id } = req.params;
 
-    const user = await createUser.execute({ name, cpf, rg, phone, password });
+    const user = await showUser.execute(user_id);
+
+    return res.status(201).json(classToClass(user));
+  }
+
+  async update(req: Request, res: Response): Promise<Response> {
+    const updateUser = new UpdateUserService();
+
+    const { user_id } = req.params;
+
+    const data = req.body;
+
+    const user = await updateUser.execute({ user_id, data });
 
     return res.status(201).json(classToClass(user));
   }

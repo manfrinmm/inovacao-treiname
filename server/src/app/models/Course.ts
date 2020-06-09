@@ -12,6 +12,7 @@ import {
 
 import diskStorageProvider from "../utils/diskStorageProvider";
 import Module from "./Module";
+import UserCourses from "./UserCourses";
 
 @Entity("courses")
 export default class Course {
@@ -86,6 +87,9 @@ export default class Course {
     cascade: true,
   })
   modules: Module[];
+
+  @OneToMany(() => UserCourses, userCourses => userCourses.course)
+  user_courses: UserCourses[];
 
   @CreateDateColumn()
   created_at: Date;

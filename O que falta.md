@@ -1,0 +1,28 @@
+- Layout responsivo:
+  - Site.
+  - Aluno.
+- Autenticação:
+  - Site.
+- Site:
+  - Filtragem por categoria.
+  - Integrar com pagSeguro.
+  - Botão de recomprar curso.
+  - Buscar Certificados.
+- Aluno:
+  - Alterar a senha.
+  - Listagem de cursos.
+  - Fazer prova.
+  - Refazer prova caso assertividade fica abaixo de 70%.
+- ADM:
+  - Visualizar certificados e provas dos alunos.
+  - Acrescentar prova prática.
+  - Cadastrar prova.
+- Personalizar uma rota para cada funcionalidade.
+- Gerar resultado de prova.
+- Somente Admin pode acessar as rotas administrativas.
+- Gerar relatório de cursos:
+  - `Aprovado por`.
+  - `Tipo`.
+  - `Valor`.
+  - `Quantidade de vendas`.
+- Gerar certificado.

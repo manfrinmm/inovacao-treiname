@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 
 import logo from "~/assets/logo.svg";
 import Button from "~/components/Button";
+import { useAuth } from "~/hooks/auth";
 
 import { Container, Content } from "./styles";
 
 const Header: React.FC = () => {
+  const { user, signOut } = useAuth();
+
   return (
     <Container>
       <Content>
@@ -16,10 +19,10 @@ const Header: React.FC = () => {
 
         <section>
           <div>
-            <p>Matheus Menezes Manfrin</p>
-            <span>123.456.254-25</span>
+            <p>{user?.name}</p>
+            <span>{user?.cpf}</span>
           </div>
-          <Button>Sair</Button>
+          <Button onClick={signOut}>Sair</Button>
         </section>
       </Content>
     </Container>

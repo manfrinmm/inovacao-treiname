@@ -29,6 +29,8 @@ routes.get("/courses/:course_id", CourseController.show);
 routes.use(Authenticate);
 
 routes.get("/users", UserController.index);
+routes.get("/users/:user_id", UserController.show);
+routes.put("/users/:user_id", UserController.update);
 
 routes.post("/file", upload.single("file"), FileController.store);
 

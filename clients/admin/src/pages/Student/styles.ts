@@ -6,7 +6,7 @@ interface StudentInfoProps {
 
 export const Container = styled.div`
   > header {
-    margin-top: 16px;
+    margin: 16px 0 24px;
 
     button {
       display: flex;
@@ -42,12 +42,11 @@ export const Container = styled.div`
 `;
 
 export const StudentInfo = styled.section<StudentInfoProps>`
-  border-radius: 8px;
-  margin-top: 40px;
+  margin-top: 8px;
   width: 448px;
 
   h1 {
-    font-size: 32px;
+    font-size: 3.2rem;
     color: #325bbf;
     margin-bottom: 16px;
   }
@@ -57,20 +56,17 @@ export const StudentInfo = styled.section<StudentInfoProps>`
     border-radius: 8px;
     padding: 8px 16px;
     background: #fff;
-
-    p {
-      strong {
-        margin-left: 8px;
-      }
-    }
   }
 
-  > div {
-    margin-top: 56px;
-    input {
-      border: 0;
-      box-shadow: 0 3px 6px rgba(16, 20, 81, 0.16);
-      width: 100%;
+  form {
+    > div {
+      margin-top: 56px;
+
+      input {
+        border: 0;
+        box-shadow: 0 3px 6px rgba(16, 20, 81, 0.16);
+        width: 100%;
+      }
     }
   }
 
@@ -114,7 +110,6 @@ export const StudentInfo = styled.section<StudentInfoProps>`
 
 export const Courses = styled.section`
   width: 640px;
-  /* margin-top: 50px; */
   margin-left: 32px;
 
   header {
@@ -161,6 +156,103 @@ export const Courses = styled.section`
 
     button {
       padding: 8px 16px;
+    }
+  }
+`;
+
+export const CourseList = styled.ul`
+  margin-top: 16px;
+
+  list-style: none;
+
+  max-height: 320px;
+
+  overflow-y: scroll;
+
+  li + li {
+    margin-top: 8px;
+  }
+`;
+
+export const Course = styled.li`
+  padding: 16px 24px;
+  border-radius: 8px;
+  border: 1px solid;
+  background: #fff;
+
+  display: flex;
+  align-items: center;
+
+  div {
+    p {
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    section {
+      span {
+        color: #7888b6;
+
+        & + span {
+          margin-left: 16px;
+        }
+      }
+    }
+  }
+
+  a {
+    margin-left: auto;
+    svg {
+      padding: 0;
+    }
+  }
+`;
+
+export const Logs = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    font-size: 3.2rem;
+    color: #325bbf;
+    margin: 64px 0 32px;
+  }
+
+  section {
+    max-height: 320px;
+    overflow-y: scroll;
+  }
+
+  table {
+    max-width: 688px;
+    text-align: center;
+    margin: 0 auto 32px;
+
+    border-collapse: separate;
+    border-spacing: 0 8px;
+
+    thead td {
+      position: sticky;
+      top: 0;
+    }
+
+    tbody {
+      td {
+        border: 0;
+        border-style: solid none;
+        padding: 16px;
+        background: #fff;
+
+        &:first-child {
+          border-top-left-radius: 8px;
+          border-bottom-left-radius: 8px;
+        }
+
+        &:last-child {
+          border-bottom-right-radius: 8px;
+          border-top-right-radius: 8px;
+        }
+      }
     }
   }
 `;

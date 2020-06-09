@@ -8,14 +8,25 @@ class SessionController {
   async store(req: Request, res: Response): Promise<Response> {
     const authenticateSession = new AuthenticateSessionService();
 
-    const { cpf, password } = req.body;
-
-    const { user, token } = await authenticateSession.execute({
+    const {
       cpf,
       password,
+      countryCode,
+      regionName,
+      city,
+      query: ip,
+    } = req.body;
+
+    const local = `${city} | ${regionName} | ${countryCode}`;
+
+    const { user, token, log } = await authenticateSession.execute({
+      cpf,
+      password,
+      local,
+      ip,
     });
 
-    return res.json({ user: classToClass(user), token });
+    return res.json({ user: classToClass(user), token, log });
   }
 }
 

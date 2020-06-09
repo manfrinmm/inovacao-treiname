@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 
 import { compare } from "bcryptjs";
-import { classToClass } from "class-transformer";
 import { sign } from "jsonwebtoken";
 import { getRepository } from "typeorm";
 
@@ -12,7 +11,7 @@ class SessionAdminController {
   async store(req: Request, res: Response): Promise<Response> {
     const adminsRepository = getRepository(Admin);
 
-    console.log(req);
+    console.log(req.headers);
 
     const { cpf, password } = req.body;
 

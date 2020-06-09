@@ -8,6 +8,7 @@ import {
   OneToMany,
 } from "typeorm";
 
+import Log from "./Log";
 import UserCourses from "./UserCourses";
 
 @Entity("users")
@@ -31,8 +32,14 @@ export default class User {
   @Exclude()
   password: string;
 
-  @OneToMany(() => UserCourses, userCourses => userCourses.courses)
+  @Column()
+  exam_practice_link: string;
+
+  @OneToMany(() => UserCourses, userCourses => userCourses.users)
   courses: UserCourses[];
+
+  @OneToMany(() => Log, log => log.user)
+  logs: Log[];
 
   @CreateDateColumn()
   created_at: Date;

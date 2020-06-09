@@ -44,12 +44,12 @@ export default class CreateExamQuestions1590875334888
           },
           {
             name: "created_at",
-            type: "timestamp",
+            type: "timestamp with time zone",
             default: "now()",
           },
           {
             name: "updated_at",
-            type: "timestamp",
+            type: "timestamp with time zone",
             default: "now()",
           },
         ],

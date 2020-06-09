@@ -23,16 +23,16 @@ export default class UserCourses1591487435905 implements MigrationInterface {
           },
           {
             name: "expires_in",
-            type: "timestamp",
+            type: "timestamp with time zone",
           },
           {
             name: "created_at",
-            type: "timestamp",
+            type: "timestamp with time zone",
             default: "now()",
           },
           {
             name: "updated_at",
-            type: "timestamp",
+            type: "timestamp with time zone",
             default: "now()",
           },
         ],

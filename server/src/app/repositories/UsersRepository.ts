@@ -10,6 +10,18 @@ interface CreateUserDTO {
   password: string;
 }
 
+interface UpdateUserDTO {
+  user: User;
+  data: {
+    name: string;
+    cpf: string;
+    rg: string;
+    phone: string;
+    password?: string;
+    exam_practice_link?: string;
+  };
+}
+
 export default class UsersRepository {
   private ormRepository: Repository<User>;
 
@@ -39,9 +51,17 @@ export default class UsersRepository {
 
   public async findOne(user_id: string): Promise<User | undefined> {
     const user = await this.ormRepository.findOne(user_id, {
-      relations: ["courses"],
+      relations: ["courses", "courses.course", "logs"],
     });
 
     return user;
+  }
+
+  public async update({ user, data }: UpdateUserDTO): Promise<User> {
+    const userUpdated = this.ormRepository.merge(user, data);
+
+    await this.ormRepository.save(userUpdated);
+
+    return userUpdated;
   }
 }

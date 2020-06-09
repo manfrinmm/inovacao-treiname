@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { FaTools } from "react-icons/fa";
 import { MdLink, MdFileDownload, MdCheck } from "react-icons/md";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import Button from "~/components/Button";
+import api from "~/services/api";
 
 import ModuleItem from "./ModuleItem";
 import { Container, Header, ExameDetail } from "./styles";
@@ -13,12 +14,12 @@ interface ModuleData {
   name: string;
   video_link: string | null;
   extra_link: string | null;
-  file_link: string;
+  file_url: string;
 }
 
 interface CourseData {
   name: string;
-  thumbnail: string;
+  thumbnail_url: string;
   modules: ModuleData[];
   released_on: Date;
 }
@@ -28,6 +29,8 @@ const Course: React.FC = () => {
   const [currentModule, setCurrentModule] = useState({} as ModuleData | null);
 
   const history = useHistory();
+  const { course_id } = useParams();
+
   const handleSetModule = useCallback(
     (id: string) => {
       const selectedModule = course.modules.find(module => module.id === id);
@@ -48,7 +51,7 @@ const Course: React.FC = () => {
   useEffect(() => {
     const data: CourseData = {
       name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
-      thumbnail:
+      thumbnail_url:
         "https://www.tagout.com.br/img/noticias/grande/b3ba995cf71dda366edff5d3a9861e47.png",
       released_on: new Date(2020, 5, 29),
       modules: [
@@ -56,7 +59,7 @@ const Course: React.FC = () => {
           id: "1223",
           name: "Introdução",
           extra_link: null,
-          file_link:
+          file_url:
             "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
           video_link: null,
         },
@@ -64,7 +67,7 @@ const Course: React.FC = () => {
           id: "121132",
           name: "Acidentes e Doenças do Trabalho",
           extra_link: null,
-          file_link:
+          file_url:
             "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
           video_link: "https://www.youtube.com/embed/jKzNQwF1oHU",
         },
@@ -73,7 +76,7 @@ const Course: React.FC = () => {
           name: "Acidentes e Doenças do Trabalho",
           extra_link:
             "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
+          file_url:
             "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
           video_link: null,
         },
@@ -82,16 +85,20 @@ const Course: React.FC = () => {
           name: "Acidentes e Doenças do Tasdasd asdasd das dasrabalho",
           extra_link:
             "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_link:
+          file_url:
             "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
           video_link: null,
         },
       ],
     };
 
-    setCourse(data);
-    setCurrentModule(data.modules[0]);
-  }, []);
+    api.get(`/courses/${course_id}`).then(response => {
+      const courseResponse = response.data;
+
+      setCourse(courseResponse);
+      setCurrentModule(courseResponse.modules[0]);
+    });
+  }, [course_id]);
 
   return (
     <Container>
@@ -112,7 +119,7 @@ const Course: React.FC = () => {
                   </a>
                 )}
                 <a
-                  href={currentModule?.file_link}
+                  href={currentModule?.file_url}
                   download={currentModule?.name}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -136,7 +143,7 @@ const Course: React.FC = () => {
                 />
               ) : (
                 <iframe
-                  src={currentModule.file_link}
+                  src={currentModule.file_url}
                   frameBorder="0"
                   allowFullScreen={false}
                   title={currentModule.name}
@@ -188,7 +195,7 @@ const Course: React.FC = () => {
       <div>
         <aside>
           <header>
-            <img src={course.thumbnail} alt={course.name} />
+            <img src={course.thumbnail_url} alt={course.name} />
             <p>{course.name}</p>
           </header>
           <ul>

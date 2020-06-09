@@ -27,8 +27,8 @@ export default class UserCourses {
   course_id: string;
 
   @JoinColumn({ name: "course_id" })
-  @ManyToOne(() => Course)
-  courses: Course;
+  @ManyToOne(() => Course, course => course.user_courses)
+  course: Course;
 
   @Column("timestamp")
   expires_in: Date;

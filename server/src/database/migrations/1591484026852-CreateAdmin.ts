@@ -23,12 +23,12 @@ export default class CreateAdmin1591484026852 implements MigrationInterface {
           },
           {
             name: "created_at",
-            type: "timestamp",
+            type: "timestamp with time zone",
             default: "now()",
           },
           {
             name: "updated_at",
-            type: "timestamp",
+            type: "timestamp with time zone",
             default: "now()",
           },
         ],
