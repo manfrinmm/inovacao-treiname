@@ -1,5 +1,9 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, Ref } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
+
+import { FormHandles } from "@unform/core";
+
+import Radio from "~/components/Input/Radio";
 
 import { Container, Option } from "./styles";
 
@@ -8,15 +12,17 @@ interface Props {
   question: {
     id: string;
     title: string;
-    a: string;
-    b: string;
-    c: string;
-    d: string;
+    answer_a: string;
+    answer_b: string;
+    answer_c: string;
+    answer_d: string;
   };
+
+  formRef: React.MutableRefObject<any> | null;
 }
 
-const Question: React.FC<Props> = ({ number, question }) => {
-  const [expanded, setExpanded] = useState(false);
+const Question: React.FC<Props> = ({ number, question, formRef }) => {
+  const [expanded, setExpanded] = useState(true);
   const [selected, setSelect] = useState("");
 
   const handleClickButton = useCallback(() => {
@@ -32,78 +38,102 @@ const Question: React.FC<Props> = ({ number, question }) => {
       {expanded && (
         <div>
           <p>{question.title}</p>
-
           <section>
-            <Option checked={selected === question.a}>
+            <Option checked={selected === question.answer_a}>
               <div>
-                <label htmlFor={question.a}>
+                {/* <label htmlFor={question.answer_a}>
                   A
                   <input
                     name={question.id}
                     type="radio"
-                    id={question.a}
+                    id={question.answer_a}
                     onChange={() => {
-                      setSelect(question.a);
+                      setSelect(question.answer_a);
                     }}
-                    checked={selected === question.a}
+                    checked={selected === question.answer_a}
                   />
+                </label> */}
+                <label>
+                  <Radio
+                    value="answer_a"
+                    name="answer_mark"
+                    label="A"
+                    onClick={event => {
+                      formRef?.current.setFieldValue(
+                        `question[${number}].answer_mark`,
+                        "answer_a",
+                      );
+                    }}
+                  />
+                  {question.answer_a}
                 </label>
               </div>
-              <label htmlFor={question.a}>{question.a}</label>
             </Option>
-            <Option checked={selected === question.b}>
+            <Option checked={selected === question.answer_b}>
               <div>
-                <label htmlFor={question.b}>
+                {/* <label htmlFor={question.answer_b}>
                   B
                   <input
                     name={question.id}
                     type="radio"
-                    id={question.b}
+                    id={question.answer_b}
                     onChange={() => {
-                      setSelect(question.b);
+                      setSelect(question.answer_b);
                     }}
-                    checked={selected === question.b}
+                    checked={selected === question.answer_b}
                   />
+                </label> */}
+                <label>
+                  <Radio value="answer_b" name="answer_mark" label="B" />
+                  {question.answer_b}
                 </label>
               </div>
-
-              <label htmlFor={question.b}>{question.b}</label>
             </Option>
-            <Option checked={selected === question.c}>
+            <Option checked={selected === question.answer_c}>
               <div>
-                <label htmlFor={question.c}>
+                {/* <label htmlFor={question.answer_c}>
                   C
                   <input
                     name={question.id}
                     type="radio"
-                    id={question.c}
+                    id={question.answer_c}
                     onChange={() => {
-                      setSelect(question.c);
+                      setSelect(question.answer_c);
                     }}
-                    checked={selected === question.c}
+                    checked={selected === question.answer_c}
                   />
+                </label> */}
+
+                <label>
+                  <Radio value="answer_c" name="answer_mark" label="C" />
+                  {question.answer_c}
                 </label>
               </div>
 
-              <label htmlFor={question.c}>{question.c}</label>
+              {/* <label htmlFor={question.answer_c}>{question.answer_c}</label> */}
             </Option>
-            <Option checked={selected === question.d}>
+            <Option checked={selected === question.answer_d}>
               <div>
-                <label htmlFor={question.d}>
+                {/* <label htmlFor={question.answer_d}>
                   D
                   <input
                     name={question.id}
                     type="radio"
-                    id={question.d}
+                    id={question.answer_d}
                     onChange={() => {
-                      setSelect(question.d);
+                      setSelect(question.answer_d);
                     }}
-                    checked={selected === question.d}
+                    checked={selected === question.answer_d}
                   />
-                </label>
+                </label> */}
+
+                {/* <label>
+                  <Radio value="answer_d" name="answer_mark" label="D" />
+                  {question.answer_d}
+                </label> */}
               </div>
 
-              <label htmlFor={question.d}>{question.d}</label>
+              {/* <label htmlFor={question.answer_d}>{question.answer_d}</label> */}
             </Option>
           </section>
         </div>

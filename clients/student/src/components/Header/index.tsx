@@ -19,7 +19,9 @@ const Header: React.FC = () => {
 
         <section>
           <div>
-            <p>{user?.name}</p>
+            <p>
+              <Link to="/profile">{user?.name}</Link>
+            </p>
             <span>{user?.cpf}</span>
           </div>
           <Button onClick={signOut}>Sair</Button>

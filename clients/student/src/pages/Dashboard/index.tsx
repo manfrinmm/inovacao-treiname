@@ -69,12 +69,8 @@ const Dashboard: React.FC = () => {
       },
     ];
 
-    api.get(`/users/${user.id}`).then(response => {
-      const coursesResponse = response.data.courses;
-
-      setCourses(
-        coursesResponse.map(({ course }: CourseResponseData) => course),
-      );
+    api.get<CourseData[]>("/users/dashboard").then(response => {
+      setCourses(response.data);
     });
 
     // setCourses(data);

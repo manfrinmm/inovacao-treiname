@@ -1,4 +1,5 @@
 import React from "react";
+import { ToastContainer } from "react-toastify";
 
 import Routes from "~/routes";
 
@@ -11,6 +12,7 @@ const App: React.FC = () => {
       <GlobalStyle />
       <AppProvider>
         <Routes />
+        <ToastContainer autoClose={3000} />
       </AppProvider>
     </>
   );

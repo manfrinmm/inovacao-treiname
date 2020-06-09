@@ -25,6 +25,14 @@ export const Content = styled.div`
     align-items: center;
 
     div {
+      a {
+        color: #f5f7fe;
+
+        :hover {
+          text-decoration: underline;
+        }
+      }
+
       p {
         margin-bottom: 8px;
       }

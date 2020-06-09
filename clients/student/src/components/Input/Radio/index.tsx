@@ -1,61 +1,61 @@
-import React, { useEffect, useRef, RefObject } from "react";
+import React, { useEffect, useRef, InputHTMLAttributes } from "react";
 
-import { useField, PathUnformField } from "@unform/core";
+import { useField } from "@unform/core";
 
 import { Container } from "./styles";
 
-interface OptionProps {
-  value: string;
-  label: string;
-}
-
-interface Props {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
-  options: Array<OptionProps>;
+  label: string;
+  // value: string;
 }
 
-const Radio: React.FC<Props> = ({ name, options }) => {
-  const inputRefs = useRef([]);
+const Radio: React.FC<Props> = ({ name, label, value, ...rest }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { fieldName, registerField, defaultValue } = useField(name);
+  // console.log("defaultValue", defaultValue);
+  // console.log("value", value);
 
   // https://codesandbox.io/s/heuristic-haslett-58hhy?fontsize=14&hidenavigation=1&theme=dark&file=/src/components/Radio.js:765-789
-  // useEffect(() => {
-  //   registerField({
-  //     name: fieldName,
-  //     ref: inputRefs.current,
-  //     path: undefined,
-  //     getValue(refs) {
-  //       const checked = refs.find(ref => ref.checked);
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      getValue(ref) {
+        console.log("refName", ref.name);
+        console.log("refCheck", ref.checked);
+        console.log("refValue", ref.value);
 
-  //       return checked ? checked.value : null;
-  //     },
-  //     setValue(refs, value) {
-  //       const item = refs.find(ref => ref.value === value);
+        return ref.checked ? ref.value : null;
+      },
+      setValue(ref, valueInput) {
+        console.log("valueInput", valueInput);
 
-  //       if (item) {
-  //         item.checked = true;
-  //       }
-  //     },
-  //   });
-  // }, [registerField, fieldName]);
+        if (ref.value === valueInput) {
+          ref.checked = true;
+        }
+      },
+    });
+  }, [registerField, fieldName]);
 
   return (
     <Container>
-      {/* {options.map((option, index) => (
-        <label key={option.value} htmlFor={option.value}>
-          <input
-            type="radio"
-            name={fieldName}
-            id={option.value}
-            value={option.value}
-            defaultChecked={defaultValue === option.value}
-            ref={elementRef => {
-              inputRefs.current[index] = elementRef;
-            }}
-          />
-        </label>
-      ))} */}
+      <label>
+        {label}
+        <input
+          type="radio"
+          ref={inputRef}
+          name={fieldName}
+          value={value}
+          // onChange={event => {
+          //   console.log("aa");
+          //   if (inputRef.current) inputRef.current.value = event.target.value;
+          // }}
+          defaultChecked={defaultValue === value}
+          {...rest}
+        />
+      </label>
     </Container>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FaTools } from "react-icons/fa";
 import { MdLink, MdFileDownload, MdCheck } from "react-icons/md";
 import { useHistory, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import Button from "~/components/Button";
 import api from "~/services/api";
@@ -21,7 +22,7 @@ interface CourseData {
   name: string;
   thumbnail_url: string;
   modules: ModuleData[];
-  released_on: Date;
+  days_remaining: number;
 }
 
 const Course: React.FC = () => {
@@ -45,60 +46,27 @@ const Course: React.FC = () => {
   );
 
   const handleGoToExame = useCallback(() => {
-    history.push("/exame");
-  }, [history]);
+    history.push(`/course/${course_id}/exam`);
+  }, [history, course_id]);
 
   useEffect(() => {
-    const data: CourseData = {
-      name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
-      thumbnail_url:
-        "https://www.tagout.com.br/img/noticias/grande/b3ba995cf71dda366edff5d3a9861e47.png",
-      released_on: new Date(2020, 5, 29),
-      modules: [
-        {
-          id: "1223",
-          name: "Introdução",
-          extra_link: null,
-          file_url:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-        {
-          id: "121132",
-          name: "Acidentes e Doenças do Trabalho",
-          extra_link: null,
-          file_url:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: "https://www.youtube.com/embed/jKzNQwF1oHU",
-        },
-        {
-          id: "12das32",
-          name: "Acidentes e Doenças do Trabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_url:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-        {
-          id: "122d2232",
-          name: "Acidentes e Doenças do Tasdasd asdasd das dasrabalho",
-          extra_link:
-            "http://opensource.locaweb.com.br/locawebstyle-v2/manual/formularios/mascaras-forms/",
-          file_url:
-            "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-          video_link: null,
-        },
-      ],
-    };
+    async function loadCourse(): Promise<void> {
+      try {
+        await api.get(`users/courses/${course_id}`).then(response => {
+          const courseResponse = response.data;
 
-    api.get(`/courses/${course_id}`).then(response => {
-      const courseResponse = response.data;
+          setCourse(courseResponse);
+          setCurrentModule(courseResponse.modules[0]);
+        });
+      } catch (error) {
+        toast.error("Erro ao carregar curso.");
 
-      setCourse(courseResponse);
-      setCurrentModule(courseResponse.modules[0]);
-    });
-  }, [course_id]);
+        history.push("/dashboard");
+      }
+    }
+
+    loadCourse();
+  }, [course_id, history]);
 
   return (
     <Container>
@@ -215,10 +183,7 @@ const Course: React.FC = () => {
         </aside>
         <p>
           Seu acesso a esse curso expira em
-          <strong>
-            {` ${course.released_on?.getDate() - new Date().getDate()} `}
-            dias
-          </strong>
+          <strong> {course.days_remaining} dias</strong>
         </p>
       </div>
     </Container>
