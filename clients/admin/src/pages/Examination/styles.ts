@@ -88,7 +88,7 @@ export const Answer = styled.div<AnswerProp>`
     flex: 1;
 
     textarea {
-      border-color: ${props => props.isMarked && "#EF5912"};
+      /* border-color: ${props => props.isMarked && "#EF5912"}; */
     }
   }
 

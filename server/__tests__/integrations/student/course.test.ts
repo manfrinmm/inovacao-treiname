@@ -1,17 +1,20 @@
+import { differenceInDays, parseISO, subHours } from "date-fns";
 import request from "supertest";
 import { getRepository } from "typeorm";
 
-import app from "../../src/app";
-import Course from "../../src/app/models/Course";
+import app from "../../../src/app";
+import Admin from "../../../src/app/models/Admin";
+import UserCourses from "../../../src/app/models/UserCourses";
 import {
   initializeConnection,
   truncateAll,
   closeConnection,
-} from "../util/connectionDB";
+} from "../../util/connectionDB";
 
-describe("Course", () => {
-  let user;
-  let token: string;
+describe("student/Course", () => {
+  let user_id: string;
+  let tokenAdmin: string;
+  let tokenUser: string;
 
   beforeAll(async () => {
     await initializeConnection();
@@ -20,7 +23,25 @@ describe("Course", () => {
   beforeEach(async () => {
     await truncateAll();
 
-    user = {
+    const adminsRepository = getRepository(Admin);
+
+    const admin = adminsRepository.create({
+      cpf: "1234567118126",
+      password: "$2y$08$jiZkI9VpeNI15NfgXSzmFOOvKsb8jBni8DUPuCLHa/kkcTXZnneHm",
+    });
+
+    await adminsRepository.save(admin);
+
+    const sessionAdminResponse = await request(app)
+      .post("/sessions/admins")
+      .send({
+        cpf: admin.cpf,
+        password: "123",
+      });
+
+    tokenAdmin = sessionAdminResponse.body.token;
+
+    const user = {
       name: "Matheus Menezes",
       cpf: "1234567825368126",
       rg: "1230254",
@@ -29,169 +50,56 @@ describe("Course", () => {
     };
 
     const userResponse = await request(app).post("/users").send(user);
+    user_id = userResponse.body.id;
 
-    const { cpf } = userResponse.body;
-    const { password } = user;
+    const { cpf, password } = user;
 
-    const response = await request(app).post("/sessions").send({
-      cpf,
-      password,
-    });
+    const location = {
+      countryCode: "BR",
+      regionName: "Goias",
+      city: "Jatai",
+      query: "168.228.184.217",
+    };
 
-    token = response.body.token;
+    const sessionUserResponse = await request(app)
+      .post("/sessions")
+      .send({
+        cpf,
+        password,
+        ...location,
+      });
+
+    tokenUser = sessionUserResponse.body.token;
   });
 
   afterAll(async () => {
     await closeConnection();
   });
 
-  it("should be able to create a new course", async () => {
-    const course = {
-      name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
-      category: "N10",
-      modality: "Formação",
-      workload: 8,
-      value: 12000,
-      description:
-        "Instruir, orientar e capacitar trabalhadores em geral, que lidam com formas de energias perigosas, de forma a garantir a segurança dos funcionários, contratados e subcontratados, protegendo-os contra energização inesperada, ligações ou fuga das energias residuais durante a realização de serviços.",
-      target_audience:
-        "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos  nergizados, tais como: instalação, construção, inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
-      thumbnail:
-        "https://www.portaldoseguro.com.br/wp-content/uploads/2019/03/homem-jovem-intrigado-segurando-a-testa-enquanto-se-sente-stress_1262-18026.jpg",
-      course_expiration: 16,
-      certificate_validity: 12,
-      approved_by: "Matheus Menezes - CRA 123255",
-      illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
-      learns: [
-        "Ambiente de trabalho",
-        "Acidentes e Doenças do Trabalho",
-        "Energia Elétrica",
-        "Equipamentos Instalados em Linhas de Transmissão",
-        "Dados Estatísticos",
-      ],
-      modules: [
-        {
-          name: "Introdução",
-          description: "lalalala",
-          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
-          file: "123easdasdas-indro",
-        },
-        {
-          name: "Aplicação",
-          description: "lalalala",
-          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
-          extra_link:
-            "https://gist.github.com/diego3g/5f23fb3f8f18fa9ec52669741cd156b3/revisions",
-          file: "123easdasdas-indro",
-        },
-        {
-          name: "Introdução33",
-          description: "lalalala",
-          file: "123easdasdas-indro",
-        },
-      ],
-    };
-
-    const response = await request(app)
-      .post("/courses")
-      .send(course)
-      .set("Authorization", `Bearer ${token}`);
-
-    expect(response.status).toBe(201);
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        ...course,
-        modules: expect.arrayContaining(
-          course.modules.map(module => expect.objectContaining(module)),
-        ),
-      }),
-    );
-  });
-
-  it("should be able to show a course", async () => {
-    const course = {
-      name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
-      category: "N10",
-      modality: "Formação",
-      workload: 8,
-      value: 12000,
-      description:
-        "Instruir, orientar e capacitar trabalhadores em geral, que lidam com formas de energias perigosas, de forma a garantir a segurança dos funcionários, contratados e subcontratados, protegendo-os contra energização inesperada, ligações ou fuga das energias residuais durante a realização de serviços.",
-      target_audience:
-        "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos  nergizados, tais como: instalação, construção, inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
-      thumbnail:
-        "https://www.portaldoseguro.com.br/wp-content/uploads/2019/03/homem-jovem-intrigado-segurando-a-testa-enquanto-se-sente-stress_1262-18026.jpg",
-      course_expiration: 16,
-      certificate_validity: 12,
-      approved_by: "Matheus Menezes - CRA 123255",
-      illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
-      learns: [
-        "Ambiente de trabalho",
-        "Acidentes e Doenças do Trabalho",
-        "Energia Elétrica",
-        "Equipamentos Instalados em Linhas de Transmissão",
-        "Dados Estatísticos",
-      ],
-      modules: [
-        {
-          name: "Introdução",
-          description: "lalalala",
-          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
-          file: "123easdasdas-indro",
-        },
-        {
-          name: "Aplicação",
-          description: "lalalala",
-          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
-          extra_link:
-            "https://gist.github.com/diego3g/5f23fb3f8f18fa9ec52669741cd156b3/revisions",
-          file: "123easdasdas-indro",
-        },
-        {
-          name: "Introdução33",
-          description: "lalalala",
-          file: "123easdasdas-indro",
-        },
-      ],
-    };
-
-    const courseResponse = await request(app)
-      .post("/courses")
-      .send(course)
-      .set("Authorization", `Bearer ${token}`);
-
-    const course_id = courseResponse.body.id;
-
-    const response = await request(app)
-      .get(`/courses/${course_id}`)
-      .set("Authorization", `Bearer ${token}`);
-
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        ...course,
-        modules: expect.arrayContaining(
-          course.modules.map(module => expect.objectContaining(module)),
-        ),
-      }),
-    );
-  });
-
-  it("should be able to list all courses", async () => {
+  it("should be able to show all courses of a user", async () => {
     const course1 = {
-      name: "Title course 1",
+      name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
       category: "N10",
       modality: "Formação",
-      workload: 80,
-      value: 12900,
-      description: "Description course 1",
-      target_audience: "TTeste teste reparos, montagem e ajustes.",
+      workload: 8,
+      value: 12000,
+      description:
+        "Instruir, orientar e capacitar trabalhadores em geral, que lidam com formas de energias perigosas, de forma a garantir a segurança dos funcionários, contratados e subcontratados, protegendo-os contra energização inesperada, ligações ou fuga das energias residuais durante a realização de serviços.",
+      target_audience:
+        "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos  nergizados, tais como: instalação, construção, inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
       thumbnail:
         "https://www.portaldoseguro.com.br/wp-content/uploads/2019/03/homem-jovem-intrigado-segurando-a-testa-enquanto-se-sente-stress_1262-18026.jpg",
-      course_expiration: 160,
-      certificate_validity: 6,
-      approved_by: "Fabio - CRA 123255",
-      illustrative_video: "",
-      learns: ["First learn", "Second learn", "Third learn"],
+      course_expiration: 16,
+      certificate_validity: 12,
+      approved_by: "Matheus Menezes - CRA 123255",
+      illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
+      learns: [
+        "Ambiente de trabalho",
+        "Acidentes e Doenças do Trabalho",
+        "Energia Elétrica",
+        "Equipamentos Instalados em Linhas de Transmissão",
+        "Dados Estatísticos",
+      ],
       modules: [
         {
           name: "Introdução",
@@ -208,7 +116,7 @@ describe("Course", () => {
           file: "123easdasdas-indro",
         },
         {
-          name: "Introdução",
+          name: "Introdução33",
           description: "lalalala",
           file: "123easdasdas-indro",
         },
@@ -216,101 +124,75 @@ describe("Course", () => {
     };
 
     const course2 = {
-      name: "Curso de Energias Perigosas",
+      name: "22Curso Bloqueio e 22",
       category: "N10",
-      modality: "Formação",
-      workload: 45,
-      value: 365256,
-      description:
-        "Instruir, orien com formas de energias perigosas, de forma a garantir a segurança dos funcionários, contratados e subcontratados, protegendo-os contra energização inesperada, ligações ou fuga das energias residuais durante a realização de serviços.",
-      target_audience:
-        "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos  nergizados, tais como: instalação, letrução, inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
-      thumbnail:
-        "https://www.portaldoseguro.com.br/wp-content/uploads/2019/03/homem-jovem-intrigado-segurando-a-testa-enquanto-se-sente-stress_1262-18026.jpg",
-      course_expiration: 16,
-      certificate_validity: 12,
-      approved_by: "Fabio - CRA 123255",
-      illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
-      learns: ["First learn", "Second learn", "Third learn"],
-      modules: [
-        {
-          name: "Introdução",
-          description: "TEste",
-          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
-          file: "123easdasdas-indro",
-        },
-      ],
-    };
-
-    const course3 = {
-      name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
-      category: "N10",
-      modality: "Formação",
-      workload: 8,
+      modality: "Reciclagem",
+      workload: 80,
       value: 12000,
-      description: "Description",
-      target_audience: "Tab",
+      description:
+        "Instruir, orientar e capacitar trabalhadores em geral, que lidam com formas de energias perigosas, de forma a garantir a segurança dos funcionários, contratados e subcontratados, protegendo-os contra energização inesperada, ligações ou fuga das energias residuais durante a realização de serviços.",
+      target_audience:
+        "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos  nergizados, tais como: instalação, construção, inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
       thumbnail:
         "https://www.portaldoseguro.com.br/wp-content/uploads/2019/03/homem-jovem-intrigado-segurando-a-testa-enquanto-se-sente-stress_1262-18026.jpg",
-      course_expiration: 16,
+      course_expiration: 6,
       certificate_validity: 12,
       approved_by: "Matheus Menezes - CRA 123255",
       illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
-      learns: ["First learn"],
+      learns: ["Ambiente de trabalho"],
       modules: [
         {
           name: "Introdução",
-          description: "TEste",
+          description: "lalalala",
           video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
           file: "123easdasdas-indro",
         },
       ],
     };
 
-    const response1 = request(app)
+    const courseResponse1 = await request(app)
       .post("/courses")
       .send(course1)
-      .set("Authorization", `Bearer ${token}`);
-    const response2 = request(app)
+      .set("Authorization", `Bearer ${tokenAdmin}`);
+
+    const course_id1 = courseResponse1.body.id;
+
+    const courseResponse2 = await request(app)
       .post("/courses")
       .send(course2)
-      .set("Authorization", `Bearer ${token}`);
-    const response3 = request(app)
-      .post("/courses")
-      .send(course3)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
-    await Promise.all([response1, response2, response3]);
+    const course_id2 = courseResponse2.body.id;
+
+    await request(app)
+      .post("/user-courses/")
+      .send({ user_id, course_id: course_id1 })
+      .set("Authorization", `Bearer ${tokenAdmin}`);
+    await request(app)
+      .post("/user-courses/")
+      .send({ user_id, course_id: course_id2 })
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     const response = await request(app)
-      .get("/courses")
-      .set("Authorization", `Bearer ${token}`);
+      .get("/users/dashboard")
+      .set("Authorization", `Bearer ${tokenUser}`);
 
+    expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          ...course1,
-          modules: expect.arrayContaining(
-            course1.modules.map(module => expect.objectContaining(module)),
-          ),
+          id: course_id1,
+          status: null,
         }),
         expect.objectContaining({
-          ...course2,
-          modules: expect.arrayContaining(
-            course2.modules.map(module => expect.objectContaining(module)),
-          ),
-        }),
-        expect.objectContaining({
-          ...course3,
-          modules: expect.arrayContaining(
-            course3.modules.map(module => expect.objectContaining(module)),
-          ),
+          id: course_id2,
+          status: null,
         }),
       ]),
     );
   });
 
-  it("should be able to update a course", async () => {
+  it("should be able to show a courses of a user", async () => {
     const course = {
       name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
       category: "N10",
@@ -355,51 +237,42 @@ describe("Course", () => {
           file: "123easdasdas-indro",
         },
       ],
-    } as Course;
+    };
 
     const courseResponse = await request(app)
       .post("/courses")
       .send(course)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
-    const courseData = courseResponse.body as Course;
+    const course_id = courseResponse.body.id;
 
-    courseData.name = "Edit title name";
-    courseData.modules[0].name = "Edit name of module";
+    const userCoursesResponse = await request(app)
+      .post("/user-courses/")
+      .send({ user_id, course_id })
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
-    // Omit updated_at on edited information
-    delete courseData.modules[0].updated_at;
-    delete courseData.updated_at;
-
-    const courseNewData = {
-      ...courseData,
-      modules: [
-        ...courseData.modules,
-        {
-          name: "New module",
-          description: "New module Description",
-          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
-          file: "New module-indro",
-        },
-      ],
-    };
+    const days_remaining = differenceInDays(
+      parseISO(userCoursesResponse.body.expires_in),
+      new Date(),
+    );
 
     const response = await request(app)
-      .put(`/courses/${courseData.id}`)
-      .send(courseNewData)
-      .set("Authorization", `Bearer ${token}`);
+      .get(`/users/courses/${course_id}`)
+      .set("Authorization", `Bearer ${tokenUser}`);
 
+    expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        ...courseNewData,
+        ...course,
         modules: expect.arrayContaining(
-          courseNewData.modules.map(module => expect.objectContaining(module)),
+          course.modules.map(module => expect.objectContaining(module)),
         ),
+        days_remaining,
       }),
     );
   });
 
-  it("should be able to delete a course", async () => {
+  it("should not be able to show a courses of a user after expires", async () => {
     const course = {
       name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
       category: "N10",
@@ -446,33 +319,26 @@ describe("Course", () => {
       ],
     };
 
-    const courseRepository = getRepository(Course);
+    const userCoursesRepository = getRepository(UserCourses);
 
     const courseResponse = await request(app)
       .post("/courses")
       .send(course)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     const course_id = courseResponse.body.id;
 
-    const deleteResponse = await request(app)
-      .delete(`/courses/${course_id}`)
-      .set("Authorization", `Bearer ${token}`);
+    await userCoursesRepository.save({
+      course_id,
+      user_id,
+      expires_in: subHours(new Date(), 10),
+    });
 
     const response = await request(app)
-      .get(`/courses/${course_id}`)
-      .set("Authorization", `Bearer ${token}`);
+      .get(`/users/courses/${course_id}`)
+      .set("Authorization", `Bearer ${tokenUser}`);
 
-    expect(deleteResponse.status).toBe(204);
-    expect(response.status).toBe(404);
-    expect(await courseRepository.findOne(course_id)).toBe(undefined);
-  });
-
-  it("should not be able to delete a course not-existing", async () => {
-    const deleteResponse = await request(app)
-      .delete("/courses/f7192341-1389-41c2-9319-7804a25ae54a")
-      .set("Authorization", `Bearer ${token}`);
-
-    expect(deleteResponse.status).toBe(404);
+    expect(response.status).toBe(403);
+    expect(response.body).toHaveProperty("message");
   });
 });

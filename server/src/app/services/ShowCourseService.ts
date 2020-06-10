@@ -9,7 +9,7 @@ export default class DeleteCourseService {
     const course = await coursesRepository.findOne(course_id);
 
     if (!course) {
-      throw new AppError("Course not found", 404);
+      throw new AppError("Course not found", 400);
     }
 
     return course;

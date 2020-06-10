@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useCallback, ChangeEvent } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import api from "~/services/api";
 
@@ -18,17 +19,27 @@ const ModalCourse: React.FC<ModalCourseProps> = ({ setModalVisible }) => {
   const [courseSelected, setCourseSelected] = useState("");
 
   const [courses, setCourses] = useState<CourseProps[]>([]);
+  const [coursesFiltered, setCoursesFiltered] = useState<CourseProps[]>(
+    courses,
+  );
+  const [filter, setFilter] = useState("");
+
   const { user_id } = useParams();
 
   const handleReleaseCourse = useCallback(async () => {
-    await api.post("/user-courses", {
-      user_id,
-      course_id: courseSelected,
-    });
+    try {
+      await api.post("/user-courses", {
+        user_id,
+        course_id: courseSelected,
+      });
 
-    setModalVisible(false);
-
-    window.location.reload();
+      toast.success("Curso liberado com sucesso.");
+      setModalVisible(false);
+    } catch (error) {
+      toast.error(
+        "Erro ao liberar curso para o usuário. Por favor, tente novamente.",
+      );
+    }
   }, [user_id, courseSelected, setModalVisible]);
 
   const handleCloseModal = useCallback(async () => {
@@ -46,20 +57,53 @@ const ModalCourse: React.FC<ModalCourseProps> = ({ setModalVisible }) => {
     });
   }, []);
 
+  const handleFilterInput = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const filterValue = event.target.value;
+
+      setFilter(filterValue);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (!filter) {
+      setCoursesFiltered(courses);
+    } else {
+      const courseFiltered = courses.filter(course => {
+        const courseName = course.name.toLocaleUpperCase();
+
+        const foundCourse = courseName.includes(filter.toLocaleUpperCase());
+
+        if (foundCourse) {
+          return course;
+        }
+
+        return null;
+      });
+
+      setCoursesFiltered(courseFiltered);
+    }
+  }, [filter, courses]);
+
   return (
     <>
       <Block />
 
       <Container>
         <h1>Pesquise um curso para adicionar na lista de liberados</h1>
+        <input
+          type="search"
+          placeholder="Pesquise por um curso"
+          value={filter}
+          onChange={handleFilterInput}
+        />
         <ul>
-          {courses.map(course => (
+          {coursesFiltered.map(course => (
             <Course key={course.id} isSelected={course.id === courseSelected}>
               <button
                 type="button"
                 onClick={() => {
-                  console.log(course.id);
-
                   setCourseSelected(course.id);
                 }}
               >

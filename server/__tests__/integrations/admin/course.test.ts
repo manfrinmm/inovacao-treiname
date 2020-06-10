@@ -1,15 +1,15 @@
 import request from "supertest";
 import { getRepository } from "typeorm";
 
-import app from "../../src/app";
-import ExamQuestion from "../../src/app/models/ExamQuestion";
+import app from "../../../src/app";
+import Course from "../../../src/app/models/Course";
 import {
   initializeConnection,
   truncateAll,
   closeConnection,
-} from "../util/connectionDB";
+} from "../../util/connectionDB";
 
-describe("Exam", () => {
+describe("admin/Course", () => {
   let user;
   let token: string;
 
@@ -33,10 +33,20 @@ describe("Exam", () => {
     const { cpf } = userResponse.body;
     const { password } = user;
 
-    const response = await request(app).post("/sessions").send({
-      cpf,
-      password,
-    });
+    const location = {
+      countryCode: "BR",
+      regionName: "Goias",
+      city: "Jatai",
+      query: "168.228.184.217",
+    };
+
+    const response = await request(app)
+      .post("/sessions")
+      .send({
+        cpf,
+        password,
+        ...location,
+      });
 
     token = response.body.token;
   });
@@ -45,7 +55,7 @@ describe("Exam", () => {
     await closeConnection();
   });
 
-  it("should be able to create a new exam to a course", async () => {
+  it("should be able to create a new course", async () => {
     const course = {
       name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
       category: "N10",
@@ -92,57 +102,23 @@ describe("Exam", () => {
       ],
     };
 
-    const courseResponse = await request(app)
+    const response = await request(app)
       .post("/courses")
       .send(course)
-      .set("Authorization", `Bearer ${token}`);
-
-    const course_id = courseResponse.body.id as string;
-
-    const exam = {
-      course_id,
-      questions: [
-        {
-          title: "Primeira questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_c",
-        },
-        {
-          title: "Segunda questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_a",
-        },
-        {
-          title: "Terceira questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_b",
-        },
-      ] as ExamQuestion[],
-    };
-
-    const response = await request(app)
-      .post("/exams")
-      .send(exam)
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
-      expect.arrayContaining(
-        exam.questions.map(question => expect.objectContaining(question)),
-      ),
+      expect.objectContaining({
+        ...course,
+        modules: expect.arrayContaining(
+          course.modules.map(module => expect.objectContaining(module)),
+        ),
+      }),
     );
   });
 
-  it("should be able to show a course exam", async () => {
+  it("should be able to show a course", async () => {
     const course = {
       name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
       category: "N10",
@@ -194,81 +170,38 @@ describe("Exam", () => {
       .send(course)
       .set("Authorization", `Bearer ${token}`);
 
-    const course_id = courseResponse.body.id as string;
-
-    const exam = {
-      course_id,
-      questions: [
-        {
-          title: "Primeira questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_c",
-        },
-        {
-          title: "Segunda questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_a",
-        },
-        {
-          title: "Terceira questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_b",
-        },
-      ] as ExamQuestion[],
-    };
-
-    await request(app)
-      .post("/exams")
-      .send(exam)
-      .set("Authorization", `Bearer ${token}`);
+    const course_id = courseResponse.body.id;
 
     const response = await request(app)
-      .get(`/courses/${course_id}/exams`)
+      .get(`/courses/${course_id}`)
       .set("Authorization", `Bearer ${token}`);
 
-    expect(response.status).toBe(200);
     expect(response.body).toEqual(
-      expect.arrayContaining(
-        exam.questions.map(question => expect.objectContaining(question)),
-      ),
+      expect.objectContaining({
+        ...course,
+        modules: expect.arrayContaining(
+          course.modules.map(module => expect.objectContaining(module)),
+        ),
+      }),
     );
   });
 
-  it("should be able to delete a exam question", async () => {
-    const examsRepository = getRepository(ExamQuestion);
-
-    const course = {
-      name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
+  it("should be able to list all courses", async () => {
+    const course1 = {
+      name: "Title course 1",
       category: "N10",
       modality: "Formação",
-      workload: 8,
-      value: 12000,
-      description:
-        "Instruir, orientar e capacitar trabalhadores em geral, que lidam com formas de energias perigosas, de forma a garantir a segurança dos funcionários, contratados e subcontratados, protegendo-os contra energização inesperada, ligações ou fuga das energias residuais durante a realização de serviços.",
-      target_audience:
-        "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos  nergizados, tais como: instalação, construção, inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
+      workload: 80,
+      value: 12900,
+      description: "Description course 1",
+      target_audience: "TTeste teste reparos, montagem e ajustes.",
       thumbnail:
         "https://www.portaldoseguro.com.br/wp-content/uploads/2019/03/homem-jovem-intrigado-segurando-a-testa-enquanto-se-sente-stress_1262-18026.jpg",
-      course_expiration: 16,
-      certificate_validity: 12,
-      approved_by: "Matheus Menezes - CRA 123255",
-      illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
-      learns: [
-        "Ambiente de trabalho",
-        "Acidentes e Doenças do Trabalho",
-        "Energia Elétrica",
-        "Equipamentos Instalados em Linhas de Transmissão",
-        "Dados Estatísticos",
-      ],
+      course_expiration: 160,
+      certificate_validity: 6,
+      approved_by: "Fabio - CRA 123255",
+      illustrative_video: "",
+      learns: ["First learn", "Second learn", "Third learn"],
       modules: [
         {
           name: "Introdução",
@@ -285,68 +218,108 @@ describe("Exam", () => {
           file: "123easdasdas-indro",
         },
         {
-          name: "Introdução33",
+          name: "Introdução",
           description: "lalalala",
           file: "123easdasdas-indro",
         },
       ],
     };
 
-    const createCourseResponse = await request(app)
-      .post("/courses")
-      .send(course)
-      .set("Authorization", `Bearer ${token}`);
-
-    const course_id = createCourseResponse.body.id as string;
-
-    const exam = {
-      course_id,
-      questions: [
+    const course2 = {
+      name: "Curso de Energias Perigosas",
+      category: "N10",
+      modality: "Formação",
+      workload: 45,
+      value: 365256,
+      description:
+        "Instruir, orien com formas de energias perigosas, de forma a garantir a segurança dos funcionários, contratados e subcontratados, protegendo-os contra energização inesperada, ligações ou fuga das energias residuais durante a realização de serviços.",
+      target_audience:
+        "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos  nergizados, tais como: instalação, letrução, inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
+      thumbnail:
+        "https://www.portaldoseguro.com.br/wp-content/uploads/2019/03/homem-jovem-intrigado-segurando-a-testa-enquanto-se-sente-stress_1262-18026.jpg",
+      course_expiration: 16,
+      certificate_validity: 12,
+      approved_by: "Fabio - CRA 123255",
+      illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
+      learns: ["First learn", "Second learn", "Third learn"],
+      modules: [
         {
-          title: "Primeira questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_c",
+          name: "Introdução",
+          description: "TEste",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          file: "123easdasdas-indro",
         },
-        {
-          title: "Segunda questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_a",
-        },
-        {
-          title: "Terceira questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_b",
-        },
-      ] as ExamQuestion[],
+      ],
     };
 
-    const createExamResponse = await request(app)
-      .post("/exams")
-      .send(exam)
+    const course3 = {
+      name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
+      category: "N10",
+      modality: "Formação",
+      workload: 8,
+      value: 12000,
+      description: "Description",
+      target_audience: "Tab",
+      thumbnail:
+        "https://www.portaldoseguro.com.br/wp-content/uploads/2019/03/homem-jovem-intrigado-segurando-a-testa-enquanto-se-sente-stress_1262-18026.jpg",
+      course_expiration: 16,
+      certificate_validity: 12,
+      approved_by: "Matheus Menezes - CRA 123255",
+      illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
+      learns: ["First learn"],
+      modules: [
+        {
+          name: "Introdução",
+          description: "TEste",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          file: "123easdasdas-indro",
+        },
+      ],
+    };
+
+    const response1 = request(app)
+      .post("/courses")
+      .send(course1)
+      .set("Authorization", `Bearer ${token}`);
+    const response2 = request(app)
+      .post("/courses")
+      .send(course2)
+      .set("Authorization", `Bearer ${token}`);
+    const response3 = request(app)
+      .post("/courses")
+      .send(course3)
       .set("Authorization", `Bearer ${token}`);
 
-    const examData = createExamResponse.body as ExamQuestion[];
-
-    const question_id = examData[0].id;
+    await Promise.all([response1, response2, response3]);
 
     const response = await request(app)
-      .delete(`/courses/${course_id}/exams/${question_id}`)
+      .get("/courses")
       .set("Authorization", `Bearer ${token}`);
 
-    expect(response.status).toBe(204);
-    expect(await examsRepository.findOne(question_id)).toBe(undefined);
+    delete course1.modules;
+    delete course2.modules;
+    delete course3.modules;
+
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining(course1),
+        expect.objectContaining(course2),
+        expect.objectContaining(course3),
+      ]),
+    );
+
+    // modules: expect.arrayContaining(
+    //   course1.modules.map(module => expect.objectContaining(module)),
+    // ),
+    // modules: expect.arrayContaining(
+    //   course2.modules.map(module => expect.objectContaining(module)),
+    // ),
+    // modules: expect.arrayContaining(
+    //   course3.modules.map(module => expect.objectContaining(module)),
+    // ),
   });
 
-  it("should be able to update a exam", async () => {
+  it("should be able to update a course", async () => {
     const course = {
       name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
       category: "N10",
@@ -391,82 +364,124 @@ describe("Exam", () => {
           file: "123easdasdas-indro",
         },
       ],
-    };
+    } as Course;
 
-    const createCourseResponse = await request(app)
+    const courseResponse = await request(app)
       .post("/courses")
       .send(course)
       .set("Authorization", `Bearer ${token}`);
 
-    const course_id = createCourseResponse.body.id as string;
+    const courseData = courseResponse.body as Course;
 
-    const exam = {
-      course_id,
-      questions: [
-        {
-          title: "Primeira questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_c",
-        },
-        {
-          title: "Segunda questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_a",
-        },
-        {
-          title: "Terceira questão",
-          answer_a: "Resposta a",
-          answer_b: "Resposta b",
-          answer_c: "Resposta c",
-          answer_d: "Resposta d",
-          correct_answer: "answer_b",
-        },
-      ] as ExamQuestion[],
-    };
-
-    const createExamResponse = await request(app)
-      .post("/exams")
-      .send(exam)
-      .set("Authorization", `Bearer ${token}`);
-
-    const examData = createExamResponse.body as ExamQuestion[];
-
-    examData[0].title = "Edit title primeira questão";
-    examData[1].correct_answer = "answer_c";
+    courseData.name = "Edit title name";
+    courseData.modules[0].name = "Edit name of module";
 
     // Omit updated_at on edited information
-    delete examData[0].updated_at;
-    delete examData[1].updated_at;
+    delete courseData.modules[0].updated_at;
+    delete courseData.updated_at;
 
-    const examNewData = [
-      ...examData,
-      {
-        course_id,
-        title: "Quarta questão",
-        answer_a: "Resposta a",
-        answer_b: "Resposta b",
-        answer_c: "Resposta c",
-        answer_d: "Resposta d",
-        correct_answer: "answer_d",
-      },
-    ];
+    const courseNewData = {
+      ...courseData,
+      modules: [
+        ...courseData.modules,
+        {
+          name: "New module",
+          description: "New module Description",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          file: "New module-indro",
+        },
+      ],
+    };
 
     const response = await request(app)
-      .put(`/courses/${course_id}/exams`)
-      .send(examNewData)
+      .put(`/courses/${courseData.id}`)
+      .send(courseNewData)
       .set("Authorization", `Bearer ${token}`);
 
-    expect(response.status).toBe(200);
     expect(response.body).toEqual(
-      expect.arrayContaining(
-        examNewData.map(question => expect.objectContaining(question)),
-      ),
+      expect.objectContaining({
+        ...courseNewData,
+        modules: expect.arrayContaining(
+          courseNewData.modules.map(module => expect.objectContaining(module)),
+        ),
+      }),
     );
+  });
+
+  it("should be able to delete a course", async () => {
+    const course = {
+      name: "Curso Bloqueio e Etiquetagem de Fontes de Energias Perigosas",
+      category: "N10",
+      modality: "Formação",
+      workload: 8,
+      value: 12000,
+      description:
+        "Instruir, orientar e capacitar trabalhadores em geral, que lidam com formas de energias perigosas, de forma a garantir a segurança dos funcionários, contratados e subcontratados, protegendo-os contra energização inesperada, ligações ou fuga das energias residuais durante a realização de serviços.",
+      target_audience:
+        "Trabalhadores em geral que executam serviços em com formas de energias perigosas e/ou que realizam serviços ou manutenção nos equipamentos  nergizados, tais como: instalação, construção, inspeção, limpeza, lubrificação, reparos, montagem e ajustes.",
+      thumbnail:
+        "https://www.portaldoseguro.com.br/wp-content/uploads/2019/03/homem-jovem-intrigado-segurando-a-testa-enquanto-se-sente-stress_1262-18026.jpg",
+      course_expiration: 16,
+      certificate_validity: 12,
+      approved_by: "Matheus Menezes - CRA 123255",
+      illustrative_video: "https://www.youtube.com/watch?v=jKzNQwF1oHU&t=1086s",
+      learns: [
+        "Ambiente de trabalho",
+        "Acidentes e Doenças do Trabalho",
+        "Energia Elétrica",
+        "Equipamentos Instalados em Linhas de Transmissão",
+        "Dados Estatísticos",
+      ],
+      modules: [
+        {
+          name: "Introdução",
+          description: "lalalala",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          file: "123easdasdas-indro",
+        },
+        {
+          name: "Aplicação",
+          description: "lalalala",
+          video_link: "https://www.youtube.com/watch?v=FRhljZVQ0IM",
+          extra_link:
+            "https://gist.github.com/diego3g/5f23fb3f8f18fa9ec52669741cd156b3/revisions",
+          file: "123easdasdas-indro",
+        },
+        {
+          name: "Introdução33",
+          description: "lalalala",
+          file: "123easdasdas-indro",
+        },
+      ],
+    };
+
+    const courseRepository = getRepository(Course);
+
+    const courseResponse = await request(app)
+      .post("/courses")
+      .send(course)
+      .set("Authorization", `Bearer ${token}`);
+
+    const course_id = courseResponse.body.id;
+
+    const deleteResponse = await request(app)
+      .delete(`/courses/${course_id}`)
+      .set("Authorization", `Bearer ${token}`);
+
+    const response = await request(app)
+      .get(`/courses/${course_id}`)
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(deleteResponse.status).toBe(204);
+    expect(response.status).toBe(400);
+    expect(await courseRepository.findOne(course_id)).toBe(undefined);
+  });
+
+  it("should not be able to delete a course not-existing", async () => {
+    const deleteResponse = await request(app)
+      .delete("/courses/f7192341-1389-41c2-9319-7804a25ae54a")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(deleteResponse.status).toBe(400);
   });
 });

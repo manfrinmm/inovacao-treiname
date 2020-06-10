@@ -1,15 +1,15 @@
 import request from "supertest";
 import { getRepository } from "typeorm";
 
-import app from "../../src/app";
-import Module from "../../src/app/models/Module";
+import app from "../../../src/app";
+import Module from "../../../src/app/models/Module";
 import {
   initializeConnection,
   truncateAll,
   closeConnection,
-} from "../util/connectionDB";
+} from "../../util/connectionDB";
 
-describe("Module", () => {
+describe("admin/Module", () => {
   let user;
   let token: string;
 
@@ -33,10 +33,20 @@ describe("Module", () => {
     const { cpf } = userResponse.body;
     const { password } = user;
 
-    const response = await request(app).post("/sessions").send({
-      cpf,
-      password,
-    });
+    const location = {
+      countryCode: "BR",
+      regionName: "Goias",
+      city: "Jatai",
+      query: "168.228.184.217",
+    };
+
+    const response = await request(app)
+      .post("/sessions")
+      .send({
+        cpf,
+        password,
+        ...location,
+      });
 
     token = response.body.token;
   });
@@ -114,6 +124,6 @@ describe("Module", () => {
       .delete(`/modules/8faeaf5b-c117-47e6-a021-0e2abda15d3b`)
       .set("Authorization", `Bearer ${token}`);
 
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(400);
   });
 });

@@ -9,14 +9,14 @@
   - Botão de recomprar curso.
   - Buscar Certificados.
 - Aluno:
-  - Alterar a senha.
-  - Listagem de cursos.
+  - Listagem de cursos (status).
   - Fazer prova.
   - Refazer prova caso assertividade fica abaixo de 70%.
 - ADM:
   - Visualizar certificados e provas dos alunos.
-  - Acrescentar prova prática.
   - Cadastrar prova.
+  - Acrescentar prova prática.
+  - Verificar cadastro de curso no thumbnail e modalidade.
 - Personalizar uma rota para cada funcionalidade.
 - Gerar resultado de prova.
 - Somente Admin pode acessar as rotas administrativas.

@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 import { Scope, FormHandles } from "@unform/core";
 import { Form } from "@unform/web";
@@ -46,69 +47,34 @@ interface FormDataProps {
 }
 
 const Examination: React.FC = () => {
-  const examForm = useRef<FormHandles>(null);
+  const examFormRef = useRef<FormHandles>(null);
 
   const [courses, setCourses] = useState<CourseProps[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
 
-  const [formData, setFormData] = useState<FormDataProps>({
-    questions: [{ title: "lkakkaaa", correct_answer: "answer_b" }],
-  } as FormDataProps);
+  const [formData, setFormData] = useState<FormDataProps>({} as FormDataProps);
 
   const getQuestionsState = useCallback((): QuestionDataProps[] => {
-    const inputValues: QuestionDataProps[] = [];
+    const data = examFormRef.current?.getData() as FormDataProps;
 
-    for (let index = 0; index < formData.questions.length; index++) {
-      const title = examForm.current?.getFieldValue(
-        `questions[${index}].title`,
-      );
+    const answersMarked = data.questions.map(question => {
+      const value = Object.values(question).find(
+        item => item !== null,
+      ) as string;
 
-      const answer_a = examForm.current?.getFieldValue(
-        `questions[${index}].answer_a`,
-      );
+      return { ...question, correct_answer: value };
+    });
 
-      const answer_b = examForm.current?.getFieldValue(
-        `questions[${index}].answer_b`,
-      );
+    console.log(answersMarked);
 
-      const answer_c = examForm.current?.getFieldValue(
-        `questions[${index}].answer_c`,
-      );
-
-      const answer_d = examForm.current?.getFieldValue(
-        `questions[${index}].answer_d`,
-      );
-
-      const correct_answer = examForm.current?.getFieldValue(
-        `questions[${index}].correct_answer`,
-      );
-      console.log("correct_answer", correct_answer);
-
-      inputValues[index] = {
-        title,
-        answer_a,
-        answer_b,
-        answer_c,
-        answer_d,
-        correct_answer,
-      };
-
-      console.log(inputValues[index]);
-
-      const question_id = formData.questions[index].id;
-
-      if (question_id) {
-        Object.assign(inputValues[index], { id: question_id });
-      }
-    }
-
-    return inputValues;
-  }, [formData.questions]);
+    return answersMarked;
+  }, []);
 
   const handleAddQuestion = useCallback(() => {
     const questions = getQuestionsState();
 
     setFormData(state => ({
-      ...state,
+      course_id: state.course_id,
       questions: [
         ...questions,
         {
@@ -117,7 +83,7 @@ const Examination: React.FC = () => {
           answer_b: "",
           answer_c: "",
           answer_d: "",
-          correct_answer: "answer_c",
+          correct_answer: "",
         },
       ],
     }));
@@ -125,26 +91,57 @@ const Examination: React.FC = () => {
 
   const handleRemoveQuestion = useCallback(
     async (indexToRemove: number) => {
-      const questions = getQuestionsState();
+      try {
+        const questions = getQuestionsState();
 
-      const question_id = questions[indexToRemove].id;
+        const question_id = questions[indexToRemove].id;
 
-      if (question_id) {
-        // await api.delete(`/modules/${question_id}`);
-        console.log("Questão deletada.");
+        if (question_id) {
+          const course_id = examFormRef.current?.getFieldValue("course_id");
+          await api.delete(`/courses/${course_id}/exams/${question_id}`);
+        }
+
+        setFormData(state => ({
+          ...state,
+          questions: questions.filter((_, index) => index !== indexToRemove),
+        }));
+
+        toast.success("Questão deletada.");
+      } catch (error) {
+        toast.error("Erro ao deletar questão.");
       }
-
-      setFormData(state => ({
-        ...state,
-        questions: questions.filter((_, index) => index !== indexToRemove),
-      }));
     },
     [getQuestionsState],
   );
 
-  const handleSubmit = useCallback(data => {
-    console.log(data.questions[0]);
-    console.log(data);
+  const handleCourseSelect = useCallback(async event => {
+    const course_id = event.target.value;
+    setSelectedCourse(course_id);
+  }, []);
+
+  const handleSubmit = useCallback(async data => {
+    // const questions = getQuestionsState();
+
+    // console.log(questions);
+
+    console.log("formData", examFormRef.current?.getData());
+
+    const answersMarked = data.questions.map((question: any) => {
+      const value = Object.values(question).find(item => item !== null);
+
+      return { ...question, correct_answer: value };
+    });
+    console.log("answersMarked", answersMarked);
+
+    try {
+      const exam = { course_id: data.course_id, questions: answersMarked };
+      // await api.post("/exams", exam);
+      console.log("exam", data);
+
+      // toast.success("Prova criada com sucesso.");
+    } catch (error) {
+      toast.error("Erro ao criar prova.");
+    }
   }, []);
 
   useEffect(() => {
@@ -160,17 +157,40 @@ const Examination: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (selectedCourse) {
+      api.get(`/courses/${selectedCourse}/exams`).then(response => {
+        console.log(response.data);
+
+        if (response.data.length < 1) {
+          setFormData({ questions: [{}] } as FormDataProps);
+          return;
+        }
+
+        setFormData({ course_id: selectedCourse, questions: response.data });
+      });
+    }
+
+    // setFormData({ questions: [{}] } as FormDataProps);
+  }, [selectedCourse]);
+
   return (
     <Container>
       <Form
         onSubmit={handleSubmit}
         initialData={formData}
-        ref={examForm}
-        id="examForm"
+        ref={examFormRef}
+        id="examFormRef"
       >
         <header>
           <h1>Cadastrar Prova</h1>
-          <Select title="Curso" name="course_id" options={courses} />
+          <Select
+            title="Curso"
+            name="course_id"
+            options={courses}
+            // value={formData.course_id}
+            onChange={handleCourseSelect}
+          />
           <h3>Questões</h3>
         </header>
 
@@ -233,12 +253,6 @@ const Examination: React.FC = () => {
                         name="correct_answer"
                         title="C"
                         radioValue="answer_c"
-                        onClick={() => {
-                          examForm.current?.setFieldValue(
-                            "questions[0].correct_answer",
-                            "answer_c",
-                          );
-                        }}
                       />
                     </section>
                     <TextArea
@@ -269,7 +283,9 @@ const Examination: React.FC = () => {
             Adicionar Questão
           </AddQuestionButton>
         </Questions>
-        <Button type="submit">Cadastrar Prova</Button>
+        <Button type="submit">
+          {selectedCourse ? "Atualizar Prova" : "Cadastrar Prova"}
+        </Button>
       </Form>
     </Container>
   );

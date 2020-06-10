@@ -10,7 +10,7 @@ export default class DeleteModuleService {
     const module = await modulesRepository.findOne(module_id);
 
     if (!module) {
-      throw new AppError("Module not found", 404);
+      throw new AppError("Module not found", 400);
     }
 
     await modulesRepository.remove(module);

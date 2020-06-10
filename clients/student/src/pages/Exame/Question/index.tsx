@@ -127,10 +127,10 @@ const Question: React.FC<Props> = ({ number, question, formRef }) => {
                   />
                 </label> */}
 
-                {/* <label>
+                <label>
                   <Radio value="answer_d" name="answer_mark" label="D" />
                   {question.answer_d}
-                </label> */}
+                </label>
               </div>
 
               {/* <label htmlFor={question.answer_d}>{question.answer_d}</label> */}

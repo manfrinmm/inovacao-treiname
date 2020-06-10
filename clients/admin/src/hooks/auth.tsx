@@ -1,4 +1,5 @@
 import React, { useState, createContext, useCallback, useContext } from "react";
+import { toast } from "react-toastify";
 
 import api from "~/services/api";
 
@@ -25,9 +26,17 @@ const AuthProvider: React.FC = ({ children }) => {
 
     if (token) {
       api.defaults.headers.authorization = `Bearer ${token}`;
+
+      api.get("/users").catch(() => {
+        localStorage.removeItem("@inovaTreinamentos:token");
+
+        toast.info("Faça login novamente.");
+
+        setAuthData({} as AuthState);
+      });
+
       return { token };
     }
-
     return {} as AuthState;
   });
 

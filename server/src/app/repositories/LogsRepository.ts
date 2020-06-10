@@ -25,6 +25,19 @@ export default class UsersRepository {
     return logs;
   }
 
+  public async findAllByUser(user_id: string): Promise<Log[]> {
+    const logs = await this.ormRepository.find({
+      where: {
+        user_id,
+      },
+      order: {
+        created_at: 1,
+      },
+    });
+
+    return logs;
+  }
+
   public async create(logData: CreateLogDTO): Promise<Log> {
     const log = this.ormRepository.create(logData);
 

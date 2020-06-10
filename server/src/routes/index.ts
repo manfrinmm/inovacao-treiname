@@ -2,16 +2,17 @@ import express, { Router } from "express";
 
 import multer from "multer";
 
-import CourseController from "./app/controllers/CourseController";
-import ExamController from "./app/controllers/ExamController";
-import FileController from "./app/controllers/FileController";
-import ModuleController from "./app/controllers/ModuleController";
-import SessionAdminController from "./app/controllers/SessionAdminController";
-import SessionController from "./app/controllers/SessionController";
-import UserController from "./app/controllers/UserController";
-import UserCoursesController from "./app/controllers/UserCoursesController";
-import Authenticate from "./app/middlewares/Authenticate";
-import uploadConfig from "./config/multer";
+import CourseController from "../app/controllers/CourseController";
+import ExamController from "../app/controllers/ExamController";
+import FileController from "../app/controllers/FileController";
+import ModuleController from "../app/controllers/ModuleController";
+import SessionAdminController from "../app/controllers/SessionAdminController";
+import SessionController from "../app/controllers/SessionController";
+import UserController from "../app/controllers/UserController";
+import UserCoursesController from "../app/controllers/UserCoursesController";
+import Authenticate from "../app/middlewares/Authenticate";
+import uploadConfig from "../config/multer";
+import studentRoutes from "./student.routes";
 
 const upload = multer(uploadConfig.multer);
 
@@ -27,6 +28,8 @@ routes.get("/courses", CourseController.index);
 routes.get("/courses/:course_id", CourseController.show);
 
 routes.use(Authenticate);
+
+routes.use("/users", studentRoutes);
 
 routes.get("/users", UserController.index);
 routes.get("/users/:user_id", UserController.show);

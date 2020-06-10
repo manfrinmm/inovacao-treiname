@@ -17,37 +17,28 @@ const Radio: React.FC<InputProps> = ({ title, name, radioValue, ...rest }) => {
 
   useEffect(() => {
     registerField({
-      name: fieldName,
+      name: `${fieldName}:${radioValue}`,
       ref: inputRef.current,
       getValue(ref) {
-        console.log("refName", ref.name);
-        console.log("refCheck", ref.checked);
-        console.log("refValue", ref.value);
-        console.log("ref", ref);
-        console.log(" ");
-
-        return ref.value;
+        return ref.checked ? ref.value : null;
       },
-      setValue(ref: HTMLInputElement, valueInput: string) {
-        console.log("ref", ref);
-        console.log("valueInput", valueInput);
-
-        if (ref.value === valueInput) {
-          ref.checked = true;
-        }
-      },
+      // setValue(ref: HTMLInputElement, valueInput: string) {
+      //   if (ref.value === valueInput) {
+      //     ref.checked = true;
+      //   }
+      // },
     });
-  }, [registerField, fieldName]);
+  }, [registerField, fieldName, radioValue]);
 
   return (
-    <Container isErrored={!!error} isMarked={defaultValue === radioValue}>
+    <Container isErrored={!!error} isMarked={false}>
       <label>
         {title}
         <input
           type="radio"
           ref={inputRef}
           name={fieldName}
-          defaultValue={radioValue}
+          value={radioValue}
           defaultChecked={defaultValue === radioValue}
           {...rest}
         />

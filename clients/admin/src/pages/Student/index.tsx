@@ -6,6 +6,7 @@ import {
   MdKeyboardArrowRight,
 } from "react-icons/md";
 import { useHistory, useParams, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { Form } from "@unform/web";
 // eslint-disable-next-line import/no-duplicates
@@ -97,8 +98,6 @@ const Student: React.FC = () => {
         })),
 
         logs: response.data.logs.map((log: LogResponseProps) => {
-          /* <td>domingo, 19 de abril de 2020 às 17:36</td> */
-
           return {
             ...log,
             created_at_formatted: format(
@@ -125,7 +124,7 @@ const Student: React.FC = () => {
   }, [setModalVisible]);
 
   const handleSubmit = useCallback(
-    (data: Omit<UserDataProps, "courses">) => {
+    async (data: Omit<UserDataProps, "courses">) => {
       const {
         id,
         name,
@@ -148,9 +147,13 @@ const Student: React.FC = () => {
         exam_practice_link,
       };
 
-      api.put(`/users/${user_id}`, userNewData).then(() => {
-        window.location.reload();
-      });
+      try {
+        await api.put(`/users/${user_id}`, userNewData);
+
+        toast.success("Usuário atualizado com sucesso.");
+      } catch (error) {
+        toast.error("Erro ao atualizar usuário. Por favor, tente novamente.");
+      }
     },
     [user_id],
   );

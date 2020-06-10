@@ -61,6 +61,8 @@ export default class Course {
   @Column()
   thumbnail: string;
 
+  thumbnail_url: string;
+
   @Expose({ name: "thumbnail_url" })
   getThumbnail_url(): string {
     return encodeURI(

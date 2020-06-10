@@ -14,7 +14,7 @@ export default class UpdateCourseService {
     let course = await coursesRepository.findOne(course_id);
 
     if (!course) {
-      throw new AppError("Course not found", 404);
+      throw new AppError("Course not found", 400);
     }
 
     course = await coursesRepository.update({ course, data });

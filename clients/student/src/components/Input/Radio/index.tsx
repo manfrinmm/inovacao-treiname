@@ -20,14 +20,20 @@ const Radio: React.FC<Props> = ({ name, label, value, ...rest }) => {
   // https://codesandbox.io/s/heuristic-haslett-58hhy?fontsize=14&hidenavigation=1&theme=dark&file=/src/components/Radio.js:765-789
   useEffect(() => {
     registerField({
-      name: fieldName,
+      name: `${fieldName}:${value}`,
+      // name: `${fieldName}`,
       ref: inputRef.current,
       getValue(ref) {
-        console.log("refName", ref.name);
-        console.log("refCheck", ref.checked);
-        console.log("refValue", ref.value);
+        // console.log("refName", ref.name);
+        // console.log("ref", ref.map());
+        // console.log("refCheck", ref.checked);
+        // console.log("refValue", ref.value);
 
         return ref.checked ? ref.value : null;
+
+        // const checked = refs.find((ref: { checked: any }) => ref.checked);
+
+        // return checked ? checked.value : null;
       },
       setValue(ref, valueInput) {
         console.log("valueInput", valueInput);
@@ -37,7 +43,7 @@ const Radio: React.FC<Props> = ({ name, label, value, ...rest }) => {
         }
       },
     });
-  }, [registerField, fieldName]);
+  }, [registerField, fieldName, value]);
 
   return (
     <Container>

@@ -23,6 +23,20 @@ export default class CreateUserCourseService {
 
     const expires_in = addDays(new Date(), course.course_expiration);
 
+    const userCourses = await userCoursesRepository.findAllByUser(user_id);
+
+    const userCourseAlreadyExists = userCourses.find(
+      userCourse => userCourse.course_id === course_id,
+    );
+
+    if (userCourseAlreadyExists) {
+      userCourseAlreadyExists.expires_in = expires_in;
+
+      await userCoursesRepository.update(userCourseAlreadyExists);
+
+      return userCourseAlreadyExists;
+    }
+
     const userCourse = await userCoursesRepository.create({
       course_id,
       user_id,

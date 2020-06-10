@@ -33,7 +33,7 @@ class UserController {
 
     const user = await showUser.execute(user_id);
 
-    return res.status(201).json(classToClass(user));
+    return res.status(200).json(classToClass(user));
   }
 
   async update(req: Request, res: Response): Promise<Response> {
@@ -45,7 +45,7 @@ class UserController {
 
     const user = await updateUser.execute({ user_id, data });
 
-    return res.status(201).json(classToClass(user));
+    return res.status(200).json(classToClass(user));
   }
 }
 

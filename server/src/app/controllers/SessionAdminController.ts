@@ -11,14 +11,12 @@ class SessionAdminController {
   async store(req: Request, res: Response): Promise<Response> {
     const adminsRepository = getRepository(Admin);
 
-    console.log(req.headers);
-
     const { cpf, password } = req.body;
 
     const user = await adminsRepository.findOne({ where: { cpf } });
 
     if (!user) {
-      return res.status(400).json({ message: "User not authorized" });
+      return res.status(401).json({ message: "User not authorized" });
     }
 
     const passwordCompare = await compare(password, user.password);

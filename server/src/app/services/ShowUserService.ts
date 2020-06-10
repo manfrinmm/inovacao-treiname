@@ -9,7 +9,7 @@ export default class ShowUserService {
     const user = await usersRepository.findOne(user_id);
 
     if (!user) {
-      throw new AppError("Course not found", 404);
+      throw new AppError("Course not found", 400);
     }
 
     return user;

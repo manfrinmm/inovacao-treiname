@@ -32,6 +32,13 @@ export const Container = styled.div`
     font-size: 2.4rem;
   }
 
+  input {
+    padding: 8px 16px;
+    margin-top: 8px;
+    border: 0;
+    border-bottom: 1px solid;
+  }
+
   ul {
     display: flex;
     flex-direction: column;
