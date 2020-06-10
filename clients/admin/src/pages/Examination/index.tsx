@@ -54,27 +54,58 @@ const Examination: React.FC = () => {
 
   const [formData, setFormData] = useState<FormDataProps>({} as FormDataProps);
 
+  const handleCourseSelect = useCallback(async event => {
+    const course_id = event.target.value;
+    setSelectedCourse(course_id);
+  }, []);
+
   const getQuestionsState = useCallback((): QuestionDataProps[] => {
     const data = examFormRef.current?.getData() as FormDataProps;
 
     const answersMarked = data.questions.map(question => {
-      const value = Object.values(question).find(
-        item => item !== null,
-      ) as string;
+      const markAnswer = Object.entries(question).find(item => {
+        const valueArray = Object.values(item);
 
-      return { ...question, correct_answer: value };
+        if (
+          valueArray[0].includes("correct_answer") &&
+          valueArray[1] !== null
+        ) {
+          return item[1];
+        }
+      });
+
+      let correct_answer;
+      if (markAnswer) {
+        correct_answer = markAnswer[1] as unknown;
+      }
+
+      return { ...question, correct_answer: correct_answer as string };
     });
-
-    console.log(answersMarked);
 
     return answersMarked;
   }, []);
 
   const handleAddQuestion = useCallback(() => {
     const questions = getQuestionsState();
+    console.log("questions", questions);
 
-    setFormData(state => ({
-      course_id: state.course_id,
+    // examFormRef.current?.setData({
+    //   course_id: selectedCourse,
+    //   questions: [
+    //     ...questions,
+    //     {
+    //       title: "",
+    //       answer_a: "",
+    //       answer_b: "",
+    //       answer_c: "",
+    //       answer_d: "",
+    //       correct_answer: "",
+    //     },
+    //   ],
+    // });
+
+    setFormData({
+      course_id: formData.course_id,
       questions: [
         ...questions,
         {
@@ -86,8 +117,8 @@ const Examination: React.FC = () => {
           correct_answer: "",
         },
       ],
-    }));
-  }, [getQuestionsState]);
+    });
+  }, [getQuestionsState, formData]);
 
   const handleRemoveQuestion = useCallback(
     async (indexToRemove: number) => {
@@ -114,35 +145,22 @@ const Examination: React.FC = () => {
     [getQuestionsState],
   );
 
-  const handleCourseSelect = useCallback(async event => {
-    const course_id = event.target.value;
-    setSelectedCourse(course_id);
-  }, []);
+  const handleSubmit = useCallback(
+    async data => {
+      const questions = getQuestionsState();
 
-  const handleSubmit = useCallback(async data => {
-    // const questions = getQuestionsState();
+      try {
+        const exam = { course_id: data.course_id, questions };
+        // await api.post("/exams", exam);
+        console.log("exam", exam);
 
-    // console.log(questions);
-
-    console.log("formData", examFormRef.current?.getData());
-
-    const answersMarked = data.questions.map((question: any) => {
-      const value = Object.values(question).find(item => item !== null);
-
-      return { ...question, correct_answer: value };
-    });
-    console.log("answersMarked", answersMarked);
-
-    try {
-      const exam = { course_id: data.course_id, questions: answersMarked };
-      // await api.post("/exams", exam);
-      console.log("exam", data);
-
-      // toast.success("Prova criada com sucesso.");
-    } catch (error) {
-      toast.error("Erro ao criar prova.");
-    }
-  }, []);
+        // toast.success("Prova criada com sucesso.");
+      } catch (error) {
+        toast.error("Erro ao criar prova.");
+      }
+    },
+    [getQuestionsState],
+  );
 
   useEffect(() => {
     api.get<CourseResponse[]>("/courses").then(response => {
@@ -163,15 +181,29 @@ const Examination: React.FC = () => {
         console.log(response.data);
 
         if (response.data.length < 1) {
-          setFormData({ questions: [{}] } as FormDataProps);
+          examFormRef.current?.setData({
+            course_id: "",
+            questions: [],
+          });
+          setFormData({ course_id: "", questions: [{}] } as FormDataProps);
           return;
         }
+
+        // examFormRef.current?.setData({
+        //   course_id: selectedCourse,
+        //   questions: response.data,
+        // });
 
         setFormData({ course_id: selectedCourse, questions: response.data });
       });
     }
 
-    // setFormData({ questions: [{}] } as FormDataProps);
+    examFormRef.current?.setData({
+      course_id: "",
+      questions: [],
+    });
+
+    setFormData({ course_id: "", questions: [{}] } as FormDataProps);
   }, [selectedCourse]);
 
   return (
