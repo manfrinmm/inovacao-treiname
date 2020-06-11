@@ -1,11 +1,10 @@
-import { createConnection, getConnectionOptions, Connection } from "typeorm";
+import { createConnections, getConnectionOptions, Connection } from "typeorm";
 
-createConnection();
-
-export default async (name = "default"): Promise<Connection> => {
+export default async (name = "default"): Promise<Connection[]> => {
   const defaultOptions = await getConnectionOptions();
+  const mongoOptions = await getConnectionOptions("mongo");
 
-  return createConnection(
+  return createConnections([
     Object.assign(defaultOptions, {
       name,
       database:
@@ -13,5 +12,11 @@ export default async (name = "default"): Promise<Connection> => {
           ? "inovacao-treiname-teste"
           : defaultOptions.database,
     }),
-  );
+    Object.assign(mongoOptions, {
+      database:
+        process.env.NODE_ENV === "test"
+          ? "inovacao-treiname-teste"
+          : defaultOptions.database,
+    }),
+  ]);
 };

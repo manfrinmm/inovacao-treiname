@@ -9,6 +9,7 @@ import cors from "cors";
 
 import AppError from "./app/errors/AppError";
 import createConnection from "./database";
+// import "./database";
 import routes from "./routes";
 
 createConnection();

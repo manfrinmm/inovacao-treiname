@@ -10,7 +10,6 @@
   - Buscar Certificados.
 - Aluno:
   - Listagem de cursos (status).
-  - Fazer prova.
   - Refazer prova caso assertividade fica abaixo de 70%.
 - ADM:
   - Visualizar certificados e provas dos alunos.

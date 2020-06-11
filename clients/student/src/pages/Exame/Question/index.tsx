@@ -5,7 +5,7 @@ import { FormHandles } from "@unform/core";
 
 import Radio from "~/components/Input/Radio";
 
-import { Container, Option } from "./styles";
+import { Container, Content, Option } from "./styles";
 
 interface Props {
   number: number;
@@ -35,13 +35,12 @@ const Question: React.FC<Props> = ({ number, question, formRef }) => {
         {expanded ? <FaMinus size={24} /> : <FaPlus size={24} />}
         <h1>Questão {number + 1}</h1>
       </button>
-      {expanded && (
-        <div>
-          <p>{question.title}</p>
-          <section>
-            <Option checked={selected === question.answer_a}>
-              <div>
-                {/* <label htmlFor={question.answer_a}>
+      <Content expanded={expanded}>
+        <p>{question.title}</p>
+        <section>
+          <Option checked={selected === question.answer_a}>
+            <div>
+              {/* <label htmlFor={question.answer_a}>
                   A
                   <input
                     name={question.id}
@@ -53,25 +52,25 @@ const Question: React.FC<Props> = ({ number, question, formRef }) => {
                     checked={selected === question.answer_a}
                   />
                 </label> */}
-                <label>
-                  <Radio
-                    value="answer_a"
-                    name="answer_mark"
-                    label="A"
-                    onClick={event => {
-                      formRef?.current.setFieldValue(
-                        `question[${number}].answer_mark`,
-                        "answer_a",
-                      );
-                    }}
-                  />
-                  {question.answer_a}
-                </label>
-              </div>
-            </Option>
-            <Option checked={selected === question.answer_b}>
-              <div>
-                {/* <label htmlFor={question.answer_b}>
+              <label>
+                <Radio
+                  value="answer_a"
+                  name="answer_mark"
+                  label="A"
+                  onClick={event => {
+                    formRef?.current.setFieldValue(
+                      `question[${number}].answer_mark`,
+                      "answer_a",
+                    );
+                  }}
+                />
+                {question.answer_a}
+              </label>
+            </div>
+          </Option>
+          <Option checked={selected === question.answer_b}>
+            <div>
+              {/* <label htmlFor={question.answer_b}>
                   B
                   <input
                     name={question.id}
@@ -83,15 +82,15 @@ const Question: React.FC<Props> = ({ number, question, formRef }) => {
                     checked={selected === question.answer_b}
                   />
                 </label> */}
-                <label>
-                  <Radio value="answer_b" name="answer_mark" label="B" />
-                  {question.answer_b}
-                </label>
-              </div>
-            </Option>
-            <Option checked={selected === question.answer_c}>
-              <div>
-                {/* <label htmlFor={question.answer_c}>
+              <label>
+                <Radio value="answer_b" name="answer_mark" label="B" />
+                {question.answer_b}
+              </label>
+            </div>
+          </Option>
+          <Option checked={selected === question.answer_c}>
+            <div>
+              {/* <label htmlFor={question.answer_c}>
                   C
                   <input
                     name={question.id}
@@ -104,17 +103,17 @@ const Question: React.FC<Props> = ({ number, question, formRef }) => {
                   />
                 </label> */}
 
-                <label>
-                  <Radio value="answer_c" name="answer_mark" label="C" />
-                  {question.answer_c}
-                </label>
-              </div>
+              <label>
+                <Radio value="answer_c" name="answer_mark" label="C" />
+                {question.answer_c}
+              </label>
+            </div>
 
-              {/* <label htmlFor={question.answer_c}>{question.answer_c}</label> */}
-            </Option>
-            <Option checked={selected === question.answer_d}>
-              <div>
-                {/* <label htmlFor={question.answer_d}>
+            {/* <label htmlFor={question.answer_c}>{question.answer_c}</label> */}
+          </Option>
+          <Option checked={selected === question.answer_d}>
+            <div>
+              {/* <label htmlFor={question.answer_d}>
                   D
                   <input
                     name={question.id}
@@ -127,17 +126,16 @@ const Question: React.FC<Props> = ({ number, question, formRef }) => {
                   />
                 </label> */}
 
-                <label>
-                  <Radio value="answer_d" name="answer_mark" label="D" />
-                  {question.answer_d}
-                </label>
-              </div>
+              <label>
+                <Radio value="answer_d" name="answer_mark" label="D" />
+                {question.answer_d}
+              </label>
+            </div>
 
-              {/* <label htmlFor={question.answer_d}>{question.answer_d}</label> */}
-            </Option>
-          </section>
-        </div>
-      )}
+            {/* <label htmlFor={question.answer_d}>{question.answer_d}</label> */}
+          </Option>
+        </section>
+      </Content>
     </Container>
   );
 };

@@ -8,6 +8,10 @@ interface OptionProps {
   checked: boolean;
 }
 
+interface ContentProps {
+  expanded: boolean;
+}
+
 export const Container = styled.div<ContainerProps>`
   background: #fff;
   border: 1px solid ${props => props.selected && "#ef5912"};
@@ -48,6 +52,10 @@ export const Container = styled.div<ContainerProps>`
   }
 `;
 
+export const Content = styled.div<ContentProps>`
+  display: ${props => !props.expanded && "none"};
+`;
+
 export const Option = styled.div<OptionProps>`
   display: flex;
 
@@ -60,7 +68,9 @@ export const Option = styled.div<OptionProps>`
 
       font-weight: 500;
 
-      color: #325bbf;
+      label {
+        color: #325bbf;
+      }
 
       input[type="radio"] {
         margin-left: 8px;
