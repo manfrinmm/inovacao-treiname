@@ -24,10 +24,16 @@ interface CourseData {
   modules: ModuleData[];
   days_remaining: number;
 }
+interface ExamStatusData {
+  certification_id: string | null;
+  exam_submit_id: string | null;
+  exam_stage: "Visualizar prova" | "Fazer prova" | "Refazer prova";
+}
 
 const Course: React.FC = () => {
   const [course, setCourse] = useState({} as CourseData);
   const [currentModule, setCurrentModule] = useState({} as ModuleData | null);
+  const [examStatus, setExamStatus] = useState({} as ExamStatusData);
 
   const history = useHistory();
   const { course_id } = useParams();
@@ -45,9 +51,75 @@ const Course: React.FC = () => {
     [course],
   );
 
-  const handleGoToExame = useCallback(() => {
-    history.push(`/course/${course_id}/exam`);
-  }, [history, course_id]);
+  const handleClickExam = useCallback(async () => {
+    // history.push(`/course/${course_id}/exam`);
+    const loadInfo = toast.info(
+      "Carregando informações para fazer a prova...",
+      { autoClose: false },
+    );
+
+    try {
+      toast.dismiss(loadInfo);
+
+      const examStatusResponse = await api.get(
+        `/users/exams/${course_id}/status`,
+      );
+
+      const { exam_submit_id, certification_id } = examStatusResponse.data;
+
+      if (exam_submit_id) {
+        const examResultResponse = await api.get(
+          `/users/exams/${exam_submit_id}/result`,
+        );
+
+        const { accuracy } = examResultResponse.data;
+
+        const exam_stage =
+          accuracy >= 0.7 ? "Visualizar prova" : "Refazer prova";
+
+        setExamStatus(state => ({
+          ...state,
+          exam_submit_id,
+          certification_id,
+          exam_stage,
+        }));
+      } else {
+        setExamStatus(state => ({
+          ...state,
+          exam_submit_id,
+          certification_id,
+          exam_stage: "Fazer prova",
+        }));
+      }
+
+      setCurrentModule(null);
+    } catch (error) {
+      toast.error("Erro ao carregar informações para fazer a prova.");
+    }
+  }, [course_id]);
+
+  const handleGoToExame = useCallback(async () => {
+    let pageToGo = "";
+
+    if (
+      examStatus.exam_stage === "Fazer prova" ||
+      examStatus.exam_stage === "Refazer prova"
+    ) {
+      pageToGo = `/course/${course_id}/exam`;
+    } else if (examStatus.exam_stage === "Visualizar prova") {
+      pageToGo = `/exam/${examStatus.exam_submit_id}/result`;
+    }
+
+    history.push(pageToGo);
+  }, [history, course_id, examStatus]);
+
+  const handleGoToCertificationDetail = useCallback(() => {
+    // history.push(`/course/${course_id}/exam`);
+    console.log(
+      "Encaminhar para a página do site para visualizar o certificado.",
+      examStatus.certification_id,
+    );
+  }, [examStatus.certification_id]);
 
   useEffect(() => {
     async function loadCourse(): Promise<void> {
@@ -155,7 +227,12 @@ const Course: React.FC = () => {
                 </ul>
               </section>
 
-              <Button onClick={handleGoToExame}>Fazer prova</Button>
+              <Button onClick={handleGoToExame}>{examStatus.exam_stage}</Button>
+              {examStatus.certification_id && (
+                <Button onClick={handleGoToCertificationDetail}>
+                  Visualizar certificado
+                </Button>
+              )}
             </ExameDetail>
           )}
         </section>
@@ -177,7 +254,7 @@ const Course: React.FC = () => {
             ))}
           </ul>
 
-          <button type="button" onClick={() => setCurrentModule(null)}>
+          <button type="button" onClick={handleClickExam}>
             <FaTools size={24} /> Fazer prova
           </button>
         </aside>

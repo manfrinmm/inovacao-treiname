@@ -10,7 +10,7 @@ import {
   closeConnection,
 } from "../../util/connectionDB";
 
-describe("admin/Exam", () => {
+describe("student/Exam", () => {
   let user_id: string;
   let tokenAdmin: string;
   let tokenUser: string;
@@ -109,7 +109,7 @@ describe("admin/Exam", () => {
     await closeConnection();
   });
 
-  it("should be able to view a exam to a course", async () => {
+  it("should be able to view a course exam", async () => {
     const exam = {
       course_id,
       questions: [
@@ -171,13 +171,175 @@ describe("admin/Exam", () => {
     });
   });
 
-  it("should not be able to view a exam to a course with ser not have", async () => {
+  it("should not be able to view a course exam if user don't have course", async () => {
     const response = await request(app)
       .get(`/users/courses/${course_id}/exams`)
       .set("Authorization", `Bearer ${tokenUser}`);
 
     expect(response.status).toBe(403);
     expect(response.body).toHaveProperty("message");
+  });
+
+  it("should be able to submit exam", async () => {
+    const exam = {
+      course_id,
+      questions: [
+        {
+          title: "Primeira questão",
+          answer_a: "Resposta a",
+          answer_b: "Resposta b",
+          answer_c: "Resposta c",
+          answer_d: "Resposta d",
+          correct_answer: "answer_c",
+        },
+        {
+          title: "Segunda questão",
+          answer_a: "Resposta a",
+          answer_b: "Resposta b",
+          answer_c: "Resposta c",
+          answer_d: "Resposta d",
+          correct_answer: "answer_a",
+        },
+        {
+          title: "Terceira questão",
+          answer_a: "Resposta a",
+          answer_b: "Resposta b",
+          answer_c: "Resposta c",
+          answer_d: "Resposta d",
+          correct_answer: "answer_b",
+        },
+      ] as ExamQuestion[],
+    };
+
+    const examResponse = await request(app)
+      .post("/exams")
+      .send(exam)
+      .set("Authorization", `Bearer ${tokenAdmin}`);
+
+    await request(app)
+      .post("/user-courses/")
+      .send({ user_id, course_id })
+      .set("Authorization", `Bearer ${tokenAdmin}`);
+
+    const submitExam = {
+      course_id,
+      questions: [
+        {
+          answer_mark: "answer_a",
+        },
+        {
+          answer_mark: "answer_b",
+        },
+        {
+          answer_mark: "answer_a",
+        },
+      ],
+    };
+
+    const response = await request(app)
+      .post("/users/exams/submit")
+      .send(submitExam)
+      .set("Authorization", `Bearer ${tokenUser}`);
+
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        course_id,
+        user_id,
+        questions: expect.arrayContaining(
+          exam.questions.map((question, index) =>
+            expect.objectContaining({
+              ...question,
+              ...submitExam.questions[index],
+            }),
+          ),
+        ),
+      }),
+    );
+  });
+
+  it("should be able to show result exam, >70%", async () => {
+    const exam = {
+      course_id,
+      questions: [
+        {
+          title: "Primeira questão",
+          answer_a: "Resposta a",
+          answer_b: "Resposta b",
+          answer_c: "Resposta c",
+          answer_d: "Resposta d",
+          correct_answer: "answer_c",
+        },
+        {
+          title: "Segunda questão",
+          answer_a: "Resposta a",
+          answer_b: "Resposta b",
+          answer_c: "Resposta c",
+          answer_d: "Resposta d",
+          correct_answer: "answer_a",
+        },
+        {
+          title: "Terceira questão",
+          answer_a: "Resposta a",
+          answer_b: "Resposta b",
+          answer_c: "Resposta c",
+          answer_d: "Resposta d",
+          correct_answer: "answer_b",
+        },
+      ] as ExamQuestion[],
+    };
+
+    const examResponse = await request(app)
+      .post("/exams")
+      .send(exam)
+      .set("Authorization", `Bearer ${tokenAdmin}`);
+
+    await request(app)
+      .post("/user-courses/")
+      .send({ user_id, course_id })
+      .set("Authorization", `Bearer ${tokenAdmin}`);
+
+    const submitExam = {
+      course_id,
+      questions: [
+        {
+          answer_mark: "answer_c",
+        },
+        {
+          answer_mark: "answer_a",
+        },
+        {
+          answer_mark: "answer_b",
+        },
+      ],
+    };
+
+    const submitExamResponse = await request(app)
+      .post("/users/exams/submit")
+      .send(submitExam)
+      .set("Authorization", `Bearer ${tokenUser}`);
+
+    const submit_id = submitExamResponse.body.id;
+
+    const response = await request(app)
+      .get("/users/exams/result")
+      .send(submit_id)
+      .set("Authorization", `Bearer ${tokenUser}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        accuracy: 1,
+        questions: expect.arrayContaining(
+          exam.questions.map((question, index) =>
+            expect.objectContaining({
+              ...question,
+              ...submitExam.questions[index],
+            }),
+          ),
+        ),
+      }),
+    );
   });
 
   // it("should be able to show a course exam", async () => {

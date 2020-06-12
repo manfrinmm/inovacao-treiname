@@ -33,6 +33,12 @@ export default class UserCourses {
   @Column("timestamp")
   expires_in: Date;
 
+  @Column()
+  exam_submit_id: string;
+
+  @Column()
+  certification_id: string;
+
   @CreateDateColumn()
   created_at: Date;
 

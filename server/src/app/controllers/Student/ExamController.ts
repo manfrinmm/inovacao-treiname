@@ -25,6 +25,16 @@ class ExamController {
         .json({ message: "You are not allowed to access this exam course." });
     }
 
+    if (
+      userAlreadyContentCourse.exam_submit_id &&
+      userAlreadyContentCourse.certification_id
+    ) {
+      return res.status(403).json({
+        message:
+          "You are not allowed to access this exam course. Because You already submitted this exam.",
+      });
+    }
+
     const exam = await showExam.execute(course_id);
     const course = await showCourse.execute(course_id);
 

@@ -60,4 +60,8 @@ export default class UsersRepository {
 
     return user;
   }
+
+  public async truncate(): Promise<void> {
+    await this.ormRepository.deleteMany({});
+  }
 }

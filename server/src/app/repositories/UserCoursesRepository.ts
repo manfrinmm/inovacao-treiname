@@ -8,6 +8,16 @@ interface CreateUserCourseDTO {
   expires_in: Date;
 }
 
+// interface UpdateByUserIdAndCourseIdDTO {
+//   user_id: string;
+//   course_id: string;
+//   data: {
+//     exam_submit_id?: string;
+//     certification_id?: string;
+//     expires_in?: string;
+//   };
+// }
+
 export default class UserCoursesRepository {
   private ormRepository: Repository<UserCourses>;
 
@@ -46,4 +56,20 @@ export default class UserCoursesRepository {
 
     return userCourse;
   }
+
+  // public async updateByUserIdAndCourseId({
+  //   user_id,
+  //   course_id,
+  //   data,
+  // }: UpdateByUserIdAndCourseIdDTO): Promise<UserCourses> {
+  //   console.log({ user_id, course_id, ...data });
+
+  //   const userCourse = await this.ormRepository.save({
+  //     user_id,
+  //     course_id,
+  //     ...data,
+  //   });
+
+  //   return userCourse;
+  // }
 }

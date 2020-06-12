@@ -34,6 +34,7 @@
       }
     ],
     "camelcase": "off",
+    "no-plusplus": "off",
     "@typescript-eslint/camelcase": "off",
     "no-useless-constructor": "off",
     "prettier/prettier": "error",

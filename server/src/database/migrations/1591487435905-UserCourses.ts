@@ -26,6 +26,16 @@ export default class UserCourses1591487435905 implements MigrationInterface {
             type: "timestamp with time zone",
           },
           {
+            name: "exam_submit_id",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
+            name: "certification_id",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
             name: "created_at",
             type: "timestamp with time zone",
             default: "now()",

@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { Scope, FormHandles } from "@unform/core";
@@ -46,13 +47,19 @@ interface FormDataProps {
   questions: Array<QuestionDataProps>;
 }
 
+// Falta verificar duplicidade de Questões quando muda a seleção de curso.
+
 const Examination: React.FC = () => {
   const examFormRef = useRef<FormHandles>(null);
 
   const [courses, setCourses] = useState<CourseProps[]>([]);
   const [selectedCourse, setSelectedCourse] = useState("");
 
-  const [formData, setFormData] = useState<FormDataProps>({} as FormDataProps);
+  const [formData, setFormData] = useState<FormDataProps>({
+    questions: [{}],
+  } as FormDataProps);
+
+  const history = useHistory();
 
   const handleCourseSelect = useCallback(async event => {
     const course_id = event.target.value;
@@ -151,15 +158,22 @@ const Examination: React.FC = () => {
 
       try {
         const exam = { course_id: data.course_id, questions };
-        // await api.post("/exams", exam);
+        await api.post("/exams", exam);
         console.log("exam", exam);
 
-        // toast.success("Prova criada com sucesso.");
+        const messageSuccess =
+          formData.questions.length > 2
+            ? "Prova criada com sucesso."
+            : "Prova atualizada com sucesso.";
+
+        toast.success(messageSuccess);
+
+        history.push("/dashboard");
       } catch (error) {
         toast.error("Erro ao criar prova.");
       }
     },
-    [getQuestionsState],
+    [getQuestionsState, history, formData.questions],
   );
 
   useEffect(() => {
@@ -176,16 +190,19 @@ const Examination: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedCourse) {
-      api.get(`/courses/${selectedCourse}/exams`).then(response => {
+    async function loadCoursesExam(): Promise<void> {
+      if (selectedCourse) {
+        console.log("selectedCourse-in", selectedCourse);
+
+        const response = await api.get(`/courses/${selectedCourse}/exams`);
         console.log(response.data);
 
         if (response.data.length < 1) {
-          examFormRef.current?.setData({
-            course_id: "",
-            questions: [],
-          });
-          setFormData({ course_id: "", questions: [{}] } as FormDataProps);
+          // examFormRef.current?.setData({
+          //   course_id: "",
+          //   questions: [],
+          // });
+          setFormData({ questions: [{}] } as FormDataProps);
           return;
         }
 
@@ -194,16 +211,22 @@ const Examination: React.FC = () => {
         //   questions: response.data,
         // });
 
-        setFormData({ course_id: selectedCourse, questions: response.data });
-      });
+        setFormData(state => ({ ...state, questions: response.data }));
+
+        return;
+      }
+
+      console.log("selectedCourse-out", selectedCourse);
+
+      // examFormRef.current?.setData({
+      //   course_id: "",
+      //   questions: [],
+      // });
+
+      // setFormData({ questions: [{}] } as FormDataProps);
     }
 
-    examFormRef.current?.setData({
-      course_id: "",
-      questions: [],
-    });
-
-    setFormData({ course_id: "", questions: [{}] } as FormDataProps);
+    loadCoursesExam();
   }, [selectedCourse]);
 
   return (
@@ -220,14 +243,14 @@ const Examination: React.FC = () => {
             title="Curso"
             name="course_id"
             options={courses}
-            // value={formData.course_id}
+            value={formData.course_id}
             onChange={handleCourseSelect}
           />
           <h3>Questões</h3>
         </header>
 
         <Questions>
-          {formData.questions?.map((question, index) => (
+          {formData.questions.map((question, index) => (
             <Scope path={`questions[${index}]`} key={Math.random()}>
               {formData.questions.length > 1 && (
                 <RemoveQuestionButton
@@ -243,7 +266,7 @@ const Examination: React.FC = () => {
                 <Title>
                   <TextArea
                     name="title"
-                    title="Pergunta"
+                    title={`Pergunta ${index + 1}`}
                     placeholder="Digite a pergunta"
                   />
                 </Title>

@@ -32,6 +32,13 @@ const Exame: React.FC = () => {
 
   const handleSubmit = useCallback(
     async data => {
+      const toastInfo = toast.info(
+        "Enviando os dados da sua prova. Por favor, aguarde...",
+        {
+          autoClose: false,
+        },
+      );
+
       console.log(data);
       const answersMarked = data.question.map((question: any) => {
         const value = Object.values(question).find(item => item !== null);
@@ -53,16 +60,18 @@ const Exame: React.FC = () => {
 
         console.log(response.data);
 
+        toast.dismiss(toastInfo);
         toast.success(
           "Prova submetida com sucesso, você poderá ver seu resultado em breve.",
         );
+
+        history.push("/dashboard");
       } catch (error) {
+        toast.dismiss(toastInfo);
         toast.error("Erro ao submeter prova. Por favor, tente novamente.");
       }
-
-      // history.push("/dashboard");
     },
-    [history],
+    [history, course_id],
   );
 
   useEffect(() => {

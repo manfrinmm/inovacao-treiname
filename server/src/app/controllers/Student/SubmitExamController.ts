@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 
+import UserCoursesRepository from "../../repositories/UserCoursesRepository";
 import CreateSubmitExamService from "../../services/CreateSubmitExamService";
 import ShowExamService from "../../services/ShowExamService";
 
@@ -7,6 +8,7 @@ class SubmitExamController {
   async store(req: Request, res: Response): Promise<Response> {
     const showExam = new ShowExamService();
     const createSubmitExam = new CreateSubmitExamService();
+    const userCoursesRepository = new UserCoursesRepository();
 
     const { course_id, questions } = req.body;
     const user_id = req.user.id;
@@ -22,6 +24,29 @@ class SubmitExamController {
       user_id,
       questions: examFormatted,
     });
+
+    const exam_submit_id = String(SubmitExam.id);
+
+    const userCourses = await userCoursesRepository.findAllByUser(user_id);
+
+    const userCourse = userCourses.find(
+      userCourseItem => userCourseItem.course_id === course_id,
+    );
+    if (!userCourse) {
+      return res.status(400).json({ message: "User course not found" });
+    }
+
+    userCourse.exam_submit_id = exam_submit_id;
+
+    await userCoursesRepository.update(userCourse);
+
+    // await userCoursesRepository.updateByUserIdAndCourseId({
+    //   course_id,
+    //   user_id,
+    //   data: {
+    //     exam_submit_id,
+    //   },
+    // });
 
     return res.status(201).json(SubmitExam);
   }

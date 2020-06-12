@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { Scope, FormHandles } from "@unform/core";
 import { Form } from "@unform/web";
@@ -82,6 +83,7 @@ const Course: React.FC = () => {
   });
 
   const { course_id } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     if (!course_id) {
@@ -187,7 +189,7 @@ const Course: React.FC = () => {
 
       if (module_id) {
         await api.delete(`/modules/${module_id}`);
-        console.log("Modulo deletado.");
+        toast.success("Modulo deletado.");
       }
 
       setCourseFormData(state => ({
@@ -235,24 +237,30 @@ const Course: React.FC = () => {
 
         if (course_id) {
           const courseData = merge(courseFormData, data);
-          const response = await api.put(`/courses/${course_id}`, courseData);
+          await api.put(`/courses/${course_id}`, courseData);
 
-          console.log("curso atualizado", response.data);
+          toast.success("Curso atualizado com sucesso");
+
+          history.push("/dashboard");
         } else {
-          const response = await api.post("/courses", data);
+          await api.post("/courses", data);
 
-          console.log("curso criado", response.data);
+          toast.success("Curso criado com sucesso");
+
+          history.push("/dashboard");
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
+          toast.error("Erro ao criar o curso. Favor, verifique os campos.");
+
           courseForm.current?.setErrors(errors);
         }
-        console.log(err);
+        toast.error("Erro ao criar o curso. Favor, tente novamente.");
       }
     },
-    [courseFormData, course_id],
+    [courseFormData, history, course_id],
   );
 
   return (

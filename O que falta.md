@@ -6,18 +6,17 @@
 - Site:
   - Filtragem por categoria.
   - Integrar com pagSeguro.
+  - Botão de comprar curso.
   - Botão de recomprar curso.
   - Buscar Certificados.
 - Aluno:
   - Listagem de cursos (status).
-  - Refazer prova caso assertividade fica abaixo de 70%.
 - ADM:
   - Visualizar certificados e provas dos alunos.
   - Cadastrar prova.
   - Acrescentar prova prática.
   - Verificar cadastro de curso no thumbnail e modalidade.
 - Personalizar uma rota para cada funcionalidade.
-- Gerar resultado de prova.
 - Somente Admin pode acessar as rotas administrativas.
 - Gerar relatório de cursos:
   - `Aprovado por`.

@@ -43,7 +43,6 @@ const Select: React.FC<InputProps> = ({ title, name, options, ...rest }) => {
       <select
         id={fieldName}
         ref={inputRef}
-        value={defaultValue}
         defaultValue={defaultValue}
         {...rest}
       >

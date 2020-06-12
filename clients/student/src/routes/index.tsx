@@ -5,6 +5,7 @@ import SignIn from "~/pages/Auth/SignIn";
 import Course from "~/pages/Course";
 import Dashboard from "~/pages/Dashboard";
 import Exame from "~/pages/Exame";
+import ExameResult from "~/pages/ExameResult";
 import Profile from "~/pages/Profile";
 import DefaultLayouts from "~/styles/_layouts/DefaultLayouts";
 
@@ -19,6 +20,11 @@ const Routes: React.FC = () => (
         <Route path="/profile" component={Profile} isPrivate />
         <Route path="/course/:course_id" exact component={Course} isPrivate />
         <Route path="/course/:course_id/exam" component={Exame} isPrivate />
+        <Route
+          path="/exam/:submit_id/result"
+          component={ExameResult}
+          isPrivate
+        />
       </DefaultLayouts>
     </Switch>
   </BrowserRouter>
