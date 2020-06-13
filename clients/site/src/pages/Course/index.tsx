@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FaFileDownload, FaCertificate } from "react-icons/fa";
 import { MdAccessTime, MdTimelapse, MdCheck } from "react-icons/md";
+import { useParams } from "react-router-dom";
 
 import Button from "~/components/Button";
+import api from "~/services/api";
 
 import ModuleItem from "./ModuleItem";
 import { Container, Info, WillLearn, LearnItem, Modules } from "./styles";
-import api from "~/services/api";
-import { useParams } from "react-router-dom";
 
 interface CourseProps {
   name: string;
@@ -36,7 +36,7 @@ const Course: React.FC = () => {
     api.get(`/courses/${course_id}`).then(response => {
       setCourse(response.data);
     });
-  }, []);
+  }, [course_id]);
 
   return (
     <Container>
@@ -89,8 +89,9 @@ const Course: React.FC = () => {
           <div>
             {course.learns?.map(learn => (
               <LearnItem key={Math.random()}>
-                <MdCheck />
-                <p>{learn}</p>
+                <p>
+                  <MdCheck /> {learn}
+                </p>
               </LearnItem>
             ))}
           </div>

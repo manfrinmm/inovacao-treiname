@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   margin: 24px 0;
+  padding: 0 24px;
 
   header {
     a {
@@ -74,6 +75,10 @@ export const Content = styled.div`
       &:hover {
         background: rgba(93, 137, 252, 0.5);
       }
+    }
+
+    @media (max-width: 818px) {
+      margin-top: 8px;
     }
   }
 

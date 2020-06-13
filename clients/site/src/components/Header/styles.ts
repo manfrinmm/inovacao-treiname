@@ -1,7 +1,11 @@
 import { Link as Linker } from "react-router-dom";
 
 import { shade } from "polished";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+interface MenuProps {
+  isOpen: boolean;
+}
 
 export const Container = styled.div`
   background: #101451;
@@ -21,8 +25,138 @@ export const Content = styled.div`
   justify-content: space-between;
 
   img {
-    height: 56px;
-    /* background: ${shade(0.1, "#101451")}; */
+    height: 64px;
+    padding: 4px 16px;
+    border-radius: 8px;
+    background: ${shade(0.4, "#fff")};
+  }
+`;
+
+export const Menu = styled.div<MenuProps>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+
+    flex: 1;
+
+    div {
+      display: flex;
+      align-items: center;
+
+      max-width: 300px;
+      flex: 1;
+
+      button:first-child {
+        background: #f0f2f5;
+        color: #101451;
+        margin-right: 16px;
+      }
+    }
+  }
+  /* @media (max-width: 580px) { */
+
+  @media (max-width: 792px) {
+    ${props =>
+      props.isOpen &&
+      css`
+        nav {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+
+          padding: 64px;
+
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          div {
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+
+            button:first-child {
+              margin-bottom: 16px;
+              margin-right: 0;
+            }
+          }
+
+          background: #9cbef6;
+        }
+      `}
+
+    span {
+      position: relative;
+      margin-left: auto;
+      height: 4px;
+      width: 32px;
+      background: #fff;
+
+      transition: 0.5s ease-in-out;
+
+      &::before {
+        background: #fff;
+
+        content: "";
+        position: absolute;
+        top: -10px;
+
+        height: 100%;
+        width: 100%;
+
+        transition: 0.5s ease-in-out;
+      }
+
+      &::after {
+        background: #fff;
+
+        content: "";
+        position: absolute;
+        bottom: -10px;
+
+        height: 100%;
+        width: 100%;
+
+        transition: 0.5s ease-in-out;
+      }
+
+      ${props =>
+        props.isOpen &&
+        css`
+          transform: rotate(45deg);
+          order: 2;
+
+          /* box-shadow: 0 0 0 200vw #000; */
+
+          &::before {
+            top: 0px;
+            transform: rotate(90deg);
+          }
+
+          &::after {
+            bottom: 0px;
+            transform: rotate(90deg);
+          }
+        `}
+    }
+
+    a,
+    button {
+      display: none;
+
+      ${props =>
+        props.isOpen &&
+        css`
+          display: block;
+        `}
+    }
   }
 `;
 
@@ -34,4 +168,6 @@ export const Link = styled(Linker)`
   color: #f5f7fe;
   text-decoration: underline;
   font-size: 3.2rem;
+
+  margin: 0 auto;
 `;

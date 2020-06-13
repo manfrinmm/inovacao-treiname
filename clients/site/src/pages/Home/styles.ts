@@ -2,6 +2,9 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   header {
+    display: flex;
+    flex-direction: column;
+
     margin-top: 56px;
 
     h1 {
@@ -11,21 +14,32 @@ export const Container = styled.div`
     }
 
     input {
-      margin-left: 16px;
+      margin: 0 16px;
+
       padding: 8px 16px;
       border-radius: 8px;
       border: 1px solid;
-      width: 527px;
+
+      flex: 1;
+      max-width: 527px;
     }
   }
+`;
 
-  section {
+export const CourseListContainer = styled.section`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin: 48px auto 0;
+
+  > div {
+    margin: 0 auto;
+    flex: 1;
+
     display: grid;
-    grid-template-columns: repeat(auto-fill, 216px);
-    gap: 24px;
-
-    margin: 48px auto 0;
-    margin-left: 88px;
+    grid-template-columns: repeat(auto-fit, minmax(216px, 1fr));
+    column-gap: 16px;
+    row-gap: 24px;
   }
 `;
 
@@ -34,6 +48,8 @@ export const CourseContainer = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
+
+  margin: 0 auto;
 
   background: #fff;
   width: 216px;

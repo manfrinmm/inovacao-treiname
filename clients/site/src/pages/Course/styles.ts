@@ -4,6 +4,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 5.6rem;
+  padding: 0 16px;
 
   aside {
     display: flex;
@@ -23,7 +24,8 @@ export const Container = styled.div`
     box-shadow: 1px 5px 6px rgba(0, 0, 0, 0.16);
 
     img {
-      width: 336px;
+      width: 100%;
+      max-width: 336px;
       height: 260px;
 
       border-radius: 4px;
@@ -68,6 +70,17 @@ export const Container = styled.div`
       margin: 48px 0 16px;
     }
   }
+
+  @media (max-width: 792px) {
+    flex-direction: column;
+
+    aside {
+      position: none;
+      order: 2;
+      margin-top: 32px;
+      margin-right: 0;
+    }
+  }
 `;
 
 export const WillLearn = styled.section`
@@ -84,7 +97,7 @@ export const WillLearn = styled.section`
 
   > div {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 352px);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 8px;
   }
 `;
@@ -95,10 +108,11 @@ export const LearnItem = styled.div`
   p {
     font-size: 2.4rem;
   }
+
   svg {
-    margin-right: 4px;
+    /* margin-right: 4px;
     width: 24px;
-    height: 24px;
+    height: 24px; */
   }
 `;
 

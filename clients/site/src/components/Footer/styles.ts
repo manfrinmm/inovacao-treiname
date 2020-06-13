@@ -7,7 +7,7 @@ export const Container = styled.footer`
 `;
 
 export const Content = styled.div`
-  width: 1120px;
+  max-width: 1120px;
   margin: 0 auto;
 
   padding: 16px 24px;
@@ -16,6 +16,10 @@ export const Content = styled.div`
   justify-content: space-between;
 
   section {
+    & + section {
+      margin-left: 16px;
+    }
+
     h2 {
       color: #325bbf;
       font-size: 2.4rem;
@@ -23,10 +27,6 @@ export const Content = styled.div`
     }
 
     p {
-      /* strong {
-        display: flex;
-        flex-direction: row;
-      } */
       & + p {
         margin-top: 8px;
       }
@@ -42,6 +42,23 @@ export const Content = styled.div`
           margin-left: 4px;
         }
       }
+    }
+  }
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+
+    section + section {
+      margin-left: 0;
+      margin-top: 16px;
+    }
+
+    section {
+      text-align: center;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   }
 `;

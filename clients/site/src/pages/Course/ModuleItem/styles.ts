@@ -23,8 +23,9 @@ export const Container = styled.div<ContainerProps>`
       `}
 
     p {
-      font-size: 3.6rem;
+      font-size: 2.4rem;
       margin-left: 24px;
+      text-align: left;
     }
   }
 
