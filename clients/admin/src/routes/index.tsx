@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Redirect } from "react-router-dom";
 import Course from "~/pages/Course";
 import Courses from "~/pages/Courses";
 import Dashboard from "~/pages/Dashboard";
+import ExameResult from "~/pages/ExameResult";
 import Examination from "~/pages/Examination";
 import SignIn from "~/pages/SignIn";
 import Student from "~/pages/Student";
@@ -25,7 +26,13 @@ const Routes: React.FC = () => (
         <Route path="/course" exact component={Course} isPrivate />
         <Route path="/course/:course_id" component={Course} isPrivate />
         <Route path="/examination" component={Examination} isPrivate />
+        <Route
+          path="/exam/:submit_id/result"
+          component={ExameResult}
+          isPrivate
+        />
         <Redirect to="/dashboard" />
+
         {/* <Route path="*" component={Dashboard} /> */}
       </Switch>
     </DefaultLayout>

@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, InputHTMLAttributes } from "react";
+import React, { useRef, useEffect, InputHTMLAttributes } from "react";
+import { IconBaseProps } from "react-icons";
 
 import { useField } from "@unform/core";
 
-import { Container } from "./styles";
+import { Container, Error } from "./styles";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
+  icon?: React.ComponentType<IconBaseProps>;
 }
 
-const Input: React.FC<InputProps> = ({ name, ...rest }) => {
+const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   const inputRef = useRef(null);
 
   const { fieldName, registerField, defaultValue, error } = useField(name);
-
-  error && console.log(error);
 
   useEffect(() => {
     registerField({
@@ -24,9 +24,20 @@ const Input: React.FC<InputProps> = ({ name, ...rest }) => {
   }, [registerField, fieldName]);
 
   return (
-    <Container>
-      <input ref={inputRef} type="text" {...rest} defaultValue={defaultValue} />
-    </Container>
+    <div>
+      <Container isErrored={!!error}>
+        <section>
+          {Icon && <Icon size={24} />}
+          <input
+            type="text"
+            ref={inputRef}
+            {...rest}
+            defaultValue={defaultValue}
+          />
+        </section>
+      </Container>
+      {error && <Error>{error}</Error>}
+    </div>
   );
 };
 

@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 
+import { isAfter } from "date-fns";
+
 import UserCoursesRepository from "../../repositories/UserCoursesRepository";
 import CreateSubmitExamService from "../../services/CreateSubmitExamService";
 import ShowExamService from "../../services/ShowExamService";
 
-class SubmitExamController {
+class PurchaseStatusController {
   async store(req: Request, res: Response): Promise<Response> {
     const showExam = new ShowExamService();
     const createSubmitExam = new CreateSubmitExamService();
@@ -43,15 +45,30 @@ class SubmitExamController {
     return res.status(201).json(SubmitExam);
   }
 
-  // async show(req: Request, res: Response): Promise<Response> {
-  //   const createExam = new ShowExamService();
+  async show(req: Request, res: Response): Promise<Response> {
+    const userCoursesRepository = new UserCoursesRepository();
 
-  //   const { course_id } = req.params;
+    const { course_id } = req.params;
+    const user_id = req.user.id;
 
-  //   const exam = await createExam.execute(course_id);
+    const userCourses = await userCoursesRepository.findAllByUser(user_id);
 
-  //   return res.status(200).json(exam);
-  // }
+    const userCourse = userCourses.find(
+      userCourseItem => userCourseItem.course_id === course_id,
+    );
+
+    if (!userCourse) {
+      return res.json({ purchase_state: "not acquired" });
+    }
+
+    const courseExpired = isAfter(new Date(), userCourse.expires_in);
+
+    if (courseExpired) {
+      return res.status(200).json({ purchase_state: "expired" });
+    }
+
+    return res.status(200).json({ purchase_state: "acquired" });
+  }
 
   // async update(req: Request, res: Response): Promise<Response> {
   //   const updateExam = new UpdateExamService();
@@ -75,4 +92,4 @@ class SubmitExamController {
   // }
 }
 
-export default new SubmitExamController();
+export default new PurchaseStatusController();

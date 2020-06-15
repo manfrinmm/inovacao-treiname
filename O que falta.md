@@ -1,26 +1,21 @@
 - Layout responsivo:
-  - Site.
   - Aluno.
-- Autenticação:
-  - Site.
 - Site:
-  - Filtragem por categoria.
   - Integrar com pagSeguro.
-  - Botão de comprar curso.
-  - Botão de recomprar curso.
   - Buscar Certificados.
 - Aluno:
   - Listagem de cursos (status).
+  - Visualizar certificado.
 - ADM:
-  - Visualizar certificados e provas dos alunos.
-  - Cadastrar prova.
+  - Visualizar certificados.
+  - Cadastrar prova. (corrigir bug de adição de questões)
   - Acrescentar prova prática.
-  - Verificar cadastro de curso no thumbnail e modalidade.
+  - Verificar bug na atualização de curso nos campos thumbnail e modalidade.
 - Personalizar uma rota para cada funcionalidade.
 - Somente Admin pode acessar as rotas administrativas.
+- Gerar certificado (PDF que será armazenado no servidor).
 - Gerar relatório de cursos:
   - `Aprovado por`.
   - `Tipo`.
   - `Valor`.
   - `Quantidade de vendas`.
-- Gerar certificado.

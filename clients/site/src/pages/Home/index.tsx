@@ -27,6 +27,54 @@ const Home: React.FC = () => {
     //   {
     //     id: String(Math.random()),
     //     name: "Curso Proteção Respiratória e Auditiva",
+    //     category: "N11",
+    //     modality: "Formação",
+    //     thumbnail_url:
+    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
+    //   },
+    //   {
+    //     id: String(Math.random()),
+    //     name: "Curso Proteção  e Auditiva",
+    //     category: "API",
+    //     modality: "Formação",
+    //     thumbnail_url:
+    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
+    //   },
+    //   {
+    //     id: String(Math.random()),
+    //     name: "Curso Proteção Respiratória e ",
+    //     category: "API",
+    //     modality: "Formação",
+    //     thumbnail_url:
+    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
+    //   },
+    //   {
+    //     id: String(Math.random()),
+    //     name: " Proteção Respiratória e Auditiva",
+    //     category: "N10",
+    //     modality: "Formação",
+    //     thumbnail_url:
+    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
+    //   },
+    //   {
+    //     id: String(Math.random()),
+    //     name: "Curso Proteção Respiratória e Auditiva",
+    //     category: "N10",
+    //     modality: "Formação",
+    //     thumbnail_url:
+    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
+    //   },
+    //   {
+    //     id: String(Math.random()),
+    //     name: "Curso Proteção Respiratória e aaaaaa",
+    //     category: "N10",
+    //     modality: "Formação",
+    //     thumbnail_url:
+    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
+    //   },
+    //   {
+    //     id: String(Math.random()),
+    //     name: "Curso masoque Respiratória e Auditiva",
     //     category: "N10",
     //     modality: "Formação",
     //     thumbnail_url:
@@ -51,7 +99,7 @@ const Home: React.FC = () => {
     //   {
     //     id: String(Math.random()),
     //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
+    //     category: "N321",
     //     modality: "Formação",
     //     thumbnail_url:
     //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
@@ -59,95 +107,7 @@ const Home: React.FC = () => {
     //   {
     //     id: String(Math.random()),
     //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
-    //     modality: "Formação",
-    //     thumbnail_url:
-    //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
-    //   },
-    //   {
-    //     id: String(Math.random()),
-    //     name: "Curso Proteção Respiratória e Auditiva",
-    //     category: "N10",
+    //     category: "N123",
     //     modality: "Formação",
     //     thumbnail_url:
     //       "https://sistemaeso.com.br/Content/blog/seguranca-no-trabalho/o-que-e-um-epi-equipamento-de-protecao-individual.jpg",
@@ -169,10 +129,12 @@ const Home: React.FC = () => {
     } else {
       const courseFiltered = courses.filter(course => {
         const courseName = course.name.toLocaleUpperCase();
+        const categoryName = course.category.toLocaleUpperCase();
 
         const foundCourse = courseName.includes(filter.toLocaleUpperCase());
+        const foundCategory = categoryName.includes(filter.toLocaleUpperCase());
 
-        if (foundCourse) {
+        if (foundCourse || foundCategory) {
           return course;
         }
       });
@@ -186,7 +148,7 @@ const Home: React.FC = () => {
         <h1>Cursos Online</h1>
         <input
           type="search"
-          placeholder="Pesquise por um curso"
+          placeholder="Pesquise por um curso ou categória"
           value={filter}
           onChange={handleFilterInput}
         />

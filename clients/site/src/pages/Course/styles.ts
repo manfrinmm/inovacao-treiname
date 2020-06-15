@@ -40,6 +40,10 @@ export const Container = styled.div`
     button {
       font-size: 3.2rem;
       margin-bottom: 4px;
+
+      &:disabled {
+        opacity: 0.5;
+      }
     }
   }
 

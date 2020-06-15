@@ -52,7 +52,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
       setAuthData({ token });
     } catch (error) {
-      console.log(error);
+      toast.error("Erro ao fazer login. Favor, tente novamente.");
     }
   }, []);
 

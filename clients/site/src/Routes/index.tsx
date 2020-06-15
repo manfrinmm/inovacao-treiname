@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
+import SignIn from "~/pages/Auth/SignIn";
+import SignUp from "~/pages/Auth/SignUp";
 import Certification from "~/pages/Certification";
 import CertificationDetail from "~/pages/CertificationDetail";
 import Course from "~/pages/Course";
@@ -12,6 +14,8 @@ const Routes: React.FC = () => (
     <DefaultLayout>
       <Switch>
         <Route path="/" exact component={Home} />
+        <Route path="/signIn" component={SignIn} />
+        <Route path="/signUp" component={SignUp} />
         <Route path="/certification" exact component={Certification} />
         <Route
           path="/certification/:certification_id"

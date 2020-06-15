@@ -13,6 +13,7 @@ interface Student {
   id: string;
   name: string;
   cpf: string;
+  phone: string;
 }
 
 const Students: React.FC = () => {
@@ -50,7 +51,9 @@ const Students: React.FC = () => {
           <StudentContent key={student.id}>
             <div>
               <p>{student.name}</p>
-              <span>{student.cpf}</span>
+              <span>
+                {student.cpf} - 📞 {student.phone}
+              </span>
             </div>
             <Link to={`student/${student.id}`}>
               <MdKeyboardArrowRight size={28} />

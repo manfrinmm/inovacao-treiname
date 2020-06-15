@@ -38,6 +38,8 @@ export const Menu = styled.div<MenuProps>`
   align-items: center;
   width: 100%;
 
+  z-index: 1;
+
   nav {
     display: flex;
     justify-content: space-between;
@@ -81,6 +83,10 @@ export const Menu = styled.div<MenuProps>`
             flex-direction: column;
             justify-content: center;
             width: 100%;
+
+            p {
+              display: block;
+            }
 
             button:first-child {
               margin-bottom: 16px;
@@ -170,4 +176,30 @@ export const Link = styled(Linker)`
   font-size: 3.2rem;
 
   margin: 0 auto;
+`;
+
+export const Profile = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  flex: 0;
+
+  p {
+    color: #f0f2f5;
+    margin-bottom: 8px;
+  }
+
+  button {
+    background: #f0f2f5;
+    color: #101451;
+    /* height: 45px; */
+    width: 40%;
+    padding: 8px;
+  }
+
+  @media (max-width: 480px) {
+    p {
+      display: none;
+    }
+  }
 `;

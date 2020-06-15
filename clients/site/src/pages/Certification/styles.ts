@@ -5,11 +5,17 @@ export const Container = styled.div`
   margin: auto;
   padding: 180px 54px;
 
+  display: flex;
+  flex-direction: column;
+
   h1 {
     text-align: center;
     font-size: 3.6rem;
-    font-weight: 500;
     color: #325bbf;
+  }
+
+  div {
+    margin: 32px 0 16px;
   }
 
   input {
@@ -19,7 +25,6 @@ export const Container = styled.div`
     border: 1px solid;
 
     padding: 8px 16px;
-    margin: 32px 0 16px;
   }
 
   button {

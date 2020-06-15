@@ -108,6 +108,53 @@ export const StudentInfo = styled.section<StudentInfoProps>`
   }
 `;
 
+export const ExamListContainer = styled.div`
+  padding: 8px 0;
+  margin-top: 16px;
+
+  h3 {
+    margin-bottom: 16px;
+    color: #325bbf;
+  }
+
+  ul {
+    overflow-y: scroll;
+    max-height: 250px;
+
+    li {
+      display: flex;
+      flex-direction: column;
+
+      text-align: center;
+
+      border: 1px solid;
+      border-radius: 8px;
+      padding: 8px 16px;
+      background: #fff;
+
+      & + li {
+        margin-top: 8px;
+      }
+
+      div {
+        display: flex;
+        justify-content: space-around;
+
+        margin-top: 8px;
+
+        a {
+          background: rgba(93, 137, 252, 0.2);
+          border-radius: 8px;
+
+          padding: 8px;
+
+          color: #5d89fc;
+        }
+      }
+    }
+  }
+`;
+
 export const Courses = styled.section`
   width: 640px;
   margin-left: 32px;

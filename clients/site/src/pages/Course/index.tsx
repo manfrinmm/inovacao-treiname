@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FaFileDownload, FaCertificate } from "react-icons/fa";
 import { MdAccessTime, MdTimelapse, MdCheck } from "react-icons/md";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import Button from "~/components/Button";
+import { useAuth } from "~/hooks/auth";
 import api from "~/services/api";
 
 import ModuleItem from "./ModuleItem";
@@ -26,17 +28,52 @@ interface CourseProps {
   course_expiration: number;
   workload: number;
   illustrative_video?: string;
+  purchase_state?: string;
 }
 
 const Course: React.FC = () => {
   const [course, setCourse] = useState({} as CourseProps);
+
   const { course_id } = useParams();
+  const history = useHistory();
+
+  const { user } = useAuth();
 
   useEffect(() => {
-    api.get(`/courses/${course_id}`).then(response => {
-      setCourse(response.data);
-    });
-  }, [course_id]);
+    async function loadCourseInfo(): Promise<void> {
+      try {
+        const response = await api.get(`/courses/${course_id}`);
+
+        setCourse(response.data);
+
+        if (user) {
+          const purchaseStatusResponse = await api.get(
+            `/users/courses/${course_id}/purchase-status`,
+          );
+
+          setCourse(state => ({ ...state, ...purchaseStatusResponse.data }));
+        }
+      } catch (error) {
+        toast.error("Erro ao buscar informações do curso.");
+        history.push("/");
+      }
+    }
+
+    loadCourseInfo();
+  }, [course_id, user, history]);
+
+  const handleBuyCourse = useCallback(() => {
+    console.log("Click");
+  }, []);
+
+  const renderBuyButton = useCallback(() => {
+    if (course.purchase_state === "acquired")
+      return <Button disabled>Curso já adquirido</Button>;
+    const buttonMessage =
+      course.purchase_state === "expired" ? "Recomprar curso" : "Comprar curso";
+
+    return <Button onClick={handleBuyCourse}>{buttonMessage}</Button>;
+  }, [course.purchase_state, handleBuyCourse]);
 
   return (
     <Container>
@@ -48,7 +85,7 @@ const Course: React.FC = () => {
             currency: "BRL",
           }).format(course.value)}
         </h1>
-        <Button>Comprar curso</Button>
+        {renderBuyButton()}
 
         <span>Pagamento processado pela PagSeguro</span>
         <Info>
