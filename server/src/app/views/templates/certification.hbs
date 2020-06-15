@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: rgba(255, 255, 255, 0.123);
+
+      font-size: large;
+    }
+
+    .image-none {
+      opacity: 0;
+    }
+
+    .container {
+      padding: 64px;
+
+      max-width: 1120px;
+      height: 100%;
+      margin: auto;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+      text-align: center;
+
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    footer .signature .signature-image {
+      width: 98px;
+    }
+
+    footer .signature.aprove-by p {
+      width: 58px;
+      flex-wrap: wrap;
+    }
+
+    #page-01 {
+      page-break-after: always;
+      height: 100vh;
+    }
+
+    #page-01 .logo {
+      align-self: flex-start;
+      margin-bottom: 16px;
+    }
+
+    #page-01 .logo img {
+      width: 182px;
+    }
+
+    #page-01 h1 {
+      margin-bottom: 20px;
+      color: #ff9000;
+    }
+
+    #page-01 section {
+      text-align: center;
+      padding: 0 32px;
+    }
+
+    #page-01 section .date-now {
+      text-align: right;
+      margin-top: 24px;
+    }
+
+    #page-01 footer {
+      margin-top: 64px;
+    }
+
+    #page-02 .container {
+      padding: 0;
+    }
+
+    #page-02 header h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: #325bbf;
+    }
+
+    #page-02 main {
+      width: 100%;
+    }
+
+    #page-02 main ul {
+      display: grid;
+      width: 100%;
+
+      list-style: none;
+
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      text-align: center;
+    }
+
+    #page-02 main ul li {
+      margin: auto;
+    }
+
+    #page-02 .signature {
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="page-01">
+    <div class="container">
+      <header class="logo">
+        <img src="logo.png" />
+      </header>
+
+      <h1>Certificado</h1>
+
+      <section>
+        <p id="content">
+          Certificamos que <strong>{{name}}</strong>, portador do
+          RG: <strong>{{rg}}</strong> concluiu com aproveitamento o
+          curso de
+          <strong>
+            {{course.category}} - {{course.name}} </strong>, de 13 a 17 de Janeiro de 2020, com carga horária de
+          {{course.workload}} horas, de acordo com a {{course.category}}.
+        </p>
+
+        <p class="date-now">{{dateFormatted}}</p>
+      </section>
+      <footer>
+        <section class="signature">
+          <img src="logo.png" class="signature-image image-none" />
+          <hr />
+          <p>Leonel Alves da Silva</p>
+          <p>RG 5.444.358 SPTC/GO</p>
+        </section>
+        <section class="signature">
+          <img src="logo.png" class="signature-image" />
+          <hr />
+          <p>Heli Gonçalves Lima</p>
+          <p>Responsável Técnico</p>
+        </section>
+      </footer>
+    </div>
+  </div>
+
+  <div id="page-02">
+    <div class="container">
+      <header class="logo">
+        <h2>
+          NR10 – CURSO BÁSICO - SEGURANÇA EM INSTALAÇÕES E SERVIÇOS COM
+          ELETRICIDADE - 40 HS
+        </h2>
+      </header>
+
+      <main>
+        <ul>
+          <li>1. Introdução à segurança com eletricidade.</li>
+          <li>2. Riscos em instalações e serviços com eletricidade:</li>
+          <li>a) O choque elétrico, mecanismos e efeitos;</li>
+          <li>
+            b) Arcos elétricos; queimaduras e quedas; e Campos
+            eletromagnéticos.
+          </li>
+          <li>3. Técnicas de Análise de Risco.</li>
+          <li>4. Medidas de Controle do Risco Elétrico:</li>
+          <li>a) Desenergização.</li>
+          <li>
+            b) Aterramento funcional (TN / TT / IT); de proteção; temporário;
+          </li>
+          <li>c) Equipotencialização;</li>
+          <li>d) Secciona mento automático da alimentação;</li>
+          <li>e) Dispositivos a corrente de fuga;</li>
+          <li>f) Extra baixa tensão;</li>
+          <li>g) Barreiras e invólucros;</li>
+          <li>h) Bloqueios e impedimentos;</li>
+          <li>i) Obstáculos e anteparos;</li>
+          <li>j) Isolamento das partes vivas;</li>
+          <li>k) Isolação dupla ou reforçada;</li>
+          <li>l) Colocação fora de alcance; e Separação elétrica.</li>
+          <li>6) Regulamentações do MTE:</li>
+          <li>
+            a) NRs; e NR-10 (Segurança em Instalações e Serviços com
+            Eletricidade);
+          </li>
+          <li>c) Qualificação; habilitação; capacitação e autorização.</li>
+          <li>7. Equipamentos de proteção coletiva.</li>
+          <li>
+            8. Equipamentos de proteção individual, e Rotinas de trabalho -
+            Procedimentos.
+          </li>
+          <li>a) instalações desenergizadas;</li>
+          <li>b) liberação para serviços;</li>
+          <li>
+            c) sinalização; e inspeções de áreas, serviços, ferramental e
+            equipamento;
+          </li>
+          <li>10. Documentação de instalações elétricas.</li>
+          <li>11. Riscos adicionais:</li>
+          <li>a) altura;</li>
+          <li>b) ambientes confinados;</li>
+          <li>c) áreas classificadas; umidade; e condições atmosféricas.</li>
+          <li>12. Proteção e combate a incêndios:</li>
+          <li>a) noções básicas;</li>
+          <li>b) medidas preventivas;</li>
+          <li>c) métodos de extinção; e prática;</li>
+          <li>13. Acidentes de origem elétrica:</li>
+          <li>a) causas diretas e indiretas; e discussão de casos;</li>
+          <li>14. Primeiros socorros:</li>
+          <li>a) noções sobre lesões;</li>
+          <li>b) priorização do atendimento;</li>
+          <li>c) aplicação de respiração artificial;</li>
+          <li>d) massagem cardíaca;</li>
+          <li>
+            e) técnicas para remoção e transporte de acidentados; e práticas.
+          </li>
+          <li>15. Responsabilidade</li>
+        </ul>
+      </main>
+
+      <footer>
+        <section class="signature">
+          <img src="logo.png" class="signature-image image-none" />
+          <hr />
+          <p>
+            Welber Menezes Maia Eletrotécnico CREA/ 8886/TD – GO
+          </p>
+          <p class="image-none">oculto</p>
+          <p class="image-none">oculto</p>
+        </section>
+        <section class="signature">
+          <img src="logo.png" class="signature-image" />
+          <hr />
+          <p>Heli Gonçalves Lima</p>
+          <p>Técnico em Segurança do Trabalho</p>
+          <p>Reg. Mte GO 000841.9</p>
+        </section>
+      </footer>
+    </div>
+  </div>
+</body>
+
+</html>

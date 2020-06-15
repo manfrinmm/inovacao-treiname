@@ -1,21 +1,25 @@
-- Layout responsivo:
-  - Aluno.
 - Site:
   - Integrar com pagSeguro.
   - Buscar Certificados.
 - Aluno:
-  - Listagem de cursos (status).
   - Visualizar certificado.
+  - Layout responsivo.
 - ADM:
-  - Visualizar certificados.
+  - Visualizar certificados dos alunos.
   - Cadastrar prova. (corrigir bug de adição de questões)
   - Acrescentar prova prática.
-  - Verificar bug na atualização de curso nos campos thumbnail e modalidade.
-- Personalizar uma rota para cada funcionalidade.
-- Somente Admin pode acessar as rotas administrativas.
-- Gerar certificado (PDF que será armazenado no servidor).
+  - Verificar bug na atualização de curso nos campos thumbnail e modalidade. (Não está alterando os valores dos campos - Apenas no react)
+- Gerar certificado. (PDF que será armazenado no servidor)
 - Gerar relatório de cursos:
   - `Aprovado por`.
   - `Tipo`.
   - `Valor`.
   - `Quantidade de vendas`.
+- Personalizar uma rota para cada funcionalidade. (Otimização)
+- Somente Admin pode acessar as rotas administrativas. (Otimização)
+- Refatoração de testes. (Otimização)
+- Validação de formulários (React);
+- Validação de requisições (Node);
+- Jobs:
+  - Calculo da avaliação.
+  - Geração de certificados.
