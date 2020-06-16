@@ -16,6 +16,7 @@ export default class ShowExamResult {
     if (!examResult) {
       throw new AppError("Exam result not found");
     }
+
     let accuracy = 0;
 
     examResult.questions.forEach(question => {
@@ -25,6 +26,8 @@ export default class ShowExamResult {
     });
 
     if (accuracy >= 0.7) {
+      // Call Jobs to generate certification.
+
       return { examResult, accuracy };
     }
 

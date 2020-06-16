@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 
 import multer from "multer";
+import path from "path";
 
 import CourseController from "../app/controllers/CourseController";
 import ExamController from "../app/controllers/ExamController";
@@ -19,22 +20,52 @@ const upload = multer(uploadConfig.multer);
 
 const routes = Router();
 routes.use("/files", express.static(uploadConfig.tmpFolder));
+
+const viewsPath = path.resolve(__dirname, "..", "app", "views");
+routes.use(express.static(viewsPath));
+
 routes.get("/pdf", async (req, res) => {
   const createCertification = new CreateCertificationService();
 
   const data = {
-    name: "Matheus Menezes Manfrin",
+    name: "Matheus Menezes Manfrin aaa",
     rg: "25.654.698",
     course: {
       name: "SEGURANÇA EM INSTALAÇÕES E SERVIÇOS COM ELETRICIDADE",
       workload: 8,
       category: "NR-10",
-      learns: ["nada", "nada", "nada", "nada"],
+      learns: [
+        "10. Documentação de instalações elétricas.",
+        "11. Riscos adicionais:",
+        "a) altura;",
+        "b) ambientes confinados;",
+        "c) áreas classificadas; umidade; e condições atmosféricas.",
+        "12. Proteção e combate a incêndios:",
+        "a) noções básicas;",
+        "b) medidas preventivas;",
+        "c) métodos de extinção; e prática;",
+        "13. Acidentes de origem elétrica:",
+        "a) causas diretas e indiretas; e discussão de casos;",
+        "14. Primeiros socorros:",
+        "a) noções sobre lesões;",
+        "b) priorização do atendimento;",
+        "c) aplicação de respiração artificial;",
+        "d) massagem cardíaca;",
+        "e) técnicas para remoção e transporte de acidentados; e práticas.",
+        "15. Responsabilidade",
+      ],
     },
   };
 
-  await createCertification.execute(data);
-  return res.json("ok");
+  const pdfName = await createCertification.execute(data);
+
+  const pdfPath = path.resolve(
+    uploadConfig.tmpFolder,
+    "certifications",
+    pdfName,
+  );
+
+  return res.sendFile(pdfPath);
 });
 // routes.use("/pdf", (req, res) => {
 //   const pdf = new Pdfkit({ layout: "landscape", margin: 32 });

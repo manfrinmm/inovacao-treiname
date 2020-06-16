@@ -6,7 +6,8 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: rgba(255, 255, 255, 0.123);
+  background: #eee;
+  color: #000;
 
   font-size: large;
 }
@@ -39,8 +40,15 @@ footer {
   margin-top: 16px;
 }
 
+footer .signature {
+  width: 100%;
+  max-width: 300px;
+  height: 50px;
+}
+
 footer .signature .signature-image {
   width: 98px;
+  height: 50px;
 }
 
 footer .signature.aprove-by p {
@@ -50,7 +58,7 @@ footer .signature.aprove-by p {
 
 #page-01 {
   page-break-after: always;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 #page-01 .logo {
@@ -81,8 +89,12 @@ footer .signature.aprove-by p {
   margin-top: 64px;
 }
 
+#page-02 {
+  height: 100vh;
+}
+
 #page-02 .container {
-  padding: 0;
+  padding: 24px;
 }
 
 #page-02 header h2 {
@@ -101,7 +113,7 @@ footer .signature.aprove-by p {
 
   list-style: none;
 
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   text-align: center;
 }
 

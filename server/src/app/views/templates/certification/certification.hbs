@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href={{styles_url}}>
+
+</head>
+
+<body>
+  <div id="page-01">
+    <div class="container">
+      <header class="logo">
+        <img src={{logo_url}} />
+      </header>
+
+      <h1>Certificado</h1>
+
+      <section>
+        <p id="content">
+          Certificamos que <strong>{{name}}</strong>, portador do
+          RG: <strong>{{rg}}</strong> concluiu com aproveitamento o
+          curso de
+          <strong>
+            {{course.category}} - {{course.name}} </strong>, de 13 a 17 de Janeiro de 2020, com carga horária de
+          <strong>{{course.workload}} horas</strong>, de acordo com a <strong>{{course.category}}</strong>.
+        </p>
+
+        <p class="date-now">{{localDateFormatted}}</p>
+      </section>
+      <footer>
+        <section class="signature">
+          <img src={{signature_image_url}} class="signature-image image-none" />
+          <hr />
+          <p>{{name}}</p>
+          <p>RG {{rg}}</p>
+        </section>
+        <section class="signature">
+          <img src={{signature_image_url}} class="signature-image" />
+          <hr />
+          <p>Heli Gonçalves Lima</p>
+          <p>Responsável Técnico</p>
+        </section>
+      </footer>
+    </div>
+  </div>
+
+  <div id="page-02">
+    <div class="container">
+      <header class="logo">
+        <h2>
+          {{course.category}} – {{course.name}} - {{course.workload}} horas
+        </h2>
+      </header>
+
+      <main>
+        <ul>
+          {{#each  course.learns as |learn| }}
+          <li>{{learn}}</li>
+          {{/each }}
+        </ul>
+      </main>
+
+      <footer>
+        <section class="signature">
+          <img src={{signature_image_url}} class="signature-image image-none" />
+          <hr />
+          <p>
+            {{course.approved_by}}
+          </p>
+          <p class="image-none">oculto</p>
+          <p class="image-none">oculto</p>
+        </section>
+        <section class="signature">
+          <img src={{signature_image_url}} class="signature-image" />
+          <hr />
+          <p>Heli Gonçalves Lima</p>
+          <p>Técnico em Segurança do Trabalho</p>
+          <p>Reg. Mte GO 000841.9</p>
+        </section>
+      </footer>
+    </div>
+  </div>
+</body>
+
+</html>

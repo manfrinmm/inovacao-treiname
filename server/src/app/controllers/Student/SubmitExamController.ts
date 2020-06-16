@@ -40,6 +40,8 @@ class SubmitExamController {
 
     await userCoursesRepository.update(userCourse);
 
+    // call Job for calculate Exam Result && accuracy > 0.7, generate certification.
+
     return res.status(201).json(SubmitExam);
   }
 
