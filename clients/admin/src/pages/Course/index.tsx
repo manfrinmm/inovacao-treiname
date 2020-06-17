@@ -49,6 +49,7 @@ interface CourseFormData {
   certificate_validity: string;
   approved_by: string;
   illustrative_video: string;
+  practical_exam?: string;
   learns: Array<string>;
   modules: Array<CourseModuleProps>;
 }
@@ -87,12 +88,17 @@ const Course: React.FC = () => {
 
   useEffect(() => {
     if (!course_id) {
+      console.log("Problema.data");
+
       return;
     }
 
     api.get(`/courses/${course_id}`).then(response => {
       console.log("response.data", response.data);
       setCourseFormData(response.data);
+      // courseForm.current?.setData(response.data);
+      courseForm.current?.setFieldValue("modality", response.data.modality);
+      courseForm.current?.setFieldValue("thumbnail", response.data.thumbnail);
     });
   }, [course_id]);
 
@@ -238,10 +244,10 @@ const Course: React.FC = () => {
         if (course_id) {
           const courseData = merge(courseFormData, data);
           await api.put(`/courses/${course_id}`, courseData);
-
+          console.log("courseData", courseData);
           toast.success("Curso atualizado com sucesso");
 
-          history.push("/dashboard");
+          // history.push("/dashboard");
         } else {
           await api.post("/courses", data);
 
@@ -250,14 +256,23 @@ const Course: React.FC = () => {
           history.push("/dashboard");
         }
       } catch (err) {
+        const messageCourse = course_id ? "atualizar" : "criar";
+
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
-          toast.error("Erro ao criar o curso. Favor, verifique os campos.");
+          toast.error(
+            `Erro ao ${messageCourse} o curso. Favor, verifique os campos.`,
+          );
 
           courseForm.current?.setErrors(errors);
+
+          return;
         }
-        toast.error("Erro ao criar o curso. Favor, tente novamente.");
+
+        toast.error(
+          `Erro ao ${messageCourse} o curso. Favor, tente novamente.`,
+        );
       }
     },
     [courseFormData, history, course_id],
@@ -333,6 +348,20 @@ const Course: React.FC = () => {
             title="Link de vídeo ilustrativo"
             placeholder="Link do vídeo"
           />
+        </section>
+
+        <section>
+          <div>
+            {courseFormData.practical_exam && (
+              <RemoveModuleButton icon={FaRegTrashAlt} onClick={() => {}}>
+                Remover prova
+              </RemoveModuleButton>
+            )}
+            <Dropzone
+              name="practical_exam"
+              title="Instruções de prova prática - Campo não obrigatório"
+            />
+          </div>
         </section>
         <Title>O que o aluno aprenderá</Title>
         <Scope path="learns">

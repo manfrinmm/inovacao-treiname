@@ -82,6 +82,18 @@ export default class Course {
   @Column()
   illustrative_video: string;
 
+  // @Column()
+  // practical_exam: string;
+
+  // practical_exam_url: string;
+
+  // @Expose({ name: "practical_exam_url" })
+  // getPractical_exam_url(): string {
+  //   return encodeURI(
+  //     `${process.env.APP_API_URL}/files/uploads/${this.practical_exam}`,
+  //   );
+  // }
+
   @Column("varchar", { array: true })
   learns: string[];
 

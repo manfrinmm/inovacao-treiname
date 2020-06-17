@@ -2,24 +2,26 @@ import React, { useEffect, useRef, SelectHTMLAttributes } from "react";
 
 import { useField } from "@unform/core";
 
-import { Container } from "./styles";
+import { Container, Error } from "./styles";
 
-interface InputProps extends SelectHTMLAttributes<HTMLSelectElement> {
+interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   title: string;
   name: string;
 }
 
-const Select: React.FC<InputProps> = ({ title, name, ...rest }) => {
-  const inputRef = useRef(null);
+const Select: React.FC<SelectProps> = ({ title, name, ...rest }) => {
+  const selectRef = useRef<HTMLSelectElement>(null);
 
   const { fieldName, registerField, error, defaultValue } = useField(name);
 
-  if (error) console.log(error);
+  console.log("fieldName", fieldName);
+  console.log("defaultValue", defaultValue);
+  console.log("selectRef", selectRef.current?.value);
 
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: inputRef.current,
+      ref: selectRef.current,
       path: "value",
     });
   }, [registerField, fieldName]);
@@ -29,13 +31,14 @@ const Select: React.FC<InputProps> = ({ title, name, ...rest }) => {
       <label htmlFor={fieldName}>{title}</label>
       <select
         id={fieldName}
-        ref={inputRef}
+        ref={selectRef}
         defaultValue={defaultValue}
         {...rest}
       >
         <option value="Formação">Formação</option>
         <option value="Reciclagem">Reciclagem</option>
       </select>
+      {error && <Error>{error}</Error>}
     </Container>
   );
 };

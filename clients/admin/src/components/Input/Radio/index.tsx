@@ -19,6 +19,7 @@ const Radio: React.FC<InputProps> = ({ title, name, radioValue, ...rest }) => {
     registerField({
       name: `${fieldName}:${radioValue}`,
       ref: inputRef.current,
+      // path: "value",
       getValue(ref) {
         return ref.checked ? ref.value : null;
       },

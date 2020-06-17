@@ -32,6 +32,9 @@ const Dropzone: React.FC<DropzoneProps> = ({ name, title, ...rest }) => {
       name: fieldName,
       ref: inputRef.current,
       path: "value",
+      setValue(ref: any, value: any) {
+        setFilename(value);
+      },
     });
   }, [registerField, fieldName]);
 
@@ -64,16 +67,13 @@ const Dropzone: React.FC<DropzoneProps> = ({ name, title, ...rest }) => {
 
       <FileInput htmlFor={fieldName} isErrored={!!error}>
         <MdCloudUpload size={56} />
-        <p>
-          {filename ||
-            "Clique ou arraste e solte aqui para fazer upload do arquivo"}
-        </p>
+        <p>{filename || "Clique aqui para fazer upload do arquivo"}</p>
 
         <input
           type="text"
           ref={inputRef}
           defaultValue={defaultValue}
-          {...rest}
+          // {...rest}
         />
 
         <input

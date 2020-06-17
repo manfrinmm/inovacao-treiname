@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Button from "~/components/Button";
 
 interface AnswerProp {
-  isMarked: boolean;
+  isMarked?: boolean;
 }
 
 export const Container = styled.div`
@@ -20,6 +20,7 @@ export const Container = styled.div`
     }
 
     h3 {
+      margin-top: 16px;
       font-size: 3.2rem;
       font-weight: 400;
       color: #325bbf;

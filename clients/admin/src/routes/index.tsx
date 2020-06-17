@@ -6,6 +6,7 @@ import Courses from "~/pages/Courses";
 import Dashboard from "~/pages/Dashboard";
 import ExameResult from "~/pages/ExameResult";
 import Examination from "~/pages/Examination";
+import ReportCourses from "~/pages/ReportCourses";
 import SignIn from "~/pages/SignIn";
 import Student from "~/pages/Student";
 import Students from "~/pages/Students";
@@ -26,6 +27,7 @@ const Routes: React.FC = () => (
         <Route path="/course" exact component={Course} isPrivate />
         <Route path="/course/:course_id" component={Course} isPrivate />
         <Route path="/examination" component={Examination} isPrivate />
+        <Route path="/report-courses" component={ReportCourses} isPrivate />
         <Route
           path="/exam/:submit_id/result"
           component={ExameResult}

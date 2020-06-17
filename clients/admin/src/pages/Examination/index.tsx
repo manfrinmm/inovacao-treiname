@@ -8,10 +8,10 @@ import { Form } from "@unform/web";
 
 import Button from "~/components/Button";
 import Radio from "~/components/Input/Radio";
-import Select from "~/components/Input/Select";
 import TextArea from "~/components/TextArea";
 import api from "~/services/api";
 
+import Select from "./Select";
 import {
   Container,
   Title,
@@ -61,6 +61,9 @@ const Examination: React.FC = () => {
 
   const history = useHistory();
 
+  console.log("formData", formData);
+  // examFormRef.current?.setData(formData.questions);
+
   const handleCourseSelect = useCallback(async event => {
     const course_id = event.target.value;
     setSelectedCourse(course_id);
@@ -69,24 +72,24 @@ const Examination: React.FC = () => {
   const getQuestionsState = useCallback((): QuestionDataProps[] => {
     const data = examFormRef.current?.getData() as FormDataProps;
 
+    console.log("dataFormRef", data);
     const answersMarked = data.questions.map(question => {
       const markAnswer = Object.entries(question).find(item => {
-        const valueArray = Object.values(item);
+        const [key, value] = Object.values(item);
 
-        if (
-          valueArray[0].includes("correct_answer") &&
-          valueArray[1] !== null
-        ) {
-          return item[1];
+        if (key.includes("correct_answer") && value !== null) {
+          return value;
         }
+
+        return null;
       });
 
-      let correct_answer;
+      let correct_answer = "";
       if (markAnswer) {
-        correct_answer = markAnswer[1] as unknown;
+        correct_answer = String(markAnswer[1]);
       }
 
-      return { ...question, correct_answer: correct_answer as string };
+      return { ...question, correct_answer };
     });
 
     return answersMarked;
@@ -96,8 +99,11 @@ const Examination: React.FC = () => {
     const questions = getQuestionsState();
     console.log("questions", questions);
 
+    examFormRef.current?.reset({
+      questions,
+    });
+
     // examFormRef.current?.setData({
-    //   course_id: selectedCourse,
     //   questions: [
     //     ...questions,
     //     {
@@ -112,7 +118,7 @@ const Examination: React.FC = () => {
     // });
 
     setFormData({
-      course_id: formData.course_id,
+      course_id: selectedCourse,
       questions: [
         ...questions,
         {
@@ -125,18 +131,23 @@ const Examination: React.FC = () => {
         },
       ],
     });
-  }, [getQuestionsState, formData]);
+  }, [getQuestionsState, selectedCourse]);
 
   const handleRemoveQuestion = useCallback(
     async (indexToRemove: number) => {
       try {
         const questions = getQuestionsState();
 
+        examFormRef.current?.setData({
+          questions: questions.filter((_, index) => index !== indexToRemove),
+        });
+
+        console.log("questionsRemove", questions);
+
         const question_id = questions[indexToRemove].id;
 
         if (question_id) {
-          const course_id = examFormRef.current?.getFieldValue("course_id");
-          await api.delete(`/courses/${course_id}/exams/${question_id}`);
+          // await api.delete(`/courses/${selectedCourse}/exams/${question_id}`);
         }
 
         setFormData(state => ({
@@ -152,29 +163,26 @@ const Examination: React.FC = () => {
     [getQuestionsState],
   );
 
-  const handleSubmit = useCallback(
-    async data => {
-      const questions = getQuestionsState();
+  const handleSubmit = useCallback(async () => {
+    const questions = getQuestionsState();
 
-      try {
-        const exam = { course_id: data.course_id, questions };
-        await api.post("/exams", exam);
-        console.log("exam", exam);
+    try {
+      const exam = { course_id: selectedCourse, questions };
+      // await api.post("/exams", exam);
+      console.log("exam", exam);
 
-        const messageSuccess =
-          formData.questions.length > 2
-            ? "Prova criada com sucesso."
-            : "Prova atualizada com sucesso.";
+      const messageSuccess =
+        formData.questions.length > 2
+          ? "Prova criada com sucesso."
+          : "Prova atualizada com sucesso.";
 
-        toast.success(messageSuccess);
+      toast.success(messageSuccess);
 
-        history.push("/dashboard");
-      } catch (error) {
-        toast.error("Erro ao criar prova.");
-      }
-    },
-    [getQuestionsState, history, formData.questions],
-  );
+      // history.push("/dashboard");
+    } catch (error) {
+      toast.error("Erro ao criar prova.");
+    }
+  }, [getQuestionsState, selectedCourse, formData.questions.length]);
 
   useEffect(() => {
     api.get<CourseResponse[]>("/courses").then(response => {
@@ -191,6 +199,9 @@ const Examination: React.FC = () => {
 
   useEffect(() => {
     async function loadCoursesExam(): Promise<void> {
+      examFormRef.current?.reset({});
+      setFormData({ questions: [{}] } as FormDataProps);
+
       if (selectedCourse) {
         console.log("selectedCourse-in", selectedCourse);
 
@@ -198,20 +209,27 @@ const Examination: React.FC = () => {
         console.log(response.data);
 
         if (response.data.length < 1) {
-          // examFormRef.current?.setData({
-          //   course_id: "",
-          //   questions: [],
-          // });
-          setFormData({ questions: [{}] } as FormDataProps);
+          examFormRef.current?.setData({
+            course_id: selectedCourse,
+            questions: [{}],
+          });
+          setFormData({
+            course_id: selectedCourse,
+            questions: [{}],
+          } as FormDataProps);
+
           return;
         }
 
-        // examFormRef.current?.setData({
-        //   course_id: selectedCourse,
-        //   questions: response.data,
-        // });
+        examFormRef.current?.setData({
+          course_id: selectedCourse,
+          questions: response.data,
+        });
 
-        setFormData(state => ({ ...state, questions: response.data }));
+        setFormData({
+          course_id: selectedCourse,
+          questions: response.data,
+        });
 
         return;
       }
@@ -220,10 +238,10 @@ const Examination: React.FC = () => {
 
       // examFormRef.current?.setData({
       //   course_id: "",
-      //   questions: [],
+      //   questions: [{}],
       // });
 
-      // setFormData({ questions: [{}] } as FormDataProps);
+      // setFormData({ course_id: "", questions: [{}] } as FormDataProps);
     }
 
     loadCoursesExam();
@@ -231,26 +249,25 @@ const Examination: React.FC = () => {
 
   return (
     <Container>
+      <header>
+        <h1>Cadastrar Prova</h1>
+        <Select
+          title="Curso"
+          name="course_id"
+          options={courses}
+          value={formData.course_id}
+          onChange={handleCourseSelect}
+        />
+        <h3>Questões</h3>
+      </header>
       <Form
         onSubmit={handleSubmit}
         initialData={formData}
         ref={examFormRef}
         id="examFormRef"
       >
-        <header>
-          <h1>Cadastrar Prova</h1>
-          <Select
-            title="Curso"
-            name="course_id"
-            options={courses}
-            value={formData.course_id}
-            onChange={handleCourseSelect}
-          />
-          <h3>Questões</h3>
-        </header>
-
         <Questions>
-          {formData.questions.map((question, index) => (
+          {formData.questions.map((_, index) => (
             <Scope path={`questions[${index}]`} key={Math.random()}>
               {formData.questions.length > 1 && (
                 <RemoveQuestionButton
@@ -274,7 +291,7 @@ const Examination: React.FC = () => {
                 <hr />
 
                 <section>
-                  <Answer isMarked={question.correct_answer === "answer_a"}>
+                  <Answer>
                     <section>
                       <Radio
                         name="correct_answer"
@@ -288,7 +305,7 @@ const Examination: React.FC = () => {
                       placeholder="Digite a resposta"
                     />
                   </Answer>
-                  <Answer isMarked={question.correct_answer === "answer_b"}>
+                  <Answer>
                     <section>
                       <Radio
                         name="correct_answer"
@@ -302,7 +319,7 @@ const Examination: React.FC = () => {
                       placeholder="Digite a resposta"
                     />
                   </Answer>
-                  <Answer isMarked={question.correct_answer === "answer_c"}>
+                  <Answer>
                     <section>
                       <Radio
                         name="correct_answer"
@@ -316,7 +333,7 @@ const Examination: React.FC = () => {
                       placeholder="Digite a resposta"
                     />
                   </Answer>
-                  <Answer isMarked={question.correct_answer === "answer_d"}>
+                  <Answer>
                     <section>
                       <Radio
                         name="correct_answer"

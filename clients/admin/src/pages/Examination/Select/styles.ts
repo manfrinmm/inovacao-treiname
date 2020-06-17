@@ -15,9 +15,3 @@ export const Container = styled.div`
     }
   }
 `;
-
-export const Error = styled.span`
-  color: #ed4337;
-  margin-top: 4px;
-  font-weight: 500;
-`;

@@ -63,6 +63,11 @@ export default class CreateCourse1590281576904 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: "practical_exam",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
             name: "learns",
             type: "varchar",
             isArray: true,
