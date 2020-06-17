@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-// import { Form } from "@unform/web";
-
-// import InputSearch from "~/components/InputSearch";
 import api from "~/services/api";
 
 import { Container, CourseList, CourseItem } from "./styles";
@@ -20,6 +17,13 @@ interface CourseProps {
 
 const Courses: React.FC = () => {
   const [courses, setCourses] = useState<CourseProps[]>([]);
+  const [coursesFiltered, setCoursesFiltered] = useState<CourseProps[]>([]);
+  const [filter, setFilter] = useState("");
+
+  const handleFilterInput = useCallback(event => {
+    const filterValue = event.target.value;
+    setFilter(filterValue);
+  }, []);
 
   useEffect(() => {
     api.get<CourseProps[]>("/courses").then(response => {
@@ -30,20 +34,39 @@ const Courses: React.FC = () => {
       }));
 
       setCourses(coursesFormatted);
+      setCoursesFiltered(coursesFormatted);
     });
   }, []);
 
+  useEffect(() => {
+    if (!filter) {
+      setCoursesFiltered(courses);
+    } else {
+      const courseFiltered = courses.filter(course => {
+        const courseName = course.name.toLocaleUpperCase();
+
+        const foundCourse = courseName.includes(filter.toLocaleUpperCase());
+
+        if (foundCourse) {
+          return course;
+        }
+      });
+      setCoursesFiltered(courseFiltered);
+    }
+  }, [filter, courses]);
+
   return (
     <Container>
-      {/* <Form
-        onSubmit={data => {
-          console.log(data);
-        }}
-      >
-        <InputSearch name="course" placeholder="Pesquise por um curso" />
-      </Form> */}
+      <header>
+        <input
+          type="search"
+          placeholder="Pesquise por um curso"
+          value={filter}
+          onChange={handleFilterInput}
+        />
+      </header>
       <CourseList>
-        {courses.map(course => (
+        {coursesFiltered.map(course => (
           <CourseItem key={course.id}>
             <div>
               <p>{course.name}</p>

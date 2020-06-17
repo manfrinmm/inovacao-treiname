@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-import { Form } from "@unform/web";
-
-import InputSearch from "~/components/InputSearch";
 import api from "~/services/api";
 
 import { Container, StudentsContainer, StudentContent } from "./styles";
@@ -18,36 +15,53 @@ interface Student {
 
 const Students: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
-
-  const options = [
-    { value: "Todos", label: "Todos" },
-    { value: "matheus", label: "matheus" },
-    { value: "matheus1", label: "matheus1" },
-    { value: "matheus2", label: "matheus2" },
-  ];
+  const [studentsFiltered, setStudentsFiltered] = useState<Student[]>([]);
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     api.get("users").then(response => {
       setStudents(response.data);
+      setStudentsFiltered(response.data);
     });
   }, []);
 
+  const handleFilterInput = useCallback(event => {
+    const filterValue = event.target.value;
+    setFilter(filterValue);
+  }, []);
+
+  useEffect(() => {
+    if (!filter) {
+      setStudentsFiltered(students);
+    } else {
+      const courseFiltered = students.filter(student => {
+        const studentName = student.name.toLocaleUpperCase();
+        const studentCPF = student.cpf.toLocaleUpperCase();
+
+        const foundCourse = studentName.includes(filter.toLocaleUpperCase());
+        const foundCategory = studentCPF.includes(filter.toLocaleUpperCase());
+
+        if (foundCourse || foundCategory) {
+          return student;
+        }
+        return null;
+      });
+      setStudentsFiltered(courseFiltered);
+    }
+  }, [filter, students]);
+
   return (
     <Container>
-      <Form
-        onSubmit={data => {
-          console.log(data);
-        }}
-      >
-        {/* <InputSearch
-          name="student"
-          options={options}
-          placeholder="Pesquise por um Aluno"
-          isClearable
-        /> */}
-      </Form>
+      <header>
+        <input
+          type="search"
+          placeholder="Pesquise por um Aluno ou CPF"
+          value={filter}
+          onChange={handleFilterInput}
+        />
+      </header>
       <StudentsContainer>
-        {students.map(student => (
+        {studentsFiltered.map(student => (
           <StudentContent key={student.id}>
             <div>
               <p>{student.name}</p>

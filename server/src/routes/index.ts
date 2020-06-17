@@ -15,6 +15,7 @@ import UserCoursesController from "../app/controllers/UserCoursesController";
 import Authenticate from "../app/middlewares/Authenticate";
 import CreateCertificationService from "../app/services/CreateCertificationService";
 import uploadConfig from "../config/multer";
+import adminRoutes from "./admin.routes";
 import studentRoutes from "./student.routes";
 
 const upload = multer(uploadConfig.multer);
@@ -83,6 +84,7 @@ routes.get("/courses/:course_id", CourseController.show);
 routes.use(Authenticate);
 
 routes.use("/users", studentRoutes);
+routes.use("/admins", adminRoutes);
 
 routes.get("/users", UserController.index);
 routes.get("/users/:user_id", UserController.show);

@@ -4,7 +4,26 @@ export const Container = styled.div`
   margin-top: 80px;
 
   display: flex;
+  align-items: center;
   flex-direction: column;
+
+  header {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    max-width: 600px;
+
+    input {
+      margin: 0 16px;
+
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid;
+
+      flex: 1;
+    }
+  }
 
   form {
     > div {

@@ -3,9 +3,8 @@
 - Aluno:
   - Layout responsivo.
 - ADM:
-  - Cadastrar prova. (corrigir bug de adição de questões)
+  - Cadastrar prova. (corrigir bug de adição e remoção de questões)
   - Acrescentar prova prática.
-  - Verificar bug na atualização de curso nos campos thumbnail e modalidade. (Não está alterando os valores dos campos - Apenas no react)
 - Personalizar uma rota para cada funcionalidade. (Otimização)
 - Somente Admin pode acessar as rotas administrativas. (Otimização)
 - Refatoração de testes. (Otimização)
@@ -16,3 +15,8 @@
   - `Tipo`.
   - `Valor`.
   - `Quantidade de vendas`.
+- Certificado:
+  - Site de acesso.
+  - Validade.
+- Colocar valor do curso em ponto flutuante.
+- Prova teórica -> Prova prática -> Adicionar link de prova prática -> Gerar certificado.
