@@ -1,26 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { MdKeyboardArrowLeft, MdFileDownload } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import api from "~/services/api";
 
 import { Container, Content } from "./styles";
 
 interface Certification {
   name: string;
-  certification: string;
+  certification_url: string;
 }
 
 const CertificationDetail: React.FC = () => {
-  const [student, setStudent] = useState({} as Certification);
+  const [certification, setCertification] = useState<Certification>();
+
+  const { certification_id } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
-    const data = {
-      name: "Matheus Menezes Manfrin",
-      certification:
-        "https://expoforest.com.br/wp-content/uploads/2017/05/exemplo.pdf",
-    };
+    async function loadCertificationData(): Promise<void> {
+      try {
+        const response = await api.get(`/certification/${certification_id}`);
 
-    setStudent(data);
-  }, []);
+        setCertification(response.data);
+      } catch (error) {
+        toast.error(
+          "Erro ao carregar informações de certificado.\nPor favor, verifique o código do certificado.",
+        );
+        history.push("/certification");
+      }
+    }
+
+    loadCertificationData();
+  }, [history, certification_id]);
+
+  if (!certification) {
+    return null;
+  }
 
   return (
     <Container>
@@ -33,19 +50,19 @@ const CertificationDetail: React.FC = () => {
       <Content>
         <section>
           <p>Este certificado é válido para</p>
-          <strong>{student.name}</strong>
+          <strong>{certification.name}</strong>
         </section>
         <div>
           <a
-            href={student.certification}
-            download={`certificado-${student.name}`}
+            href={certification.certification_url}
+            download={`certificado-${certification.name}`}
             target="__blank"
           >
             <MdFileDownload size={24} />
             Baixar certificado
           </a>
         </div>
-        <iframe title="pdf" src={student.certification} />
+        <iframe title="pdf" src={certification.certification_url} />
       </Content>
     </Container>
   );

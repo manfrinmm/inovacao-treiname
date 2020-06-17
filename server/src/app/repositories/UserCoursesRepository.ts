@@ -57,19 +57,28 @@ export default class UserCoursesRepository {
     return userCourse;
   }
 
-  // public async updateByUserIdAndCourseId({
-  //   user_id,
-  //   course_id,
-  //   data,
-  // }: UpdateByUserIdAndCourseIdDTO): Promise<UserCourses> {
-  //   console.log({ user_id, course_id, ...data });
+  public async findByCertification(
+    certification: string,
+  ): Promise<UserCourses | undefined> {
+    const userCourse = await this.ormRepository.findOne({
+      where: { certification },
+    });
 
-  //   const userCourse = await this.ormRepository.save({
-  //     user_id,
-  //     course_id,
-  //     ...data,
-  //   });
+    return userCourse;
+  }
 
-  //   return userCourse;
-  // }
+  public async findByUserIdAndCourseIdWithRelations({
+    course_id,
+    user_id,
+  }: {
+    course_id: string;
+    user_id: string;
+  }): Promise<UserCourses | undefined> {
+    const userCourse = await this.ormRepository.findOne({
+      relations: ["course", "user"],
+      where: { user_id, course_id },
+    });
+
+    return userCourse;
+  }
 }

@@ -1,9 +1,7 @@
-import AppError from "../errors/AppError";
-import ExamQuestion from "../models/ExamQuestion";
-import SubmitExam from "../models/schemas/SubmitExam";
-import CoursesRepository from "../repositories/CoursesRepository";
-import ExamsRepository from "../repositories/ExamsRepository";
-import SubmitExamsRepository from "../repositories/SubmitExamsRepository";
+import AppError from "../../errors/AppError";
+import SubmitExam from "../../models/schemas/SubmitExam";
+import CoursesRepository from "../../repositories/CoursesRepository";
+import SubmitExamsRepository from "../../repositories/SubmitExamsRepository";
 
 interface Request {
   course_id: string;

@@ -1,3 +1,4 @@
+import { Expose } from "class-transformer";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -37,7 +38,18 @@ export default class UserCourses {
   exam_submit_id: string;
 
   @Column()
-  certification_id: string;
+  certification: string;
+
+  @Expose({ name: "certification_url" })
+  getCertification_url(): string | null {
+    if (!this.certification) {
+      return null;
+    }
+
+    return encodeURI(
+      `${process.env.APP_API_URL}/files/certifications/${this.certification}`,
+    );
+  }
 
   @CreateDateColumn()
   created_at: Date;

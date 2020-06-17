@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import { isAfter } from "date-fns";
 
 import UserCoursesRepository from "../../repositories/UserCoursesRepository";
-import CreateSubmitExamService from "../../services/CreateSubmitExamService";
 import ShowExamService from "../../services/ShowExamService";
+import CreateSubmitExamService from "../../services/student/CreateSubmitExamService";
 
 class PurchaseStatusController {
   async store(req: Request, res: Response): Promise<Response> {

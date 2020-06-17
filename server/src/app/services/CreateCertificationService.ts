@@ -1,11 +1,11 @@
 /* eslint-disable import/no-duplicates */
-import crypto from "crypto";
 import { format } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import fs from "fs";
 import hbs from "handlebars";
 import path from "path";
 import puppeteer from "puppeteer";
+import { uuid } from "uuidv4";
 
 import uploadConfig from "../../config/multer";
 import AppError from "../errors/AppError";
@@ -17,12 +17,19 @@ interface PdfCreatorDTO {
     name: string;
     workload: number;
     category: string;
+    approved_by: string;
     learns: string[];
   };
+  released_on: Date;
 }
 
 export default class CreateCertificationService {
-  public async execute({ name, rg, course }: PdfCreatorDTO): Promise<string> {
+  public async execute({
+    name,
+    rg,
+    course,
+    released_on,
+  }: PdfCreatorDTO): Promise<string> {
     const logo_url = `${process.env.APP_API_URL}/templates/certification/logo.png`;
     const signature_image_url = `${process.env.APP_API_URL}/templates/certification/signature.jpeg`;
     const styles_url = `${process.env.APP_API_URL}/templates/certification/styles.css`;
@@ -47,6 +54,14 @@ export default class CreateCertificationService {
       { locale: ptBR },
     )}`;
 
+    function formatDate(date: Date) {
+      return format(date, "dd'/'MM'/'yyyy'");
+    }
+
+    const period = `${formatDate(released_on)} a ${formatDate(new Date())}`;
+
+    const code = uuid();
+
     const context = {
       name,
       rg,
@@ -55,11 +70,11 @@ export default class CreateCertificationService {
       logo_url,
       signature_image_url,
       styles_url,
+      period,
+      code,
     };
 
-    const certificationName = `${crypto
-      .randomBytes(10)
-      .toString("hex")}-${name}.pdf`;
+    const certificationName = `${code}.pdf`;
 
     const html = hbs.compile(fs.readFileSync(htmlPath, "utf8"))(context);
 
@@ -69,7 +84,7 @@ export default class CreateCertificationService {
 
       await page.setContent(html);
       await page.emulateMediaType("print");
-      const pdf = await page.pdf({
+      await page.pdf({
         path: `${certificationsFolder}/${certificationName}`,
         landscape: true,
         printBackground: true,

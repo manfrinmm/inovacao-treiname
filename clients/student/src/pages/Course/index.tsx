@@ -25,7 +25,7 @@ interface CourseData {
   days_remaining: number;
 }
 interface ExamStatusData {
-  certification_id: string | null;
+  certification: string | null;
   exam_submit_id: string | null;
   exam_stage: "Visualizar prova" | "Fazer prova" | "Refazer prova";
 }
@@ -52,7 +52,6 @@ const Course: React.FC = () => {
   );
 
   const handleClickExam = useCallback(async () => {
-    // history.push(`/course/${course_id}/exam`);
     const loadInfo = toast.info(
       "Carregando informações para fazer a prova...",
       { autoClose: false },
@@ -65,29 +64,27 @@ const Course: React.FC = () => {
         `/users/exams/${course_id}/status`,
       );
 
-      const { exam_submit_id, certification_id } = examStatusResponse.data;
+      const {
+        exam_submit_id,
+        certification,
+        accuracy,
+      } = examStatusResponse.data;
 
-      if (exam_submit_id) {
-        const examResultResponse = await api.get(
-          `/users/exams/${exam_submit_id}/result`,
-        );
-
-        const { accuracy } = examResultResponse.data;
-
+      if (accuracy) {
         const exam_stage =
           accuracy >= 0.7 ? "Visualizar prova" : "Refazer prova";
 
         setExamStatus(state => ({
           ...state,
           exam_submit_id,
-          certification_id,
+          certification,
           exam_stage,
         }));
       } else {
         setExamStatus(state => ({
           ...state,
           exam_submit_id,
-          certification_id,
+          certification,
           exam_stage: "Fazer prova",
         }));
       }
@@ -114,12 +111,10 @@ const Course: React.FC = () => {
   }, [history, course_id, examStatus]);
 
   const handleGoToCertificationDetail = useCallback(() => {
-    // history.push(`/course/${course_id}/exam`);
-    console.log(
-      "Encaminhar para a página do site para visualizar o certificado.",
-      examStatus.certification_id,
-    );
-  }, [examStatus.certification_id]);
+    const certification_id = examStatus.certification?.split(".pdf")[0];
+
+    window.open(`http://localhost:3001/certification/${certification_id}`);
+  }, [examStatus.certification]);
 
   useEffect(() => {
     async function loadCourse(): Promise<void> {
@@ -228,7 +223,7 @@ const Course: React.FC = () => {
               </section>
 
               <Button onClick={handleGoToExame}>{examStatus.exam_stage}</Button>
-              {examStatus.certification_id && (
+              {examStatus.certification && (
                 <Button onClick={handleGoToCertificationDetail}>
                   Visualizar certificado
                 </Button>

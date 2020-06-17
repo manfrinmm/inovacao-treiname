@@ -2,28 +2,43 @@ import AppError from "../../errors/AppError";
 import UserCourses from "../../models/UserCourses";
 import SubmitExamsRepository from "../../repositories/SubmitExamsRepository";
 import UserCoursesRepository from "../../repositories/UserCoursesRepository";
+import ShowUserCourseByUserIdAndCourseIdService from "../ShowUserCourseByUserIdAndCourseIdService";
 
 interface Request {
   course_id: string;
   user_id: string;
 }
 
+interface ShowExamStatusResponse {
+  accuracy: number | undefined;
+  userCourse: UserCourses;
+}
+
 export default class ShowExamStatus {
-  public async execute({ user_id, course_id }: Request): Promise<UserCourses> {
-    // const submitExamsRepository = new SubmitExamsRepository();
-    const userCoursesRepository = new UserCoursesRepository();
+  public async execute({
+    user_id,
+    course_id,
+  }: Request): Promise<ShowExamStatusResponse> {
+    const submitExamsRepository = new SubmitExamsRepository();
+    const showUserCourseByUserIdAndCourseId = new ShowUserCourseByUserIdAndCourseIdService();
 
-    const userCourses = await userCoursesRepository.findAllByUser(user_id);
+    const userCourse = await showUserCourseByUserIdAndCourseId.execute({
+      course_id,
+      user_id,
+    });
 
-    const userCourse = userCourses.find(
-      userCourseItem => userCourseItem.course_id === course_id,
-    );
+    const { exam_submit_id } = userCourse;
 
-    if (!userCourse) {
-      throw new AppError("User course not found");
+    let accuracy;
+
+    if (exam_submit_id) {
+      const exam = await submitExamsRepository.findOne(exam_submit_id);
+
+      accuracy = exam?.accuracy;
     }
 
-    return userCourse;
+    return { userCourse, accuracy };
+
     // const examResult = await submitExamsRepository.findOne(submit_id);
 
     // if (!examResult) {

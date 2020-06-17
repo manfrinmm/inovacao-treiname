@@ -24,6 +24,12 @@ export default class CreateUserService {
 
     const password_hash = await hash(password, 8);
 
+    const userAlreadyExist = await userRepository.findByCpf(cpf);
+
+    if (userAlreadyExist) {
+      throw new AppError("User already exists");
+    }
+
     const user = await userRepository.create({
       name,
       cpf,

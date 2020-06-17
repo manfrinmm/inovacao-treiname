@@ -55,5 +55,6 @@
   },
   "logo_url": "http://localhost:3333/templates/certification/logo.png",
   "signature_image_url": "http://localhost:3333/templates/certification/signature.jpeg",
-  "styles_url": "http://localhost:3333/templates/certification/styles.css"
+  "styles_url": "http://localhost:3333/templates/certification/styles.css",
+  "code": "92daade1-efca-4ddd-a6fe-2c4bd0a360b8"
 }

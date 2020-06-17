@@ -36,7 +36,7 @@ interface CourseResponseProps {
     name: string;
   };
   exam_submit_id?: string;
-  certification_id?: string;
+  certification_url?: string;
   expires_in: string;
   created_at: string;
 }
@@ -59,7 +59,7 @@ interface CourseProps {
   id: string;
   name: string;
   exam_submit_id?: string;
-  certification_id?: string;
+  certification_url?: string;
   expires_in_formatted: Date;
   created_at_formatted: Date;
 }
@@ -95,7 +95,7 @@ const Student: React.FC = () => {
           id: course.course.id,
           name: course.course.name,
           exam_submit_id: course.exam_submit_id,
-          certification_id: course.certification_id,
+          certification_url: course.certification_url,
           created_at_formatted: new Date(
             course.created_at,
           ).toLocaleDateString(),
@@ -215,72 +215,32 @@ const Student: React.FC = () => {
           <ExamListContainer>
             <h3>Todas as Provas e Certificados de {userData.first_name}</h3>
             <ul>
-              {userData.courses?.map(course => (
-                <>
-                  <li>
-                    <h3>{course.name}</h3>
-                    <div>
-                      <Link
-                        to={`/exam/${course.exam_submit_id}/result`}
-                        target="_blank"
-                      >
-                        Visualizar Prova
-                      </Link>
+              {userData.courses?.map(
+                course =>
+                  course.exam_submit_id && (
+                    <li key={course.id}>
+                      <h3>{course.name}</h3>
+                      <div>
+                        <Link
+                          to={`/exam/${course.exam_submit_id}/result`}
+                          target="_blank"
+                        >
+                          Visualizar Prova
+                        </Link>
 
-                      <Link
-                        to={`/exam/${course.certification_id}/result`}
-                        target="_blank"
-                      >
-                        Visualizar Certificação
-                      </Link>
-                    </div>
-                  </li>
-                  <li>
-                    <h3>{course.name}</h3>
-                    <div>
-                      <Link to={`/exam/${course.exam_submit_id}/result`}>
-                        Visualizar Prova
-                      </Link>
-                    </div>
-                  </li>
-                  <li>
-                    <h3>{course.name}</h3>
-                    <div>
-                      <Link to={`/exam/${course.exam_submit_id}/result`}>
-                        Visualizar Prova
-                      </Link>
-
-                      <Link to={`/exam/${course.certification_id}/result`}>
-                        Visualizar Certificação
-                      </Link>
-                    </div>
-                  </li>
-                  <li>
-                    <h3>{course.name}</h3>
-                    <div>
-                      <Link to={`/exam/${course.exam_submit_id}/result`}>
-                        Visualizar Prova
-                      </Link>
-
-                      <Link to={`/exam/${course.certification_id}/result`}>
-                        Visualizar Certificação
-                      </Link>
-                    </div>
-                  </li>
-                  <li>
-                    <h3>{course.name}</h3>
-                    <div>
-                      <Link to={`/exam/${course.exam_submit_id}/result`}>
-                        Visualizar Prova
-                      </Link>
-
-                      <Link to={`/exam/${course.certification_id}/result`}>
-                        Visualizar Certificação
-                      </Link>
-                    </div>
-                  </li>
-                </>
-              ))}
+                        {course.certification_url && (
+                          <a
+                            href={course.certification_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Visualizar Certificação
+                          </a>
+                        )}
+                      </div>
+                    </li>
+                  ),
+              )}
             </ul>
           </ExamListContainer>
         </StudentInfo>

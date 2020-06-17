@@ -18,6 +18,9 @@ export default class SubmitExam {
   @Column("uuid")
   user_id: string;
 
+  @Column("number")
+  accuracy: number;
+
   @Column("array", { array: true })
   questions: [
     {

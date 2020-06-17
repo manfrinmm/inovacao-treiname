@@ -5,12 +5,14 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --inspect --transpileOnly --ignore-watch node_modules ./src/server.ts",
+    "queue": "ts-node-dev --transpileOnly --ignore-watch node_modules ./src/queue.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "start": "set NODE_ENV=production&ts-node-dev ./dist/server.ts",
     "test": "set NODE_ENV=test&jest --runInBand --detectOpenHandles"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bee-queue": "^1.2.3",
     "class-transformer": "^0.2.3",
     "cors": "^2.8.5",
     "date-fns": "^2.14.0",
@@ -25,7 +27,8 @@
     "pg": "^8.2.1",
     "puppeteer": "^4.0.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.25"
+    "typeorm": "^0.2.25",
+    "uuidv4": "^6.1.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

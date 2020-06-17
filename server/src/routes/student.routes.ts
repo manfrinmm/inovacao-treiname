@@ -11,11 +11,15 @@ import SubmitExamController from "../app/controllers/Student/SubmitExamControlle
 const routes = Router();
 
 routes.get("/dashboard", DashboardController.index);
+
 routes.get("/courses/:course_id", CourseController.show);
 routes.get("/courses/:course_id/exams", ExamController.show);
+
 routes.post("/exams/submit", SubmitExamController.store);
-routes.get("/exams/:submit_id/result", ResultExamController.show);
+
 routes.get("/exams/:course_id/status", ShowExamStatusController.show);
+routes.get("/exams/:submit_id/result", ResultExamController.show);
+
 routes.get(
   "/courses/:course_id/purchase-status",
   PurchaseStatusController.show,

@@ -3,6 +3,7 @@ import express, { Router } from "express";
 import multer from "multer";
 import path from "path";
 
+import CertificationController from "../app/controllers/CertificationController";
 import CourseController from "../app/controllers/CourseController";
 import ExamController from "../app/controllers/ExamController";
 import FileController from "../app/controllers/FileController";
@@ -34,6 +35,7 @@ routes.get("/pdf", async (req, res) => {
       name: "SEGURANÇA EM INSTALAÇÕES E SERVIÇOS COM ELETRICIDADE",
       workload: 8,
       category: "NR-10",
+      approved_by: "mathesssss",
       learns: [
         "10. Documentação de instalações elétricas.",
         "11. Riscos adicionais:",
@@ -67,61 +69,8 @@ routes.get("/pdf", async (req, res) => {
 
   return res.sendFile(pdfPath);
 });
-// routes.use("/pdf", (req, res) => {
-//   const pdf = new Pdfkit({ layout: "landscape", margin: 32 });
 
-//   pdf
-//     .image(resolve(__dirname, "logo.png"), {
-//       width: 200,
-//     })
-//     .moveDown(2);
-
-//   pdf
-//     .fillColor("#ff9000")
-//     .fontSize(36)
-//     .text("Certificado", {
-//       align: "center",
-//     })
-//     .moveDown(1);
-
-//   pdf
-//     .fillColor("#000")
-//     .fontSize(16)
-//     .text(
-//       "Certificamos que LEONEL ALVES DA SILVA, portador do RG: 5.444.358" +
-//         " SPTC/GO concluiu com aproveitamento o curso de NR-10 Básico - Segurança" +
-//         " em Instalações e Serviços com Eletricidade, de 13 a 17 de Janeiro de" +
-//         " 2020, com carga horária de 40 horas,de acordo com a NR-10.",
-//       {
-//         align: "center",
-//       },
-//     )
-//     .font("Times-Roman", "13")
-//     .moveDown(3);
-
-//   pdf.text("Jatai - GO, 17 de Janeiro de 2020", {
-//     align: "right",
-//   });
-
-//   pdf
-//     .image(resolve(__dirname, "logo.png"), 72, 355, {
-//       width: 200,
-//     })
-//     .text("Ass. Estudante", 72, 355)
-//     .moveDown(2);
-
-//   pdf
-//     .image(resolve(__dirname, "sup.jpeg"), 450, 355, {
-//       width: 200,
-//       height: 80,
-//     })
-//     .text("Ass. Sup", 450, 355)
-//     .moveDown(2);
-
-//   pdf.end();
-
-//   return pdf.pipe(res);
-// });
+routes.get("/certification/:id", CertificationController.show);
 
 routes.post("/sessions", SessionController.store);
 routes.post("/sessions/admins", SessionAdminController.store);
