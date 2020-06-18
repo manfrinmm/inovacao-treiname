@@ -20,7 +20,8 @@
     "react-scripts": "3.4.1",
     "react-toastify": "^6.0.5",
     "styled-components": "^5.1.0",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "yup": "^0.29.1"
   },
   "scripts": {
     "start": "set PORT=3001 && react-app-rewired start",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@types/react-router-dom": "^5.1.5",
     "@types/styled-components": "^5.1.0",
+    "@types/yup": "^0.29.3",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "babel-plugin-root-import": "^6.5.0",

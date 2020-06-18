@@ -48,8 +48,9 @@ const AuthProvider: React.FC = ({ children }) => {
 
       api.get("/users/dashboard").catch(() => {
         localStorage.removeItem("@inovaTreinamentos:token");
+        localStorage.removeItem("@inovaTreinamentos:user");
 
-        toast.info("Faça login novamente.");
+        toast.info("Faça login novamente.", { toastId: "ToastInfoMessage" });
 
         setAuthData({} as AuthState);
       });
@@ -100,7 +101,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
         setAuthData({ token, user });
       } catch (error) {
-        console.log(error);
+        throw toast.error("Falha ao fazer login.");
       }
     },
     [generateLog],

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, Ref } from "react";
+import React, { useState, useCallback, Ref, useEffect } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 
 import { FormHandles } from "@unform/core";
@@ -8,6 +8,7 @@ import Radio from "~/components/Input/Radio";
 import { Container, Content, Option } from "./styles";
 
 interface Props {
+  isErrored: boolean;
   number: number;
   question: {
     id: string;
@@ -17,11 +18,9 @@ interface Props {
     answer_c: string;
     answer_d: string;
   };
-
-  formRef: React.MutableRefObject<any> | null;
 }
 
-const Question: React.FC<Props> = ({ number, question, formRef }) => {
+const Question: React.FC<Props> = ({ number, question, isErrored }) => {
   const [expanded, setExpanded] = useState(true);
   const [selected, setSelect] = useState("");
 
@@ -30,7 +29,7 @@ const Question: React.FC<Props> = ({ number, question, formRef }) => {
   }, [expanded]);
 
   return (
-    <Container selected={selected !== ""}>
+    <Container selected={selected !== ""} isErrored={isErrored}>
       <button type="button" onClick={handleClickButton}>
         {expanded ? <FaMinus size={24} /> : <FaPlus size={24} />}
         <h1>Questão {number + 1}</h1>
@@ -53,17 +52,7 @@ const Question: React.FC<Props> = ({ number, question, formRef }) => {
                   />
                 </label> */}
               <label>
-                <Radio
-                  value="answer_a"
-                  name="answer_mark"
-                  label="A"
-                  onClick={event => {
-                    formRef?.current.setFieldValue(
-                      `question[${number}].answer_mark`,
-                      "answer_a",
-                    );
-                  }}
-                />
+                <Radio value="answer_a" name="answer_mark" label="A" />
                 {question.answer_a}
               </label>
             </div>

@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 
 interface ContainerProps {
   selected: boolean;
+  isErrored: boolean;
 }
 
 interface OptionProps {
@@ -14,7 +15,7 @@ interface ContentProps {
 
 export const Container = styled.div<ContainerProps>`
   background: #fff;
-  border: 1px solid ${props => props.selected && "#ef5912"};
+  border: 1px solid ${props => props.isErrored && "#ef5912"};
   border-radius: 8px;
 
   button {

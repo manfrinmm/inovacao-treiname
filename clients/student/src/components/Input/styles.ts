@@ -1,8 +1,12 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+interface ContainerProps {
+  isErrored: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
   padding: 8px 16px;
-  border: 1px solid;
+  border: 1px solid ${props => (props.isErrored ? "#ed4337" : "#040522")};
   border-radius: 8px;
 
   background: #fff;
@@ -28,4 +32,10 @@ export const Container = styled.div`
       }
     }
   }
+`;
+
+export const Error = styled.span`
+  color: #ed4337;
+  margin-top: 4px;
+  font-weight: 500;
 `;

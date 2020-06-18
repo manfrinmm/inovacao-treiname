@@ -3,7 +3,7 @@ import { IconBaseProps } from "react-icons";
 
 import { useField } from "@unform/core";
 
-import { Container } from "./styles";
+import { Container, Error } from "./styles";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -24,18 +24,20 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   }, [registerField, fieldName]);
 
   return (
-    <Container>
-      <section>
-        {Icon && <Icon size={24} />}
-        <input
-          type="text"
-          ref={inputRef}
-          {...rest}
-          defaultValue={defaultValue}
-        />
-      </section>
-      {error && <span>{error}</span>}
-    </Container>
+    <div>
+      <Container isErrored={!!error}>
+        <section>
+          {Icon && <Icon size={24} />}
+          <input
+            type="text"
+            ref={inputRef}
+            {...rest}
+            defaultValue={defaultValue}
+          />
+        </section>
+      </Container>
+      {error && <Error>{error}</Error>}
+    </div>
   );
 };
 
