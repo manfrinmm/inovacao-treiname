@@ -33,6 +33,7 @@ class CourseController {
       certificate_validity,
       approved_by,
       illustrative_video,
+      practical_exam,
       learns,
       modules,
     } = req.body;
@@ -50,6 +51,7 @@ class CourseController {
       certificate_validity,
       approved_by,
       illustrative_video,
+      practical_exam,
       learns,
       modules,
     });

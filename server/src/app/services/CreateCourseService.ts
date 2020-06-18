@@ -22,6 +22,7 @@ interface Request {
   certificate_validity: number;
   approved_by: string;
   illustrative_video: string;
+  practical_exam?: string;
   learns: Array<string>;
   modules: Array<ModuleData>;
 }
@@ -40,6 +41,7 @@ export default class CreateCourseService {
     certificate_validity,
     approved_by,
     illustrative_video,
+    practical_exam,
     learns,
     modules,
   }: Request): Promise<Course> {
@@ -58,6 +60,7 @@ export default class CreateCourseService {
       certificate_validity,
       approved_by,
       illustrative_video,
+      practical_exam,
       learns,
       modules,
     });

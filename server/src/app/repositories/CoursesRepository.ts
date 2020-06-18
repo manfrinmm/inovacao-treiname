@@ -23,6 +23,7 @@ interface CreateCourseDTO {
   certificate_validity: number;
   approved_by: string;
   illustrative_video: string;
+  practical_exam?: string;
   learns: Array<string>;
   modules: Array<ModuleData>;
 }
@@ -67,6 +68,7 @@ export default class CoursesRepository {
       certificate_validity,
       approved_by,
       illustrative_video,
+      practical_exam,
       learns,
       modules,
     } = courseData;
@@ -84,6 +86,7 @@ export default class CoursesRepository {
       certificate_validity,
       approved_by,
       illustrative_video,
+      practical_exam,
       learns,
       modules,
     });
