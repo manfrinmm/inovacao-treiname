@@ -1,5 +1,6 @@
 import { getMongoRepository, MongoRepository } from "typeorm";
 
+import AppError from "../errors/AppError";
 import SubmitExam from "../models/schemas/SubmitExam";
 
 interface QuestionProps {
@@ -53,6 +54,11 @@ export default class SubmitExamsRepository {
     accuracy: number;
   }): Promise<SubmitExam | undefined> {
     const submit_exam = await this.ormRepository.findOne(submit_id);
+
+    if (!submit_exam) {
+      throw new AppError("Submit exam not found");
+    }
+
     submit_exam.accuracy = accuracy;
 
     await this.ormRepository.save(submit_exam);

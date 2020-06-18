@@ -8,11 +8,13 @@ import {
   truncateAll,
   closeConnection,
 } from "../../util/connectionDB";
+import CreateAdmin from "../../util/factories/CreateAdmin";
 
 describe("admin/Exam", () => {
-  let user;
-  let token: string;
   let course_id: string;
+  let user_id: string;
+  let tokenAdmin: string;
+  let tokenUser: string;
 
   beforeAll(async () => {
     await initializeConnection();
@@ -21,7 +23,10 @@ describe("admin/Exam", () => {
   beforeEach(async () => {
     await truncateAll();
 
-    user = {
+    const admin = await CreateAdmin();
+    tokenAdmin = admin.tokenAdmin;
+
+    const user = {
       name: "Matheus Menezes",
       cpf: "1234567825368126",
       rg: "1230254",
@@ -74,12 +79,12 @@ describe("admin/Exam", () => {
         ...location,
       });
 
-    token = response.body.token;
+    tokenUser = response.body.token;
 
     const responseCourse = await request(app)
       .post("/courses")
       .send(course)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     course_id = responseCourse.body.id;
   });
@@ -122,7 +127,7 @@ describe("admin/Exam", () => {
     const response = await request(app)
       .post("/exams")
       .send(exam)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
@@ -166,11 +171,11 @@ describe("admin/Exam", () => {
     await request(app)
       .post("/exams")
       .send(exam)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     const response = await request(app)
       .get(`/courses/${course_id}/exams`)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
@@ -214,7 +219,7 @@ describe("admin/Exam", () => {
     const createExamResponse = await request(app)
       .post("/exams")
       .send(exam)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     const examData = createExamResponse.body as ExamQuestion[];
 
@@ -241,7 +246,7 @@ describe("admin/Exam", () => {
     const response = await request(app)
       .put(`/courses/${course_id}/exams`)
       .send(examNewData)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
@@ -287,7 +292,7 @@ describe("admin/Exam", () => {
     const createExamResponse = await request(app)
       .post("/exams")
       .send(exam)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     const examData = createExamResponse.body as ExamQuestion[];
 
@@ -295,7 +300,7 @@ describe("admin/Exam", () => {
 
     const response = await request(app)
       .delete(`/courses/${course_id}/exams/${question_id}`)
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${tokenAdmin}`);
 
     expect(response.status).toBe(204);
     expect(await examsRepository.findOne(question_id)).toBe(undefined);

@@ -13,23 +13,23 @@ class SessionAdminController {
 
     const { cpf, password } = req.body;
 
-    const user = await adminsRepository.findOne({ where: { cpf } });
+    const admin = await adminsRepository.findOne({ where: { cpf } });
 
-    if (!user) {
+    if (!admin) {
       return res.status(401).json({ message: "User not authorized" });
     }
 
-    const passwordCompare = await compare(password, user.password);
+    const passwordCompare = await compare(password, admin.password);
 
     if (!passwordCompare) {
-      return res.status(401).json({ message: "User not authorized" });
+      return res.status(401).json({ message: "User not authorize" });
     }
 
     const { secret, expiresIn } = authConfig;
 
     const token = sign({}, secret, {
       expiresIn,
-      subject: user.id,
+      subject: admin.id,
     });
 
     return res.json({ token });

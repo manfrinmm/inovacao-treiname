@@ -27,7 +27,7 @@ class ExamController {
 
     if (
       userAlreadyContentCourse.exam_submit_id &&
-      userAlreadyContentCourse.certification_id
+      userAlreadyContentCourse.certification
     ) {
       return res.status(403).json({
         message:

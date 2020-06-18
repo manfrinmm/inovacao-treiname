@@ -31,7 +31,7 @@ export default class Course {
   @Column("integer")
   workload: number;
 
-  @Column("integer")
+  @Column("float")
   value: number;
 
   @Column("text")
@@ -82,17 +82,21 @@ export default class Course {
   @Column()
   illustrative_video: string;
 
-  // @Column()
-  // practical_exam: string;
+  @Column()
+  practical_exam: string;
 
-  // practical_exam_url: string;
+  practical_exam_url: string;
 
-  // @Expose({ name: "practical_exam_url" })
-  // getPractical_exam_url(): string {
-  //   return encodeURI(
-  //     `${process.env.APP_API_URL}/files/uploads/${this.practical_exam}`,
-  //   );
-  // }
+  @Expose({ name: "practical_exam_url" })
+  getPractical_exam_url(): string | null {
+    if (!this.practical_exam) {
+      return null;
+    }
+
+    return encodeURI(
+      `${process.env.APP_API_URL}/files/uploads/${this.practical_exam}`,
+    );
+  }
 
   @Column("varchar", { array: true })
   learns: string[];

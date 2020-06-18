@@ -40,6 +40,8 @@ export default class UserCourses {
   @Column()
   certification: string;
 
+  certification_url: string;
+
   @Expose({ name: "certification_url" })
   getCertification_url(): string | null {
     if (!this.certification) {

@@ -13,6 +13,7 @@ import SessionController from "../app/controllers/SessionController";
 import UserController from "../app/controllers/UserController";
 import UserCoursesController from "../app/controllers/UserCoursesController";
 import Authenticate from "../app/middlewares/Authenticate";
+import AuthenticateAdmin from "../app/middlewares/AuthenticateAdmin";
 import CreateCertificationService from "../app/services/CreateCertificationService";
 import uploadConfig from "../config/multer";
 import adminRoutes from "./admin.routes";
@@ -32,6 +33,7 @@ routes.get("/pdf", async (req, res) => {
   const data = {
     name: "Matheus Menezes Manfrin aaa",
     rg: "25.654.698",
+    released_on: new Date(),
     course: {
       name: "SEGURANÇA EM INSTALAÇÕES E SERVIÇOS COM ELETRICIDADE",
       workload: 8,
@@ -84,6 +86,11 @@ routes.get("/courses/:course_id", CourseController.show);
 routes.use(Authenticate);
 
 routes.use("/users", studentRoutes);
+
+routes.get("/courses/:course_id/exams", ExamController.show);
+
+routes.use(AuthenticateAdmin);
+
 routes.use("/admins", adminRoutes);
 
 routes.get("/users", UserController.index);
@@ -99,7 +106,6 @@ routes.delete("/courses/:course_id", CourseController.destroy);
 routes.delete("/modules/:module_id", ModuleController.destroy);
 
 routes.post("/exams", ExamController.store);
-routes.get("/courses/:course_id/exams", ExamController.show);
 routes.put("/courses/:course_id/exams", ExamController.update);
 routes.delete("/courses/:course_id/exams/:question_id", ExamController.destroy);
 

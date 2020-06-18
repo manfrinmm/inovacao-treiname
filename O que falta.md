@@ -10,13 +10,13 @@
 - Refatoração de testes. (Otimização)
 - Validação de formulários (React);
 - Validação de requisições (Node);
-- Gerar relatório de cursos:
-  - `Aprovado por`.
-  - `Tipo`.
-  - `Valor`.
-  - `Quantidade de vendas`.
 - Certificado:
   - Site de acesso.
   - Validade.
-- Colocar valor do curso em ponto flutuante.
-- Prova teórica -> Prova prática -> Adicionar link de prova prática -> Gerar certificado.
+- Prova teórica -> Prova prática -> Adicionar link de prova prática -> Gerar certificado (Manualmente).
+
+**Bônus**
+
+- Rotas:
+  - Site:
+    - Mostrar informações de curso sem link dos módulos.

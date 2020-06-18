@@ -322,8 +322,7 @@ describe("student/Exam", () => {
     const submit_id = submitExamResponse.body.id;
 
     const response = await request(app)
-      .get("/users/exams/result")
-      .send(submit_id)
+      .get(`/users/exams/${submit_id}/result`)
       .set("Authorization", `Bearer ${tokenUser}`);
 
     expect(response.status).toBe(200);

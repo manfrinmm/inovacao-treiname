@@ -36,7 +36,7 @@ export async function truncateAll(): Promise<void> {
 }
 
 export async function closeConnection(): Promise<void> {
-  const mainConnection = getConnection();
+  const mainConnection = getConnection("test-connection");
   const mongoConnection = getConnection("mongo");
 
   await Promise.all([mainConnection.close(), mongoConnection.close()]);

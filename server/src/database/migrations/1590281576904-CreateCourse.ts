@@ -31,7 +31,7 @@ export default class CreateCourse1590281576904 implements MigrationInterface {
           },
           {
             name: "value",
-            type: "integer",
+            type: "float",
           },
           {
             name: "description",
