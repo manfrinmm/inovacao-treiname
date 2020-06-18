@@ -14,6 +14,7 @@
   - Site de acesso.
   - Validade.
 - Prova teórica -> Prova prática -> Adicionar link de prova prática -> Gerar certificado (Manualmente).
+- Validar formulário, submissão de prova (dando erro, marcando questões erradas)
 
 **Bônus**
 

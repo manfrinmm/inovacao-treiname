@@ -38,10 +38,12 @@ class SubmitExamController {
     userCourse.exam_submit_id = exam_submit_id;
     await userCoursesRepository.update(userCourse);
 
-    // call Job for calculate Exam Result && accuracy > 0.7, generate certification.
+    const hasPracticalExam = !!userCourse.course.practical_exam;
+
     console.log(`calling job: ${ExamCorrection.key}`);
     await Queue.add(ExamCorrection.key, {
       submit_id: exam_submit_id,
+      hasPracticalExam,
     });
 
     return res.status(201).json(SubmitExam);

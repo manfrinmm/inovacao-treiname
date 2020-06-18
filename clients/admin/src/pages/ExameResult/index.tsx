@@ -39,7 +39,7 @@ const ExameResult: React.FC = () => {
     async function loadExam(): Promise<void> {
       try {
         const response = await api.get<ExameDataResponse>(
-          `/users/exams/${submit_id}/result`,
+          `/admins/exams/${submit_id}/result`,
         );
 
         const { questions, accuracy, created_at } = response.data;

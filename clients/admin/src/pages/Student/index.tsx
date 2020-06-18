@@ -34,6 +34,7 @@ interface CourseResponseProps {
   course: {
     id: string;
     name: string;
+    practical_exam: string;
   };
   exam_submit_id?: string;
   certification_url?: string;
@@ -58,6 +59,7 @@ interface LogProps {
 interface CourseProps {
   id: string;
   name: string;
+  has_practical_exam: string;
   exam_submit_id?: string;
   certification_url?: string;
   expires_in_formatted: Date;
@@ -94,6 +96,7 @@ const Student: React.FC = () => {
         courses: response.data.courses.map((course: CourseResponseProps) => ({
           id: course.course.id,
           name: course.course.name,
+          has_practical_exam: course.course.practical_exam,
           exam_submit_id: course.exam_submit_id,
           certification_url: course.certification_url,
           created_at_formatted: new Date(
@@ -125,6 +128,10 @@ const Student: React.FC = () => {
   const handleGoBack = useCallback(() => {
     goBack();
   }, [goBack]);
+
+  const handleGenerateCertification = useCallback(() => {
+    console.log("Gerar certificado para", userData.id);
+  }, [userData.id]);
 
   const handleOpenModal = useCallback(async () => {
     setModalVisible(true);
@@ -228,14 +235,20 @@ const Student: React.FC = () => {
                           Visualizar Prova
                         </Link>
 
-                        {course.certification_url && (
-                          <a
-                            href={course.certification_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Visualizar Certificação
-                          </a>
+                        {course.has_practical_exam ? (
+                          <Button onClick={handleGenerateCertification}>
+                            Gerar certificado
+                          </Button>
+                        ) : (
+                          course.certification_url && (
+                            <a
+                              href={course.certification_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Visualizar Certificação
+                            </a>
+                          )
                         )}
                       </div>
                     </li>

@@ -66,20 +66,6 @@ export default class SubmitExamsRepository {
     return submit_exam;
   }
 
-  // public async findByUserId(user_id: string): Promise<SubmitExam | undefined> {
-  //   const submitExam = await this.ormRepository.findOne({ user_id });
-
-  //   return submitExam;
-  // }
-
-  // public async findByCourseId(
-  //   course_id: string,
-  // ): Promise<SubmitExam | undefined> {
-  //   const user = await this.ormRepository.findOne({ course_id });
-
-  //   return user;
-  // }
-
   // For tests
   public async truncate(): Promise<void> {
     await this.ormRepository.deleteMany({});

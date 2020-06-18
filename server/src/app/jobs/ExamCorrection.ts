@@ -11,7 +11,7 @@ class ExamCorrection {
   async handle({ data }: any) {
     const submitExamsRepository = new SubmitExamsRepository();
 
-    const { submit_id } = data;
+    const { submit_id, hasPracticalExam } = data;
 
     const exam = await submitExamsRepository.findOne(submit_id);
 
@@ -28,7 +28,7 @@ class ExamCorrection {
 
     await submitExamsRepository.updateAccuracy({ accuracy, submit_id });
 
-    if (accuracy >= 0.7) {
+    if (accuracy >= 0.7 && !hasPracticalExam) {
       console.log(`Calling job: ${GenerateCertification.key}`);
       await Queue.add(GenerateCertification.key, {
         course_id: exam.course_id,
