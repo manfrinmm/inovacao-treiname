@@ -129,9 +129,21 @@ const Student: React.FC = () => {
     goBack();
   }, [goBack]);
 
-  const handleGenerateCertification = useCallback(() => {
-    console.log("Gerar certificado para", userData.id);
-  }, [userData.id]);
+  const handleGenerateCertification = useCallback(
+    async (course_id: string) => {
+      try {
+        await api.post("/admins/certifications", {
+          course_id,
+          user_id,
+        });
+
+        toast.success("A certificação estará disponível em breve.");
+      } catch (error) {
+        toast.error("Falha ao gerar certificado.");
+      }
+    },
+    [user_id],
+  );
 
   const handleOpenModal = useCallback(async () => {
     setModalVisible(true);
@@ -202,7 +214,7 @@ const Student: React.FC = () => {
 
             <LinkInput
               name="exam_practice_link"
-              title="Adicione um link do vídeo da prova prática"
+              title="Adicione um link da playlist de vídeo das provas práticas"
               placeholder="Link do vídeo"
             />
             <Button
@@ -235,8 +247,13 @@ const Student: React.FC = () => {
                           Visualizar Prova
                         </Link>
 
-                        {course.has_practical_exam ? (
-                          <Button onClick={handleGenerateCertification}>
+                        {course.has_practical_exam &&
+                        !course.certification_url ? (
+                          <Button
+                            onClick={() => {
+                              handleGenerateCertification(course.id);
+                            }}
+                          >
                             Gerar certificado
                           </Button>
                         ) : (

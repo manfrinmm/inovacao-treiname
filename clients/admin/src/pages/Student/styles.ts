@@ -150,6 +150,16 @@ export const ExamListContainer = styled.div`
 
           color: #5d89fc;
         }
+
+        button {
+          background: rgba(93, 137, 252, 0.2);
+          border-radius: 8px;
+          padding: 8px;
+
+          color: #5d89fc;
+          margin-top: 0;
+          margin-left: 32px;
+        }
       }
     }
   }

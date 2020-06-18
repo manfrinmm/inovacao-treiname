@@ -99,6 +99,10 @@ const Course: React.FC = () => {
       // courseForm.current?.setData(response.data);
       courseForm.current?.setFieldValue("modality", response.data.modality);
       courseForm.current?.setFieldValue("thumbnail", response.data.thumbnail);
+      courseForm.current?.setFieldValue(
+        "practical_exam",
+        response.data.practical_exam,
+      );
     });
   }, [course_id]);
 
@@ -146,6 +150,26 @@ const Course: React.FC = () => {
 
     return inputValues;
   }, [courseFormData.modules]);
+
+  const handleRemovePracticalExam = useCallback(async () => {
+    try {
+      courseForm.current?.setFieldValue("practical_exam", undefined);
+
+      const learns = getStudentLearnState();
+      const modules = getCourseModulesState();
+
+      setCourseFormData(state => ({
+        ...state,
+        modules,
+        learns,
+        practical_exam: undefined,
+      }));
+
+      toast.success("Exame prático removido com sucesso");
+    } catch (error) {
+      toast.error("Erro ao remover exame prático");
+    }
+  }, [getStudentLearnState, getCourseModulesState]);
 
   const handleAddStudentLearn = useCallback((): void => {
     const inputValues = getStudentLearnState();
@@ -353,7 +377,10 @@ const Course: React.FC = () => {
         <section>
           <div>
             {courseFormData.practical_exam && (
-              <RemoveModuleButton icon={FaRegTrashAlt} onClick={() => {}}>
+              <RemoveModuleButton
+                icon={FaRegTrashAlt}
+                onClick={handleRemovePracticalExam}
+              >
                 Remover prova
               </RemoveModuleButton>
             )}

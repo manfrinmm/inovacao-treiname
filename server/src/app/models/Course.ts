@@ -47,6 +47,9 @@ export default class Course {
     }
 
     diskStorageProvider.saveFile(this.thumbnail);
+    if (this.practical_exam) {
+      diskStorageProvider.saveFile(this.practical_exam);
+    }
   }
 
   @BeforeUpdate()
@@ -56,6 +59,9 @@ export default class Course {
     }
 
     diskStorageProvider.saveFile(this.thumbnail);
+    if (this.practical_exam) {
+      diskStorageProvider.saveFile(this.practical_exam);
+    }
   }
 
   @Column()

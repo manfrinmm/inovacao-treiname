@@ -28,6 +28,7 @@ interface ExamStatusData {
   certification: string | null;
   exam_submit_id: string | null;
   exam_stage: "Visualizar prova" | "Fazer prova" | "Refazer prova";
+  practical_exam_url?: string;
 }
 
 const Course: React.FC = () => {
@@ -68,6 +69,7 @@ const Course: React.FC = () => {
         exam_submit_id,
         certification,
         accuracy,
+        practical_exam_url,
       } = examStatusResponse.data;
 
       if (accuracy) {
@@ -79,6 +81,7 @@ const Course: React.FC = () => {
           exam_submit_id,
           certification,
           exam_stage,
+          practical_exam_url,
         }));
       } else {
         setExamStatus(state => ({
@@ -112,9 +115,12 @@ const Course: React.FC = () => {
 
   const handleGoToCertificationDetail = useCallback(() => {
     const certification_id = examStatus.certification?.split(".pdf")[0];
-
     window.open(`http://localhost:3001/certification/${certification_id}`);
   }, [examStatus.certification]);
+
+  const handleGoToPracticalExamInstructions = useCallback(() => {
+    window.open(examStatus.practical_exam_url);
+  }, [examStatus.practical_exam_url]);
 
   useEffect(() => {
     async function loadCourse(): Promise<void> {
@@ -223,6 +229,13 @@ const Course: React.FC = () => {
               </section>
 
               <Button onClick={handleGoToExame}>{examStatus.exam_stage}</Button>
+
+              {examStatus.practical_exam_url && (
+                <Button onClick={handleGoToPracticalExamInstructions}>
+                  Visualizar instruções de prova prática
+                </Button>
+              )}
+
               {examStatus.certification && (
                 <Button onClick={handleGoToCertificationDetail}>
                   Visualizar certificado

@@ -1,3 +1,5 @@
+import { classToClass } from "class-transformer";
+
 import AppError from "../../errors/AppError";
 import UserCourses from "../../models/UserCourses";
 import SubmitExamsRepository from "../../repositories/SubmitExamsRepository";
@@ -12,6 +14,7 @@ interface Request {
 interface ShowExamStatusResponse {
   accuracy: number | undefined;
   userCourse: UserCourses;
+  practical_exam_url: string | undefined;
 }
 
 export default class ShowExamStatus {
@@ -30,14 +33,16 @@ export default class ShowExamStatus {
     const { exam_submit_id } = userCourse;
 
     let accuracy;
+    let practical_exam_url;
 
     if (exam_submit_id) {
       const exam = await submitExamsRepository.findOne(exam_submit_id);
 
       accuracy = exam?.accuracy;
+      practical_exam_url = classToClass(userCourse.course).practical_exam_url;
     }
 
-    return { userCourse, accuracy };
+    return { userCourse, accuracy, practical_exam_url };
 
     // const examResult = await submitExamsRepository.findOne(submit_id);
 

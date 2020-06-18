@@ -9,14 +9,20 @@ class ShowExamStatusController {
     const { course_id } = req.params;
     const user_id = req.user.id;
 
-    const { accuracy, userCourse } = await showExamStatus.execute({
+    const {
+      accuracy,
+      userCourse,
+      practical_exam_url,
+    } = await showExamStatus.execute({
       user_id,
       course_id,
     });
 
     delete userCourse.course;
 
-    return res.status(200).json({ accuracy, ...userCourse });
+    return res
+      .status(200)
+      .json({ accuracy, ...userCourse, practical_exam_url });
   }
 }
 
