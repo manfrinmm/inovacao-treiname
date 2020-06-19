@@ -4,7 +4,5 @@
   - Layout responsivo.
 - ADM:
   - Cadastrar prova. (corrigir bug de adição e remoção de questões)
-- Validação de formulários (React);
-- Validação de requisições (Node);
-- Personalizar uma rota para cada funcionalidade. (Otimização)
+  - Validação de formulários (Cadastro de questões);
 - Refatoração de testes. (Otimização)

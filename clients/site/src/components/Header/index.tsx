@@ -16,9 +16,11 @@ const Header: React.FC = () => {
   const handleClickMenu = useCallback(() => {
     setIsOpen(state => !state);
   }, []);
+
   const handleGoToSignIn = useCallback(() => {
     history.push("/signIn");
   }, [history]);
+
   const handleGoToSignUp = useCallback(() => {
     history.push("/signUp");
   }, [history]);

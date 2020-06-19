@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { FaPlus } from "react-icons/fa";
 import {
   MdKeyboardArrowLeft,
@@ -8,15 +8,18 @@ import {
 import { useHistory, useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { FormHandles } from "@unform/core";
 import { Form } from "@unform/web";
 // eslint-disable-next-line import/no-duplicates
 import { format, parseISO } from "date-fns";
 // eslint-disable-next-line import/no-duplicates
 import ptBr from "date-fns/locale/pt-BR";
+import * as Yup from "yup";
 
 import Button from "~/components/Button";
 import LinkInput from "~/components/Input";
 import api from "~/services/api";
+import getValidationErrors from "~/utils/getValidationErrors";
 
 import Input from "./Input";
 import ModalCourse from "./ModalCourse";
@@ -82,6 +85,8 @@ interface UserDataProps {
 const Student: React.FC = () => {
   const [userData, setUserData] = useState({} as UserDataProps);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const formRef = useRef<FormHandles>(null);
 
   const { user_id } = useParams();
 
@@ -174,10 +179,35 @@ const Student: React.FC = () => {
       };
 
       try {
+        formRef.current?.setErrors({});
+
+        const schema = Yup.object().shape({
+          name: Yup.string().required("Nome é obrigatório"),
+          cpf: Yup.string().required("CPF é obrigatório"),
+          rg: Yup.string().required("RG é obrigatório"),
+          phone: Yup.string().required("Telefone é obrigatório"),
+          password: Yup.string(),
+          exam_practice_link: Yup.string(),
+        });
+
+        await schema.validate(data, { abortEarly: false });
+
         await api.put(`/users/${user_id}`, userNewData);
 
         toast.success("Usuário atualizado com sucesso.");
       } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error);
+
+          formRef.current?.setErrors(errors);
+
+          toast.error(
+            "Erro ao atualizar usuário. Por favor, verifique os campos.",
+          );
+
+          return;
+        }
+
         toast.error("Erro ao atualizar usuário. Por favor, tente novamente.");
       }
     },
@@ -195,7 +225,12 @@ const Student: React.FC = () => {
       <section>
         <StudentInfo hasLink={!!userData.exam_practice_link}>
           <h1>Aluno</h1>
-          <Form id="formData" onSubmit={handleSubmit} initialData={userData}>
+          <Form
+            id="formData"
+            onSubmit={handleSubmit}
+            initialData={userData}
+            ref={formRef}
+          >
             <section>
               <Input name="name" title="Nome:" placeholder="Nome do aluno" />
               <Input name="cpf" title="CPF:" placeholder="CPF do aluno" />
