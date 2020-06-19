@@ -22,6 +22,11 @@ interface UpdateUserDTO {
   };
 }
 
+interface UpdateUserPasswordDTO {
+  user: User;
+  password: string;
+}
+
 export default class UsersRepository {
   private ormRepository: Repository<User>;
 
@@ -59,6 +64,20 @@ export default class UsersRepository {
 
   public async update({ user, data }: UpdateUserDTO): Promise<User> {
     const userUpdated = this.ormRepository.merge(user, data);
+
+    await this.ormRepository.save(userUpdated);
+
+    return userUpdated;
+  }
+
+  public async updatePassword({
+    user,
+    password,
+  }: UpdateUserPasswordDTO): Promise<User> {
+    const userUpdated = {
+      ...user,
+      password,
+    };
 
     await this.ormRepository.save(userUpdated);
 

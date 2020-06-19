@@ -11,7 +11,10 @@ const Header: React.FC = () => {
     <Container>
       <Content>
         <Link to="/dashboard">Dashboard</Link>
-        <ButtonLogout onClick={signOut}>Sair</ButtonLogout>
+        <div>
+          <Link to="/profile">Atualizar perfil</Link>
+          <ButtonLogout onClick={signOut}>Sair</ButtonLogout>
+        </div>
       </Content>
     </Container>
   );

@@ -11,4 +11,4 @@
 - Certificado:
   - Site de acesso.
   - Validade.
-- Validar formulário, submissão de prova (dando erro, marcando questões erradas)
+- Student & Admin atualizar senha.

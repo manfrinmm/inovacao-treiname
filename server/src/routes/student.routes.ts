@@ -7,6 +7,7 @@ import PurchaseStatusController from "../app/controllers/Student/PurchaseStatusC
 import ResultExamController from "../app/controllers/Student/ResultExamController";
 import ShowExamStatusController from "../app/controllers/Student/ShowExamStatusController";
 import SubmitExamController from "../app/controllers/Student/SubmitExamController";
+import UpdatePasswordController from "../app/controllers/Student/UpdatePasswordController";
 
 const routes = Router();
 
@@ -24,5 +25,7 @@ routes.get(
   "/courses/:course_id/purchase-status",
   PurchaseStatusController.show,
 );
+
+routes.patch("/password/update", UpdatePasswordController.store);
 
 export default routes;

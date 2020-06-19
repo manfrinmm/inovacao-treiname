@@ -27,7 +27,7 @@ const SignIn: React.FC = () => {
       }
 
       try {
-        await api.put(`/users/${user.id}`, { password });
+        await api.patch("/users/password/update", { password });
 
         toast.success("Senha atualizada com sucesso!");
 
@@ -38,7 +38,7 @@ const SignIn: React.FC = () => {
         );
       }
     },
-    [user.id, history],
+    [history],
   );
 
   return (

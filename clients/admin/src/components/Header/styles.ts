@@ -20,10 +20,26 @@ export const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  div {
+    display: flex;
+    align-items: center;
+
+    a {
+      font-size: 2rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 `;
 
 export const ButtonLogout = styled(Button)`
   padding: 8px 24px;
+  background: #eee;
+  color: #ff9900;
+  margin-left: 16px;
 `;
 
 export const Link = styled(Linker)`
