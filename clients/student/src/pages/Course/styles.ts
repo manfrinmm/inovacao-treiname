@@ -7,17 +7,25 @@ export const Container = styled.div`
   display: flex;
   justify-content: space-between;
 
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    aside {
+      margin: 32px auto 0;
+    }
+  }
+
   main {
     width: 100%;
     margin-right: 16px;
 
     section {
-      position: sticky;
-      top: 0;
+      /* position: sticky;
+      top: 0; */
 
-      width: 735px;
+      /* width: 735px; */
       height: 100%;
-      max-height: 468px;
+      /* max-height: 468px; */
 
       iframe {
         width: 100%;

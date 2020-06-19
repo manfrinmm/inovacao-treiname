@@ -99,6 +99,10 @@ const Exame: React.FC = () => {
 
         const { name, questions } = response.data;
 
+        if (questions.length < 1) {
+          throw new Error("error");
+        }
+
         setExam({ name, questions });
       } catch (error) {
         toast.error("Erro ao carregar informações da prova.");

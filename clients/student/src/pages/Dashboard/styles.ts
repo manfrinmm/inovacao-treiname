@@ -6,6 +6,10 @@ interface CourseProp {
 
 export const Container = styled.div`
   margin-top: 24px;
+  padding: 0 32px;
+
+  display: flex;
+  flex-direction: column;
 
   header {
     display: flex;
@@ -26,7 +30,8 @@ export const Container = styled.div`
     gap: 16px 32px;
     grid-template-columns: repeat(auto-fill, 208px);
 
-    margin-top: 32px;
+    width: 100%;
+    margin: 32px auto 0;
   }
 `;
 
