@@ -4,11 +4,7 @@
   - Layout responsivo.
 - ADM:
   - Cadastrar prova. (corrigir bug de adição e remoção de questões)
-- Personalizar uma rota para cada funcionalidade. (Otimização)
-- Refatoração de testes. (Otimização)
 - Validação de formulários (React);
 - Validação de requisições (Node);
-- Certificado:
-  - Site de acesso.
-  - Validade.
-- Student & Admin atualizar senha.
+- Personalizar uma rota para cada funcionalidade. (Otimização)
+- Refatoração de testes. (Otimização)

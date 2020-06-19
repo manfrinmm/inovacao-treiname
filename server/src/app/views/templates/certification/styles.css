@@ -53,12 +53,10 @@ footer .signature .signature-image {
 
 footer .signature.aprove-by p {
   width: 58px;
-  flex-wrap: wrap;
 }
 
 #page-01 {
   page-break-after: always;
-  /* height: 100vh; */
 }
 
 #page-01 .logo {
@@ -90,11 +88,19 @@ footer .signature.aprove-by p {
 }
 
 #page-01 .code {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
   margin-top: 88px;
 }
 
-#page-02 {
-  height: 100vh;
+#page-01 .code p {
+  text-align: center;
+}
+
+#page-01 .code section p + p {
+  margin-top: 8px;
 }
 
 #page-02 .container {

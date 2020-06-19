@@ -6,6 +6,7 @@
     "workload": 8,
     "category": "NR-10",
     "approved_by": "Matheus ME. CRA 16.65-98CRA 16.65-98CRA 16.65-98CRA 16.65-98",
+    "certificate_validity": "12",
     "learns": [
       "1. Introdução à segurança com eletricidade.",
       "2. Riscos em instalações e serviços com eletricidade:",
@@ -56,5 +57,8 @@
   "logo_url": "http://localhost:3333/templates/certification/logo.png",
   "signature_image_url": "http://localhost:3333/templates/certification/signature.jpeg",
   "styles_url": "http://localhost:3333/templates/certification/styles.css",
-  "code": "92daade1-efca-4ddd-a6fe-2c4bd0a360b8"
+  "code": "92daade1-efca-4ddd-a6fe-2c4bd0a360b8",
+  "localDateFormatted": " Jataí - GO, 20/19/20",
+  "period": "17/06/2020 a 19/06/20",
+  "site_web_url": "http://localhost:3333/certification/code"
 }

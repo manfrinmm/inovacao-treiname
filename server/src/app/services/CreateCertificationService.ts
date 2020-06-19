@@ -18,6 +18,7 @@ interface PdfCreatorDTO {
     workload: number;
     category: string;
     approved_by: string;
+    certificate_validity: number;
     learns: string[];
   };
   released_on: Date;
@@ -33,6 +34,7 @@ export default class CreateCertificationService {
     const logo_url = `${process.env.APP_API_URL}/templates/certification/logo.png`;
     const signature_image_url = `${process.env.APP_API_URL}/templates/certification/signature.jpeg`;
     const styles_url = `${process.env.APP_API_URL}/templates/certification/styles.css`;
+    const site_web_url = process.env.SITE_WEB_URL;
 
     const htmlPath = path.resolve(
       __dirname,
@@ -72,6 +74,7 @@ export default class CreateCertificationService {
       styles_url,
       period,
       code,
+      site_web_url,
     };
 
     const certificationName = `${code}.pdf`;
