@@ -10,6 +10,8 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
+  margin-top: 32px;
+
   h1 {
     margin-bottom: 16px;
     font-weight: 400;

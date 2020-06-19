@@ -14,7 +14,7 @@ export const Content = styled.div`
   margin: 0 auto;
   max-width: 1120px;
   color: #f5f7fe;
-  padding: 16px 32px;
+  padding: 16px;
 
   display: flex;
   justify-content: space-between;

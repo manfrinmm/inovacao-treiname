@@ -51,8 +51,8 @@ export const Container = styled.div`
     font-weight: 500;
     color: #325bbf;
 
-    width: 336px;
-    /* width: 100%; */
+    max-width: 336px;
+    width: 100%;
     /* flex: 1; */
 
     header {

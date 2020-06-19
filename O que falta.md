@@ -1,7 +1,5 @@
 - Site:
   - Integrar com pagSeguro.
-- Aluno:
-  - Layout responsivo.
 - ADM:
   - Cadastrar prova. (corrigir bug de adição e remoção de questões)
   - Validação de formulários (Cadastro de questões);
