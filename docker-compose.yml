@@ -1,0 +1,71 @@
+version: "3.7"
+
+services:
+  # Também é necessário criar um volume para não perder os dados da pasta tmp
+  # inovacao-treinamentos-server-api:
+  #   build: ./server/Dockerfile
+  #   restart: always
+  #   ports: 3333:3333
+  #   container_name: inovacao-treinamentos-server-api
+  #   depends_on:
+  #     - inovacao-treinamentos-db-postgres
+  #     - inovacao-treinamentos-db-mongodb
+  #     - inovacao-treinamentos-db-redis
+  #   volumes:
+  #     - ./server:/home/node/api
+  #   command:
+  #     - yarn start
+  #     - yarn queue
+
+  # inovacao-treinamentos-web-admin:
+  #   build: ./clients/admin/Dockerfile
+  #   restart: always
+  #   ports: 3000:3000
+  #   container_name: inovacao-treinamentos-web-admin
+  #   depends_on: inovacao-treinamentos-server-api
+  #   command: yarn start
+
+  # inovacao-treinamentos-web-student:
+  #   build: ./clients/student/Dockerfile
+  #   restart: always
+  #   ports: 3001:3000
+  #   container_name: inovacao-treinamentos-web-student
+  #   depends_on: inovacao-treinamentos-server-api
+  #   command: yarn start
+
+  # inovacao-treinamentos-web-site:
+  #   build: ./clients/site/Dockerfile
+  #   restart: always
+  #   ports: 3002:3000
+  #   container_name: inovacao-treinamentos-web-site
+  #   depends_on: inovacao-treinamentos-server-api
+  #   command: yarn start
+
+  inovacao-treinamentos-db-postgres:
+    image: "postgres"
+    restart: always
+    container_name: inovacao-treinamentos-db-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: inovacao-treiname
+    volumes:
+      - ./docker/volumes/pgdata:/var/lib/postgresql/data
+
+  inovacao-treinamentos-db-mongodb:
+    image: "mongo"
+    restart: always
+    container_name: inovacao-treinamentos-db-mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./docker/volumes/mgdata:/data/db
+
+  inovacao-treinamentos-db-redis:
+    image: "redis:alpine"
+    restart: always
+    container_name: inovacao-treinamentos-db-redis
+    ports:
+      - 6379:6379
