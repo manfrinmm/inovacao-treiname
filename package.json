@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "build-admin": "cd ./clients/admin && yarn build",
-    "build-student": "cd ./clients/student && yarn build",
-    "build-site": "cd ./clients/site && yarn build",
+    "build-admin": "cd ./clients/admin && yarn && yarn build",
+    "build-student": "cd ./clients/student && yarn && yarn build",
+    "build-site": "cd ./clients/site && yarn && yarn build",
     "build-all-clients": "yarn build-admin && yarn build-student && yarn build-site ",
     "start-admin": "cd ./clients/admin && yarn start:build",
     "start-student": "cd ./clients/student && yarn start:build",
