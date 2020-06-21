@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build-admin": "cd ./clients/admin && yarn build",
+    "build-student": "cd ./clients/student && yarn build",
+    "build-site": "cd ./clients/site && yarn build",
+    "build-all-clients": "yarn build-admin && yarn build-student && yarn build-site ",
+    "start-admin": "cd ./clients/admin && yarn start:build",
+    "start-student": "cd ./clients/student && yarn start:build",
+    "start-site": "cd ./clients/site && yarn start:build"
+  }
+}

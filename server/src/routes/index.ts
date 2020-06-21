@@ -39,6 +39,7 @@ routes.get("/pdf", async (req, res) => {
       workload: 8,
       category: "NR-10",
       approved_by: "mathesssss",
+      certificate_validity: 12,
       learns: [
         "10. Documentação de instalações elétricas.",
         "11. Riscos adicionais:",

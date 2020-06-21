@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --inspect --transpileOnly --ignore-watch node_modules ./src/server.ts",
     "queue": "ts-node-dev --transpileOnly --ignore-watch node_modules ./src/queue.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
-    "start": "set NODE_ENV=production&ts-node-dev ./dist/server.ts",
+    "start": "set NODE_ENV=production&ts-node-dev --transpileOnly --ignore-watch node_modules ./src/server.ts",
     "test": "set NODE_ENV=test&jest --runInBand --detectOpenHandles"
   },
   "dependencies": {
