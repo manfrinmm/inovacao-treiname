@@ -82,7 +82,10 @@ export default class CreateCertificationService {
     const html = hbs.compile(fs.readFileSync(htmlPath, "utf8"))(context);
 
     try {
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        headless: false,
+        args: ["--no-sandbox"],
+      });
       const page = await browser.newPage();
 
       await page.setContent(html);
