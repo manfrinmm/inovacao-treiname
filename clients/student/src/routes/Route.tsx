@@ -20,18 +20,12 @@ const Route: React.FC<RouteProps> = ({
   const { user } = useAuth();
 
   if (user && !isPrivate) {
-    console.log("dash");
-
     return <Redirect to="/dashboard" />;
   }
 
   if (!user && isPrivate) {
-    console.log("login");
-
     return <Redirect to="/" />;
   }
-
-  console.log("Continua");
 
   return <ReactDOMRoute {...rest} render={() => <Component />} />;
 };

@@ -1,6 +1,7 @@
 - Site:
   - Integrar com pagSeguro.
 - ADM:
-  - Cadastrar prova. (corrigir bug de adição e remoção de questões)
+  - Cadastrar prova. (corrigir bug de adição e remoção de questões);
   - Validação de formulários (Cadastro de questões);
 - Refatoração de testes. (Otimização)
+- Para usar `ip-api` (logs) é necessário pagar.

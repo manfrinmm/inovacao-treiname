@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Switch } from "react-router-dom";
+import { BrowserRouter, Switch, Redirect } from "react-router-dom";
 
 import Course from "~/pages/Course";
 import Courses from "~/pages/Courses";
@@ -36,7 +36,7 @@ const Routes: React.FC = () => (
           isPrivate
         />
 
-        <Route path="*" component={Dashboard} isPrivate />
+        <Redirect to="/dashboard" />
       </Switch>
     </DefaultLayout>
   </BrowserRouter>

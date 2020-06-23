@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Switch } from "react-router-dom";
+import { BrowserRouter, Switch, Redirect } from "react-router-dom";
 
 import SignIn from "~/pages/Auth/SignIn";
 import Course from "~/pages/Course";
@@ -13,10 +13,10 @@ import Route from "./Route";
 
 const Routes: React.FC = () => (
   <BrowserRouter>
-    <Switch>
-      <Route path="/" exact component={SignIn} />
+    <DefaultLayouts>
+      <Switch>
+        <Route path="/" exact component={SignIn} />
 
-      <DefaultLayouts>
         <Route path="/dashboard" component={Dashboard} isPrivate />
         <Route path="/profile" component={Profile} isPrivate />
         <Route path="/course/:course_id" exact component={Course} isPrivate />
@@ -27,9 +27,9 @@ const Routes: React.FC = () => (
           isPrivate
         />
 
-        <Route path="*" component={Dashboard} isPrivate />
-      </DefaultLayouts>
-    </Switch>
+        <Redirect to="/dashboard" />
+      </Switch>
+    </DefaultLayouts>
   </BrowserRouter>
 );
 
