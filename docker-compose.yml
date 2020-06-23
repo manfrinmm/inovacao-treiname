@@ -12,7 +12,7 @@ services:
   #     - inovacao-treinamentos-db-mongodb
   #     - inovacao-treinamentos-db-redis
   #   volumes:
-  #     - ./server:/home/node/api
+  #     - ./server/tmp:/home/node/api/tmp
   #   command:
   #     - yarn start
   #     - yarn queue
@@ -46,11 +46,11 @@ services:
     restart: always
     container_name: inovacao-treinamentos-db-postgres
     ports:
-      - "5432:5432"
+      - ${PG_PORT}:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: docker
-      POSTGRES_DB: inovacao-treiname
+      POSTGRES_USER: "${PG_USER}"
+      POSTGRES_PASSWORD: "${PG_PASS}"
+      POSTGRES_DB: "${PG_DATABASE}"
     volumes:
       - ./docker/volumes/pgdata:/var/lib/postgresql/data
 
@@ -59,7 +59,7 @@ services:
     restart: always
     container_name: inovacao-treinamentos-db-mongodb
     ports:
-      - 27017:27017
+      - "${MG_PORT}:27017"
     volumes:
       - ./docker/volumes/mgdata:/data/db
 
@@ -68,4 +68,4 @@ services:
     restart: always
     container_name: inovacao-treinamentos-db-redis
     ports:
-      - 6379:6379
+      - "${REDIS_PORT}:6379"

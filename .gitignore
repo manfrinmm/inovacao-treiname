@@ -1,1 +1,5 @@
 cra-monorepo-examples
+
+.env
+
+*.pem

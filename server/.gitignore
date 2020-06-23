@@ -1,11 +1,11 @@
 node_modules
 
 jest-tmp
-
 coverage
 
 tmp/*
-!tmp/.gitkeep
+tmp/certifications/*
+tmp/uploads/*
 
 .env
 
