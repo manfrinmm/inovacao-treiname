@@ -13,6 +13,10 @@ export const Container = styled.div`
   height: 90%;
   background: url(${image}) no-repeat cover;
 
+  h1 {
+    color: #325bbf;
+  }
+
   form {
     max-width: 320px;
     width: 100%;

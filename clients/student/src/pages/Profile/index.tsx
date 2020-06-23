@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { FaRegIdCard } from "react-icons/fa";
 import { MdPerson, MdLock, MdContactPhone } from "react-icons/md";
 import { useHistory } from "react-router-dom";
