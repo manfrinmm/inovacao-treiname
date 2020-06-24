@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 import { Scope, FormHandles } from "@unform/core";
 import { Form } from "@unform/web";
+import * as Yup from "yup";
 
 import Button from "~/components/Button";
 import Radio from "~/components/Input/Radio";
@@ -47,8 +48,6 @@ interface FormDataProps {
   questions: Array<QuestionDataProps>;
 }
 
-// Falta verificar duplicidade de Questões quando muda a seleção de curso.
-
 const Examination: React.FC = () => {
   const examFormRef = useRef<FormHandles>(null);
 
@@ -61,19 +60,65 @@ const Examination: React.FC = () => {
 
   const history = useHistory();
 
-  console.log("formData", formData);
-  // examFormRef.current?.setData(formData.questions);
+  // Load Courses
+  useEffect(() => {
+    api
+      .get<CourseResponse[]>("/courses")
+      .then(response => {
+        const courseData = response.data;
+
+        const courseFormattedData = courseData.map(course => ({
+          label: course.name,
+          value: course.id,
+        }));
+
+        setCourses(courseFormattedData);
+      })
+      .catch(() => {
+        toast.error("Falha ao buscar dados dos cursos.");
+      });
+  }, []);
+
+  // Load Course Exam
+  useEffect(() => {
+    async function loadCoursesExam(): Promise<void> {
+      if (selectedCourse) {
+        try {
+          const response = await api.get(`/courses/${selectedCourse}/exams`);
+          console.log("Exams", response.data);
+
+          if (response.data.length < 1) {
+            setFormData({
+              course_id: selectedCourse,
+              questions: [{}],
+            } as FormDataProps);
+
+            return;
+          }
+
+          setFormData({
+            course_id: selectedCourse,
+            questions: response.data,
+          });
+        } catch (error) {
+          toast.error("Erro ao carregar informações da prova.");
+        }
+      }
+    }
+
+    loadCoursesExam();
+  }, [selectedCourse]);
 
   const handleCourseSelect = useCallback(async event => {
     const course_id = event.target.value;
+
     setSelectedCourse(course_id);
   }, []);
 
   const getQuestionsState = useCallback((): QuestionDataProps[] => {
     const data = examFormRef.current?.getData() as FormDataProps;
 
-    console.log("dataFormRef", data);
-    const answersMarked = data.questions.map(question => {
+    const correct_answers_data = data.questions.map(question => {
       const markAnswer = Object.entries(question).find(item => {
         const [key, value] = Object.values(item);
 
@@ -85,37 +130,29 @@ const Examination: React.FC = () => {
       });
 
       let correct_answer = "";
+
       if (markAnswer) {
         correct_answer = String(markAnswer[1]);
       }
 
-      return { ...question, correct_answer };
+      return correct_answer;
     });
 
+    const answersMarked = formData.questions.map(({ id }, index) => ({
+      title: data.questions[index].title,
+      answer_a: data.questions[index].answer_a,
+      answer_b: data.questions[index].answer_b,
+      answer_c: data.questions[index].answer_c,
+      answer_d: data.questions[index].answer_d,
+      correct_answer: correct_answers_data[index],
+      ...(id ? { id } : {}),
+    }));
+
     return answersMarked;
-  }, []);
+  }, [formData.questions]);
 
   const handleAddQuestion = useCallback(() => {
     const questions = getQuestionsState();
-    console.log("questions", questions);
-
-    examFormRef.current?.reset({
-      questions,
-    });
-
-    // examFormRef.current?.setData({
-    //   questions: [
-    //     ...questions,
-    //     {
-    //       title: "",
-    //       answer_a: "",
-    //       answer_b: "",
-    //       answer_c: "",
-    //       answer_d: "",
-    //       correct_answer: "",
-    //     },
-    //   ],
-    // });
 
     setFormData({
       course_id: selectedCourse,
@@ -138,16 +175,10 @@ const Examination: React.FC = () => {
       try {
         const questions = getQuestionsState();
 
-        examFormRef.current?.setData({
-          questions: questions.filter((_, index) => index !== indexToRemove),
-        });
-
-        console.log("questionsRemove", questions);
-
         const question_id = questions[indexToRemove].id;
 
         if (question_id) {
-          // await api.delete(`/courses/${selectedCourse}/exams/${question_id}`);
+          await api.delete(`/courses/${selectedCourse}/exams/${question_id}`);
         }
 
         setFormData(state => ({
@@ -160,7 +191,7 @@ const Examination: React.FC = () => {
         toast.error("Erro ao deletar questão.");
       }
     },
-    [getQuestionsState],
+    [getQuestionsState, selectedCourse],
   );
 
   const handleSubmit = useCallback(async () => {
@@ -168,84 +199,41 @@ const Examination: React.FC = () => {
 
     try {
       const exam = { course_id: selectedCourse, questions };
-      // await api.post("/exams", exam);
-      console.log("exam", exam);
 
-      const messageSuccess =
-        formData.questions.length > 2
-          ? "Prova criada com sucesso."
-          : "Prova atualizada com sucesso.";
+      const schema = Yup.object().shape({
+        course_id: Yup.string().required(),
+        questions: Yup.array().of(
+          Yup.object().shape({
+            title: Yup.string().required(),
+            answer_a: Yup.string().required(),
+            answer_b: Yup.string().required(),
+            answer_c: Yup.string().required(),
+            answer_d: Yup.string().required(),
+            correct_answer: Yup.string()
+              .oneOf(["answer_a", "answer_b", "answer_c", "answer_d"])
+              .required(),
+          }),
+        ),
+      });
 
-      toast.success(messageSuccess);
+      await schema.validate(exam, { abortEarly: false });
 
-      // history.push("/dashboard");
+      await api.post("/exams", exam);
+
+      toast.success("Prova criada/atualizada com sucesso.");
+
+      history.push("/dashboard");
     } catch (error) {
-      toast.error("Erro ao criar prova.");
-    }
-  }, [getQuestionsState, selectedCourse, formData.questions.length]);
-
-  useEffect(() => {
-    api.get<CourseResponse[]>("/courses").then(response => {
-      const courseData = response.data;
-
-      const courseFormattedData = courseData.map(course => ({
-        label: course.name,
-        value: course.id,
-      }));
-
-      setCourses(courseFormattedData);
-    });
-  }, []);
-
-  useEffect(() => {
-    async function loadCoursesExam(): Promise<void> {
-      examFormRef.current?.reset({});
-      setFormData({ questions: [{}] } as FormDataProps);
-
-      if (selectedCourse) {
-        console.log("selectedCourse-in", selectedCourse);
-
-        const response = await api.get(`/courses/${selectedCourse}/exams`);
-        console.log(response.data);
-
-        if (response.data.length < 1) {
-          examFormRef.current?.setData({
-            course_id: selectedCourse,
-            questions: [{}],
-          });
-          setFormData({
-            course_id: selectedCourse,
-            questions: [{}],
-          } as FormDataProps);
-
-          return;
-        }
-
-        examFormRef.current?.setData({
-          course_id: selectedCourse,
-          questions: response.data,
-        });
-
-        setFormData({
-          course_id: selectedCourse,
-          questions: response.data,
-        });
+      if (error instanceof Yup.ValidationError) {
+        toast.error(
+          "Erro ao criar prova.Por favor, verifique se todos os campos estão preenchidos",
+        );
 
         return;
       }
-
-      console.log("selectedCourse-out", selectedCourse);
-
-      // examFormRef.current?.setData({
-      //   course_id: "",
-      //   questions: [{}],
-      // });
-
-      // setFormData({ course_id: "", questions: [{}] } as FormDataProps);
+      toast.error("Erro ao criar prova. Por favor, tente novamente.");
     }
-
-    loadCoursesExam();
-  }, [selectedCourse]);
+  }, [getQuestionsState, selectedCourse, history]);
 
   return (
     <Container>
@@ -255,7 +243,7 @@ const Examination: React.FC = () => {
           title="Curso"
           name="course_id"
           options={courses}
-          value={formData.course_id}
+          value={selectedCourse}
           onChange={handleCourseSelect}
         />
         <h3>Questões</h3>
@@ -293,11 +281,7 @@ const Examination: React.FC = () => {
                 <section>
                   <Answer>
                     <section>
-                      <Radio
-                        name="correct_answer"
-                        title="A"
-                        radioValue="answer_a"
-                      />
+                      <Radio name="correct_answer" title="A" value="answer_a" />
                     </section>
                     <TextArea
                       name="answer_a"
@@ -307,11 +291,7 @@ const Examination: React.FC = () => {
                   </Answer>
                   <Answer>
                     <section>
-                      <Radio
-                        name="correct_answer"
-                        title="B"
-                        radioValue="answer_b"
-                      />
+                      <Radio name="correct_answer" title="B" value="answer_b" />
                     </section>
                     <TextArea
                       name="answer_b"
@@ -321,11 +301,7 @@ const Examination: React.FC = () => {
                   </Answer>
                   <Answer>
                     <section>
-                      <Radio
-                        name="correct_answer"
-                        title="C"
-                        radioValue="answer_c"
-                      />
+                      <Radio name="correct_answer" title="C" value="answer_c" />
                     </section>
                     <TextArea
                       name="answer_c"
@@ -335,11 +311,7 @@ const Examination: React.FC = () => {
                   </Answer>
                   <Answer>
                     <section>
-                      <Radio
-                        name="correct_answer"
-                        title="D"
-                        radioValue="answer_d"
-                      />
+                      <Radio name="correct_answer" title="D" value="answer_d" />
                     </section>
                     <TextArea
                       name="answer_d"
@@ -355,9 +327,7 @@ const Examination: React.FC = () => {
             Adicionar Questão
           </AddQuestionButton>
         </Questions>
-        <Button type="submit">
-          {selectedCourse ? "Atualizar Prova" : "Cadastrar Prova"}
-        </Button>
+        <Button type="submit">Cadastrar/Atualizar Prova</Button>
       </Form>
     </Container>
   );
