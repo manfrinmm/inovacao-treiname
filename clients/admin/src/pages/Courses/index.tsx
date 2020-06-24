@@ -50,6 +50,8 @@ const Courses: React.FC = () => {
         if (foundCourse) {
           return course;
         }
+
+        return null;
       });
       setCoursesFiltered(courseFiltered);
     }

@@ -27,24 +27,24 @@ export const Container = styled.div<ContainerProps>`
       margin-right: 16px;
     }
   }
-
-  > div {
-    p {
-      padding: 8px 24px;
-    }
-
-    section {
-      padding: 8px 24px;
-
-      & + div {
-        margin-top: 80px;
-      }
-    }
-  }
 `;
 
 export const Content = styled.div<ContentProps>`
   display: ${props => !props.expanded && "none"};
+
+  > p {
+    padding: 8px 24px;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+  }
+
+  section {
+    padding: 8px 24px;
+
+    & + div {
+      margin-top: 80px;
+    }
+  }
 `;
 
 export const Option = styled.div`
