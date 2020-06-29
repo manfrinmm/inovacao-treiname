@@ -7,6 +7,8 @@ interface AnswerProp {
 }
 
 export const Container = styled.div`
+  margin-bottom: 48px;
+
   header {
     margin: 48px 0 16px;
 

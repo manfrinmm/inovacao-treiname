@@ -1,12 +1,7 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 interface ContainerProps {
-  selected: boolean;
   isErrored: boolean;
-}
-
-interface OptionProps {
-  checked: boolean;
 }
 
 interface ContentProps {
@@ -21,8 +16,6 @@ export const Container = styled.div<ContainerProps>`
   button {
     padding: 8px 16px;
 
-    color: ${props => props.selected && "#ef5912"};
-
     background: transparent;
     width: 100%;
 
@@ -30,34 +23,31 @@ export const Container = styled.div<ContainerProps>`
     align-items: center;
 
     svg {
-      color: ${props => (props.selected ? "#ef5912" : " #101451")};
+      color: #101451;
       margin-right: 16px;
-    }
-  }
-
-  > div {
-    p {
-      padding: 8px 24px;
-
-      border-top: 1px solid ${props => props.selected && "#ef5912"};
-      border-bottom: 1px solid ${props => props.selected && "#ef5912"};
-    }
-
-    section {
-      padding: 8px 24px;
-
-      & + div {
-        margin-top: 80px;
-      }
     }
   }
 `;
 
 export const Content = styled.div<ContentProps>`
   display: ${props => !props.expanded && "none"};
+
+  > p {
+    padding: 8px 24px;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+  }
+
+  section {
+    padding: 8px 24px;
+
+    & + div {
+      margin-top: 80px;
+    }
+  }
 `;
 
-export const Option = styled.div<OptionProps>`
+export const Option = styled.div`
   display: flex;
 
   div {
@@ -81,14 +71,5 @@ export const Option = styled.div<OptionProps>`
         }
       }
     }
-  }
-
-  > label {
-    ${props =>
-      props.checked &&
-      css`
-        color: #ef5912;
-        font-weight: 500;
-      `}
   }
 `;

@@ -9,13 +9,14 @@ import ExameResult from "~/pages/ExameResult";
 import Profile from "~/pages/Profile";
 import DefaultLayouts from "~/styles/_layouts/DefaultLayouts";
 
-import Route from "./Routes";
+import Route from "./Route";
 
 const Routes: React.FC = () => (
   <BrowserRouter>
-    <Switch>
-      <Route path="/" exact component={SignIn} />
-      <DefaultLayouts>
+    <DefaultLayouts>
+      <Switch>
+        <Route path="/" exact component={SignIn} />
+
         <Route path="/dashboard" component={Dashboard} isPrivate />
         <Route path="/profile" component={Profile} isPrivate />
         <Route path="/course/:course_id" exact component={Course} isPrivate />
@@ -25,9 +26,10 @@ const Routes: React.FC = () => (
           component={ExameResult}
           isPrivate
         />
+
         <Redirect to="/dashboard" />
-      </DefaultLayouts>
-    </Switch>
+      </Switch>
+    </DefaultLayouts>
   </BrowserRouter>
 );
 

@@ -35,9 +35,8 @@ const Routes: React.FC = () => (
           component={ExameResult}
           isPrivate
         />
-        <Redirect to="/dashboard" />
 
-        {/* <Route path="*" component={Dashboard} /> */}
+        <Redirect to="/dashboard" />
       </Switch>
     </DefaultLayout>
   </BrowserRouter>

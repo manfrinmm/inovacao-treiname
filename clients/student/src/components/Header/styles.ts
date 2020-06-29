@@ -22,6 +22,9 @@ export const Content = styled.div`
 
   img {
     height: 64px;
+    padding: 4px 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.8);
   }
 `;
 

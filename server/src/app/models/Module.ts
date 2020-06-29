@@ -8,6 +8,7 @@ import {
   JoinColumn,
   ManyToOne,
   BeforeInsert,
+  BeforeUpdate,
 } from "typeorm";
 
 import diskStorageProvider from "../utils/diskStorageProvider";
@@ -29,6 +30,15 @@ export default class CourseModule {
 
   @Column()
   extra_link: string;
+
+  @BeforeUpdate()
+  updateFile(): void {
+    if (process.env.NODE_ENV === "test") {
+      return;
+    }
+
+    diskStorageProvider.saveFile(this.file);
+  }
 
   @BeforeInsert()
   function(): void {

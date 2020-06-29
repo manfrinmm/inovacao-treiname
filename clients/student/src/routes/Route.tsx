@@ -27,7 +27,7 @@ const Route: React.FC<RouteProps> = ({
     return <Redirect to="/" />;
   }
 
-  return <ReactDOMRoute {...rest} component={Component} />;
+  return <ReactDOMRoute {...rest} render={() => <Component />} />;
 };
 
 export default Route;

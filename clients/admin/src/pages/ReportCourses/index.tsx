@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import api from "~/services/api";
@@ -22,25 +23,33 @@ const ReportCourses: React.FC = () => {
     ReportCoursesDataProps[]
   >([]);
 
-  useEffect(() => {
-    api.get<ReportCoursesDataProps[]>("/admins/reports").then(response => {
-      const reportFormatted = response.data.map<ReportCoursesDataProps>(
-        report => ({
-          ...report,
-          value_formatted: Intl.NumberFormat("pt-br", {
-            style: "currency",
-            currency: "BRL",
-          }).format(report.value),
-          total_value_formatted: Intl.NumberFormat("pt-br", {
-            style: "currency",
-            currency: "BRL",
-          }).format(report.total_value),
-        }),
-      );
+  const history = useHistory();
 
-      setReportCoursesData(reportFormatted);
-    });
-  }, []);
+  useEffect(() => {
+    api
+      .get<ReportCoursesDataProps[]>("/admins/reports")
+      .then(response => {
+        const reportFormatted = response.data.map<ReportCoursesDataProps>(
+          report => ({
+            ...report,
+            value_formatted: Intl.NumberFormat("pt-br", {
+              style: "currency",
+              currency: "BRL",
+            }).format(report.value),
+            total_value_formatted: Intl.NumberFormat("pt-br", {
+              style: "currency",
+              currency: "BRL",
+            }).format(report.total_value),
+          }),
+        );
+
+        setReportCoursesData(reportFormatted);
+      })
+      .catch(() => {
+        toast.error("Falha ao pegar os dados para gerar o relatório.");
+        history.push("/dashboard");
+      });
+  }, [history]);
 
   return (
     <Container>

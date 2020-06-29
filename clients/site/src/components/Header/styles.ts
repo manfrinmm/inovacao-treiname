@@ -28,7 +28,7 @@ export const Content = styled.div`
     height: 64px;
     padding: 4px 16px;
     border-radius: 8px;
-    background: ${shade(0.4, "#fff")};
+    background: rgba(255, 255, 255, 0.8);
   }
 `;
 

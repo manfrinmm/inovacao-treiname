@@ -7,19 +7,17 @@ import { Container, Error } from "./styles";
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   title: string;
   name: string;
-  radioValue: string;
 }
 
-const Radio: React.FC<InputProps> = ({ title, name, radioValue, ...rest }) => {
+const Radio: React.FC<InputProps> = ({ title, name, value, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { registerField, fieldName, error, defaultValue } = useField(name);
 
   useEffect(() => {
     registerField({
-      name: `${fieldName}:${radioValue}`,
+      name: `${fieldName}:${value}`,
       ref: inputRef.current,
-      // path: "value",
       getValue(ref) {
         return ref.checked ? ref.value : null;
       },
@@ -29,7 +27,7 @@ const Radio: React.FC<InputProps> = ({ title, name, radioValue, ...rest }) => {
       //   }
       // },
     });
-  }, [registerField, fieldName, radioValue]);
+  }, [registerField, fieldName, value]);
 
   return (
     <Container isErrored={!!error} isMarked={false}>
@@ -39,8 +37,8 @@ const Radio: React.FC<InputProps> = ({ title, name, radioValue, ...rest }) => {
           type="radio"
           ref={inputRef}
           name={fieldName}
-          value={radioValue}
-          defaultChecked={defaultValue === radioValue}
+          value={value}
+          defaultChecked={defaultValue === value}
           {...rest}
         />
       </label>
