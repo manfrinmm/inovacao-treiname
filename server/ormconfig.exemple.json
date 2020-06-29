@@ -7,10 +7,10 @@
     "username": "postgres",
     "password": "docker",
     "database": "inovacao-treiname",
-    "entities": ["./src/app/models/*.ts"],
-    "migrations": ["./src/database/migrations/*.ts"],
+    "entities": ["./dist/app/models/*.js"],
+    "migrations": ["./dist/database/migrations/*.js"],
     "cli": {
-      "migrationsDir": "./src/database/migrations"
+      "migrationsDir": "./dist/database/migrations"
     }
   },
   {
@@ -20,6 +20,6 @@
     "port": 27017,
     "database": "inovacao-treiname",
     "useUnifiedTopology": true,
-    "entities": ["./src/app/models/schemas/*.ts"]
+    "entities": ["./dist/app/models/schemas/*.js"]
   }
 ]

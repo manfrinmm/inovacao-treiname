@@ -3,3 +3,5 @@ cra-monorepo-examples
 .env
 
 *.pem
+
+docker/volumes

@@ -10,8 +10,8 @@ export const Container = styled.div`
 
   margin: 16px;
 
-  height: 90%;
-  background: url(${image}) no-repeat cover;
+  height: 100%;
+  /* background: url(${image}) no-repeat cover; */
 
   h1 {
     color: #325bbf;
