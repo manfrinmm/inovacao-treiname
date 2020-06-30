@@ -119,6 +119,15 @@ const Course: React.FC = () => {
           </p>
         </section>
         <p className="description">{course.description}</p>
+        {course.illustrative_video && (
+          <iframe
+            title={course.name}
+            src={course.illustrative_video}
+            frameBorder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        )}
         <h2>Para quem este curso é direcionado</h2>
         <p className="description">{course.target_audience}</p>
         <WillLearn>

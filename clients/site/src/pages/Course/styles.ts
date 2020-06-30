@@ -49,6 +49,7 @@ export const Container = styled.div`
 
   article {
     max-width: 736px;
+    height: 100%;
 
     h1 {
       text-align: center;
@@ -72,6 +73,12 @@ export const Container = styled.div`
     h2 {
       font-size: 3.6rem;
       margin: 48px 0 16px;
+    }
+
+    iframe {
+      margin-top: 16px;
+      width: 100%;
+      height: 350px;
     }
   }
 

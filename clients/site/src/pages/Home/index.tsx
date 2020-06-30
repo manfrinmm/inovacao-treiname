@@ -137,6 +137,8 @@ const Home: React.FC = () => {
         if (foundCourse || foundCategory) {
           return course;
         }
+
+        return null;
       });
       setCoursesFiltered(courseFiltered);
     }

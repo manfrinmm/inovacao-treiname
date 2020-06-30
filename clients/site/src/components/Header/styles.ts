@@ -1,6 +1,5 @@
 import { Link as Linker } from "react-router-dom";
 
-import { shade } from "polished";
 import styled, { css } from "styled-components";
 
 interface MenuProps {
