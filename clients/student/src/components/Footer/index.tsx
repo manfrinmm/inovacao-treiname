@@ -4,7 +4,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { Container, Content } from "./styles";
 
 const Footer: React.FC = () => {
-  const telefone = "(64) 9-9960-6793";
+  const telefone = "(64) 9-9606-7930";
   const email = "helijti@yahoo.com.br";
 
   return (
