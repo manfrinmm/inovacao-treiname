@@ -1,4 +1,7 @@
 {
+  "name": "inova-treinamentos",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
     "build-admin": "cd ./clients/admin && yarn && yarn build",
     "build-student": "cd ./clients/student && yarn && yarn build",
