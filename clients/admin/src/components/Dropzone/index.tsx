@@ -26,7 +26,6 @@ const Dropzone: React.FC<DropzoneProps> = ({ name, title, ...rest }) => {
 
   const [filename, setFilename] = useState(defaultValue);
 
-  console.log(`${fieldName}:${filename}`);
   useEffect(() => {
     registerField({
       name: fieldName,

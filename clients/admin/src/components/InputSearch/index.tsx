@@ -17,7 +17,6 @@ const InputSearch: React.FC<Props> = ({ name, ...rest }) => {
   const { fieldName, defaultValue, registerField } = useField(name);
 
   useEffect(() => {
-    console.log(selectRef);
     registerField({
       name: fieldName,
       ref: selectRef.current,

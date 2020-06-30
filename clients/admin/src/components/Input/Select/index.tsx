@@ -29,11 +29,6 @@ const Select: React.FC<InputProps> = ({ title, name, options, ...rest }) => {
       name: fieldName,
       ref: inputRef.current,
       path: "value",
-      // setValue(ref, inputValue) {
-      //   console.log("inputValue", inputValue);
-
-      //   ref.value = inputValue;
-      // },
     });
   }, [registerField, fieldName]);
 

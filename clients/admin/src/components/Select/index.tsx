@@ -14,10 +14,6 @@ const Select: React.FC<SelectProps> = ({ title, name, ...rest }) => {
 
   const { fieldName, registerField, error, defaultValue } = useField(name);
 
-  console.log("fieldName", fieldName);
-  console.log("defaultValue", defaultValue);
-  console.log("selectRef", selectRef.current?.value);
-
   useEffect(() => {
     registerField({
       name: fieldName,

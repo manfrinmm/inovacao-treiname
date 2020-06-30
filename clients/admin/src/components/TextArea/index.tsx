@@ -19,11 +19,6 @@ const TextArea: React.FC<TextAreaProps> = ({ title, name, ...rest }) => {
       name: fieldName,
       ref: textAreaRef.current,
       path: "value",
-      // setValue(ref, inputValue) {
-      //   console.log("inputValue", inputValue);
-
-      //   ref.value = inputValue;
-      // },
     });
   }, [registerField, fieldName]);
 

@@ -16,6 +16,7 @@ import TextArea from "~/components/TextArea";
 import api from "~/services/api";
 import getValidationErrors from "~/utils/getValidationErrors";
 
+import InputCurrency from "./InputCurrency";
 import {
   Container,
   Title,
@@ -54,8 +55,6 @@ interface CourseFormData {
   modules: Array<CourseModuleProps>;
 }
 
-// Falta verificar o input de select (Não é modificado quando o dado vem pela API)
-// Falta verificar o dropzone da thumbnail (Não aparece o nome do arquivo)
 const Course: React.FC = () => {
   const courseForm = useRef<FormHandles>(null);
   const [courseFormData, setCourseFormData] = useState<CourseFormData>({
@@ -88,13 +87,10 @@ const Course: React.FC = () => {
 
   useEffect(() => {
     if (!course_id) {
-      console.log("Problema.data");
-
       return;
     }
 
     api.get(`/courses/${course_id}`).then(response => {
-      console.log("response.data", response.data);
       setCourseFormData(response.data);
       // courseForm.current?.setData(response.data);
       courseForm.current?.setFieldValue("modality", response.data.modality);
@@ -268,10 +264,9 @@ const Course: React.FC = () => {
         if (course_id) {
           const courseData = merge(courseFormData, data);
           await api.put(`/courses/${course_id}`, courseData);
-          console.log("courseData", courseData);
           toast.success("Curso atualizado com sucesso");
 
-          // history.push("/dashboard");
+          history.push("/dashboard");
         } else {
           await api.post("/courses", data);
 
@@ -328,7 +323,7 @@ const Course: React.FC = () => {
             title="Carga horária"
             placeholder="Digite o número"
           />
-          <Input
+          <InputCurrency
             name="value"
             title="Valor do curso"
             placeholder="Digite o valor"

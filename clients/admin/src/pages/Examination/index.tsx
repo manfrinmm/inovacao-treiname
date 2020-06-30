@@ -85,7 +85,6 @@ const Examination: React.FC = () => {
       if (selectedCourse) {
         try {
           const response = await api.get(`/courses/${selectedCourse}/exams`);
-          console.log("Exams", response.data);
 
           if (response.data.length < 1) {
             setFormData({
