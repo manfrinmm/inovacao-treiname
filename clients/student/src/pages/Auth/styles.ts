@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-import image from "~/assets/image.png";
-
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -10,8 +8,7 @@ export const Container = styled.div`
 
   margin: 16px;
 
-  height: 100%;
-  /* background: url(${image}) no-repeat cover; */
+  margin-top: 32px;
 
   h1 {
     color: #325bbf;
