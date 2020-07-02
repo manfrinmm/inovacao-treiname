@@ -1,4 +1,5 @@
 import React, { useCallback, useRef } from "react";
+import { FiLogIn } from "react-icons/fi";
 import { MdPerson, MdLock } from "react-icons/md";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -63,6 +64,10 @@ const SignIn: React.FC = () => {
         />
         <Button type="submit">Entrar</Button>
       </Form>
+
+      <a href={String(process.env.REACT_APP_SITE_STUDENT_URL)} target="__blank">
+        <FiLogIn size={20} /> <p> Acessar plataforma do estudante </p>
+      </a>
     </Container>
   );
 };

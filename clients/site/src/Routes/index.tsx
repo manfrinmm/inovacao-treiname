@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
 import SignIn from "~/pages/Auth/SignIn";
 import SignUp from "~/pages/Auth/SignUp";
@@ -7,6 +7,7 @@ import Certification from "~/pages/Certification";
 import CertificationDetail from "~/pages/CertificationDetail";
 import Course from "~/pages/Course";
 import Home from "~/pages/Home";
+import Success from "~/pages/Success";
 import DefaultLayout from "~/styles/_layouts/DefaultLayout";
 
 const Routes: React.FC = () => (
@@ -22,6 +23,9 @@ const Routes: React.FC = () => (
           component={CertificationDetail}
         />
         <Route path="/course/:course_id" component={Course} />
+        <Route path="/success" component={Success} />
+
+        <Redirect to="/" />
       </Switch>
     </DefaultLayout>
   </BrowserRouter>

@@ -4,6 +4,10 @@ import { MdAccessTime, MdTimelapse, MdCheck } from "react-icons/md";
 import { useParams, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import axios from "axios";
+import qs from "qs";
+import convertXml from "xml-js";
+
 import Button from "~/components/Button";
 import { useAuth } from "~/hooks/auth";
 import api from "~/services/api";
@@ -62,9 +66,53 @@ const Course: React.FC = () => {
     loadCourseInfo();
   }, [course_id, user, history]);
 
-  const handleBuyCourse = useCallback(() => {
-    console.log("Click");
-  }, []);
+  const handleBuyCourse = useCallback(async () => {
+    const checkoutCodeUrl =
+      process.env.NODE_ENV === "development"
+        ? `https://cors-anywhere.herokuapp.com/${process.env.REACT_APP_CHECKOUT_CODE_URL}`
+        : (process.env.REACT_APP_CHECKOUT_CODE_URL as string);
+
+    const data = {
+      currency: "BRL",
+      itemId1: course_id,
+      itemDescription1: `Compra do curso: ${course.name}`,
+      itemAmount1: course.value,
+      itemQuantity1: 1,
+      shippingAddressRequired: "false",
+    };
+
+    let toastInfo;
+
+    try {
+      toastInfo = toast.info(
+        "Requisitando dados para compra do curso. Por favor aguarde...",
+        {
+          autoClose: false,
+        },
+      );
+
+      const response = await axios.post(checkoutCodeUrl, qs.stringify(data), {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+      const checkoutCode = JSON.parse(convertXml.xml2json(response.data))
+        .elements[0].elements[0].elements[0].text;
+
+      const urlCheckoutForm = `${process.env.REACT_APP_CHECKOUT_FORM_URL}${checkoutCode}`;
+
+      window.open(urlCheckoutForm);
+
+      history.push("/success");
+    } catch (error) {
+      toast.error(
+        "Falha ao requisitar dados para compra do curso. Por favor, tente novamente!",
+      );
+    } finally {
+      toast.dismiss(toastInfo);
+    }
+  }, [course_id, course.name, course.value, history]);
 
   const renderBuyButton = useCallback(() => {
     if (course.purchase_state === "acquired")

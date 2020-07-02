@@ -28,4 +28,22 @@ export const Container = styled.div`
       font-size: 2.4rem;
     }
   }
+
+  a {
+    display: flex;
+    align-items: center;
+
+    margin-top: 32px;
+
+    color: #5d89fc;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    p {
+      margin-left: 8px;
+      font-size: 2rem;
+    }
+  }
 `;
