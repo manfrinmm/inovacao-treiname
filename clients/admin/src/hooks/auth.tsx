@@ -30,7 +30,9 @@ const AuthProvider: React.FC = ({ children }) => {
       api.get("/users").catch(() => {
         localStorage.removeItem("@inovaTreinamentos:token");
 
-        toast.info("Faça login novamente.");
+        toast.info("Faça login novamente.", {
+          toastId: "Faça login novamente.",
+        });
 
         setAuthData({} as AuthState);
       });
