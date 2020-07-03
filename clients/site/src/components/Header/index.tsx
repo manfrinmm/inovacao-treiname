@@ -18,8 +18,8 @@ const Header: React.FC = () => {
   }, []);
 
   const handleGoToSignIn = useCallback(() => {
-    history.push("/signIn");
-  }, [history]);
+    window.open(process.env.REACT_APP_SITE_STUDENT_URL, "__blank");
+  }, []);
 
   const handleGoToSignUp = useCallback(() => {
     history.push("/signUp");

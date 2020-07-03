@@ -41,7 +41,7 @@ const SignUp: React.FC = () => {
 
         await signUp(data);
 
-        history.push("/signIn");
+        history.push("/");
       } catch (error) {
         if (error instanceof Yup.ValidationError) {
           const errors = getValidationErrors(error);
