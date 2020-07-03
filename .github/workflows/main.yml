@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Copiar código para o Servidor
+      - name: Copy code to Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "."
+          target: "~/inovacao-treinamentos"
+
+      # Instalar as depedências NPM/YARN no Servidor
+      # Executar a build
+      # Executar as migrations Typeorm
+      # Restart no servidor
+      - name: Run production scripts on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/inovacao-treinamentos
+            yarn install-all-dep
+            yarn build-all
+            ./server/node_modules/.bin/typeorm migration:run
+            pm2 restart all
