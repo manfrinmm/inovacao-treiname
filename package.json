@@ -1,14 +1,22 @@
 {
   "name": "inova-treinamentos",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build-admin": "cd ./clients/admin && yarn && yarn build",
-    "build-student": "cd ./clients/student && yarn && yarn build",
-    "build-site": "cd ./clients/site && yarn && yarn build",
-    "build-all-clients": "yarn build-admin && yarn build-student && yarn build-site ",
+    "install-admin-dep": "cd ./clients/admin && yarn",
+    "install-student-dep": "cd ./clients/student && yarn",
+    "install-site-dep": "cd ./clients/site && yarn",
+    "install-server-dep": "cd ./server && yarn",
+    "install-all-dep": "yarn install-admin-dep && yarn install-student-dep && yarn install-site-dep && yarn install-server-dep",
+    "build-admin": "cd ./clients/admin && yarn build",
+    "build-student": "cd ./clients/student && yarn build",
+    "build-site": "cd ./clients/site && yarn build",
+    "build-server": "cd ./server && yarn build",
+    "build-all": "yarn build-admin && yarn build-student && yarn build-site && yarn build-server ",
     "start-admin": "cd ./clients/admin && yarn start:build",
     "start-student": "cd ./clients/student && yarn start:build",
-    "start-site": "cd ./clients/site && yarn start:build"
+    "start-site": "cd ./clients/site && yarn start:build",
+    "start-server:api": "cd ./server && yarn start:server",
+    "start-server:queue": "cd ./server && yarn start:queue"
   }
 }

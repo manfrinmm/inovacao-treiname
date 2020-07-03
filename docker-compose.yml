@@ -42,26 +42,30 @@ services:
   #   command: yarn start
 
   inovacao-treinamentos-db-postgres:
-    image: "postgres"
+    image: "bitnami/postgresql:latest"
     restart: always
     container_name: inovacao-treinamentos-db-postgres
     ports:
       - ${PG_PORT}:5432
     environment:
-      POSTGRES_USER: "${PG_USER}"
-      POSTGRES_PASSWORD: "${PG_PASS}"
-      POSTGRES_DB: "${PG_DATABASE}"
+      POSTGRESQL_USERNAME: "${PG_USER}"
+      POSTGRESQL_PASSWORD: "${PG_PASS}"
+      POSTGRESQL_DATABASE: "${PG_DATABASE}"
     volumes:
-      - ./docker/volumes/pgdata:/var/lib/postgresql/data
+      - ./docker/volumes/pgdata:/bitnami/postgresql
 
   inovacao-treinamentos-db-mongodb:
-    image: "mongo"
+    image: "bitnami/mongodb:latest"
     restart: always
     container_name: inovacao-treinamentos-db-mongodb
     ports:
       - "${MG_PORT}:27017"
+    environment:
+      MONGODB_USERNAME: "${MG_USER}"
+      MONGODB_PASSWORD: "${MG_PASS}"
+      MONGODB_DATABASE: "${MG_DATABASE}"
     volumes:
-      - ./docker/volumes/mgdata:/data/db
+      - ./docker/volumes/mgdata:/bitnami/mongodb
 
   inovacao-treinamentos-db-redis:
     image: "redis:alpine"

@@ -6,7 +6,7 @@
     "port": 5432,
     "username": "postgres",
     "password": "docker",
-    "database": "inovacao-treiname",
+    "database": "inovacao-treinamentos",
     "entities": ["./dist/app/models/*.js"],
     "migrations": ["./dist/database/migrations/*.js"],
     "cli": {
@@ -18,7 +18,7 @@
     "type": "mongodb",
     "host": "localhost",
     "port": 27017,
-    "database": "inovacao-treiname",
+    "database": "inovacao-treinamentos",
     "useUnifiedTopology": true,
     "entities": ["./dist/app/models/schemas/*.js"]
   }

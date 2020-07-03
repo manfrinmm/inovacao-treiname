@@ -8,15 +8,16 @@
     "queue": "ts-node-dev --transpileOnly --ignore-watch node_modules ./src/queue.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
-    "start:server": "set NODE_ENV=production&&node dist/server.js",
-    "start:queue": "set NODE_ENV=production&&node dist/queue.js",
-    "test": "set NODE_ENV=test&jest --runInBand --detectOpenHandles"
+    "start:server": "cross-env NODE_ENV=production node dist/server.js",
+    "start:queue": "cross-env NODE_ENV=production node dist/queue.js",
+    "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "bee-queue": "^1.2.3",
     "class-transformer": "^0.2.3",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.2",
     "date-fns": "^2.14.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
