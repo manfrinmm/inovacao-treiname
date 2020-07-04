@@ -22,10 +22,10 @@ jobs:
           source: "."
           target: "~/inovacao-treinamentos"
 
-      # Instalar as depedências NPM/YARN no Servidor
+      # Instalar as dependências NPM/YARN no Servidor
       # Executar a build
-      # Executar as migrations Typeorm
-      # Restart no servidor
+      # Executar as migrations do Typeorm
+      # Restart dos services (pm2)
       - name: Run production scripts on Server
         uses: appleboy/ssh-action@master
         with:
@@ -37,5 +37,6 @@ jobs:
             cd ~/inovacao-treinamentos
             yarn install-all-dep
             yarn build-all
-            ./server/node_modules/.bin/typeorm migration:run
+            cd server
+            ./node_modules/.bin/typeorm migration:run
             pm2 restart all

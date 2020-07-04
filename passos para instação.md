@@ -86,25 +86,32 @@ server {
 - Server:
   - Inserir os dados necessários:
     - `vim .env`
-- Docker compose (Replicar os dados inseridos dentro do `.env` do `Server`):
+- Docker compose (Replicar os dados inseridos dentro do `.env | ormconfig.json` do `Server`):
   - `docker-compose.yml`
+- Alterando permissões de arquivos para armazenar os dados dos BD's:
+  - `cd pasta_da_aplicação`
+  - `sudo chown -R 1001:1001 <volumepath>(docker)`
 
 ## Iniciando serviços
 
 - Pasta root do projeto:
-  - `yarn build-all-clients`
-  - `pm2 start --name "client-admin" yarn -- start-admin`
-  - `pm2 start --name "client-student" yarn -- start-student`
-  - `pm2 start --name "client-site" yarn -- start-site`
-- Entrar na pasta server e executar:
-  - `yarn`
+
+  - `yarn install-all-dep`
+  - `yarn build-all`
+  - `pm2 start --name "client-admin" "yarn start-admin"`
+  - `pm2 start --name "client-student" "yarn start-student"`
+  - `pm2 start --name "client-site" "yarn start-site"`
+
+- Entrar na pasta server:
   - Verificar puppeteer:
     - https://techoverflow.net/2018/06/05/how-to-fix-puppetteer-error-while-loading-shared-libraries-libx11-xcb-so-1-cannot-open-shared-object-file-no-such-file-or-directory/
     - https://medium.com/mockingbot/run-puppeteer-chrome-headless-on-ec2-amazon-linux-ami-6c9c6a17bee6
     - `cd node_modules/puppeteer/.local-chromium/` até a pasta chrome-linux.
     - executar `ldd chrome | grep not`
     - instalar todas dependências que estão faltando.
+  - Executar:
+  - `cd ..`
   - `docker-compose up -d`
-  - `pm2 start --name "server-api" yarn -- start`
-  - `pm2 start --name "server-api-queue" yarn -- queue`
+  - `pm2 start --name "server-api" "yarn start-server:api"`
+  - `pm2 start --name "server-api-queue" "yarn start-server:queue"`
   - `pm2 save`

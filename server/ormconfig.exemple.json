@@ -18,6 +18,8 @@
     "type": "mongodb",
     "host": "localhost",
     "port": 27017,
+    "username": "",
+    "password": "",
     "database": "inovacao-treinamentos",
     "useUnifiedTopology": true,
     "entities": ["./dist/app/models/schemas/*.js"]
