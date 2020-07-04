@@ -67,10 +67,7 @@ const Course: React.FC = () => {
   }, [course_id, user, history]);
 
   const handleBuyCourse = useCallback(async () => {
-    const checkoutCodeUrl =
-      process.env.NODE_ENV === "development"
-        ? `https://cors-anywhere.herokuapp.com/${process.env.REACT_APP_CHECKOUT_CODE_URL}`
-        : (process.env.REACT_APP_CHECKOUT_CODE_URL as string);
+    const checkoutCodeUrl = `https://cors-anywhere.herokuapp.com/${process.env.REACT_APP_CHECKOUT_CODE_URL}`;
 
     const data = {
       currency: "BRL",

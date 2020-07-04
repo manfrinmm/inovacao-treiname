@@ -1,5 +1,4 @@
-- Site:
-  - Integrar com pagSeguro.
-- Refatoração de testes. (Otimização)
+- Admin:
 
-- Para usar `ip-api` (logs) é necessário pagar.
+  - Correção da mascara do valor do curso.
+  - Status de upload de arquivos.
