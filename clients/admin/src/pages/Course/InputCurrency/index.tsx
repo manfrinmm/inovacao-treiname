@@ -31,6 +31,7 @@ const InputCurrency: React.FC<InputCurrencyProps> = ({
       getValue(ref) {
         let value = String(ref.value);
 
+        value = value.replace("R$ ", "");
         value = value.replace(".", "");
         value = value.replace(".", "");
         value = value.replace(".", "");
@@ -50,18 +51,26 @@ const InputCurrency: React.FC<InputCurrencyProps> = ({
       value = value.replace(/(\d)(\d{2})$/, "$1,$2");
       value = value.replace(/(?=(\d{3})+(\D))\B/g, ".");
 
+      if (!value.includes("R$ ")) {
+        value = `R$ ${value}`;
+      }
+
       event.currentTarget.value = value;
     },
     [],
   );
 
   const inputDefaultValue = useMemo(() => {
-    let value = String(defaultValue);
-    value = value.replace(/\D/g, "");
-    value = value.replace(/(\d)(\d{2})$/, "$1,$2");
-    value = value.replace(/(?=(\d{3})+(\D))\B/g, ".");
+    const value = defaultValue;
 
-    return value;
+    if (!defaultValue) {
+      return undefined;
+    }
+
+    return Intl.NumberFormat("pt-br", {
+      style: "currency",
+      currency: "BRL",
+    }).format(value);
   }, [defaultValue]);
 
   return (

@@ -7,6 +7,7 @@ import React, {
   ChangeEvent,
 } from "react";
 import { MdCloudUpload } from "react-icons/md";
+import { toast } from "react-toastify";
 
 import { useField } from "@unform/core";
 
@@ -38,24 +39,41 @@ const Dropzone: React.FC<DropzoneProps> = ({ name, title, ...rest }) => {
   }, [registerField, fieldName]);
 
   const handleChangeFile = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
+    async (event: ChangeEvent<HTMLInputElement>) => {
       const uploadFile = event.target.files?.[0];
 
       if (!uploadFile) {
         return;
       }
 
-      const data = new FormData();
+      const currentToast = toast("Enviando arquivo para o servidor", {
+        autoClose: false,
+      });
 
-      data.append("file", uploadFile);
+      try {
+        const data = new FormData();
 
-      api.post("/file", data).then(response => {
+        data.append("file", uploadFile);
+
+        const response = await api.post("/file", data);
         setFilename(response.data.filename);
 
         if (inputRef.current) {
           inputRef.current.value = response.data.filename;
         }
-      });
+
+        toast.update(currentToast, {
+          autoClose: 3000,
+          type: "success",
+          render: "Upload realizado com sucesso",
+        });
+      } catch (err) {
+        toast.update(currentToast, {
+          autoClose: 3000,
+          type: "error",
+          render: "Falha ao realizar upload",
+        });
+      }
     },
     [],
   );
