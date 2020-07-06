@@ -237,7 +237,7 @@ const Course: React.FC = () => {
           category: Yup.string().required("Categoria é obrigatório."),
           modality: Yup.string().required("Modalidade é obrigatório."),
           workload: Yup.string().required("Carga horária é obrigatório."),
-          value: Yup.string().required("Valor é obrigatório."),
+          value: Yup.number().required("Valor é obrigatório."),
           description: Yup.string().required("Descrição é obrigatório."),
           target_audience: Yup.string().required("Este campo é obrigatório."),
           thumbnail: Yup.string().required("Thumbnail é obrigatório."),
