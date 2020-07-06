@@ -31,7 +31,7 @@ const InputCurrency: React.FC<InputCurrencyProps> = ({
       getValue(ref) {
         let value = String(ref.value);
 
-        value = value.replace("R$ ", "");
+        value = value.replace("R$", "");
         value = value.replace(".", "");
         value = value.replace(".", "");
         value = value.replace(".", "");
