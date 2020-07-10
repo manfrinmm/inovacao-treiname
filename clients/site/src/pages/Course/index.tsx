@@ -73,7 +73,7 @@ const Course: React.FC = () => {
       currency: "BRL",
       itemId1: course_id,
       itemDescription1: `Compra do curso: ${course.name}`,
-      itemAmount1: course.value,
+      itemAmount1: course.value.toFixed(2),
       itemQuantity1: 1,
       shippingAddressRequired: "false",
     };
@@ -101,7 +101,7 @@ const Course: React.FC = () => {
 
       window.open(urlCheckoutForm);
 
-      history.push("/success");
+      //  history.push("/success");
     } catch (error) {
       toast.error(
         "Falha ao requisitar dados para compra do curso. Por favor, tente novamente!",
