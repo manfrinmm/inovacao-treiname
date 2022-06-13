@@ -5,6 +5,7 @@ import { isAfter, differenceInDays } from "date-fns";
 
 import UserCoursesRepository from "../../repositories/UserCoursesRepository";
 import ShowCourseService from "../../services/ShowCourseService";
+import Course from "../../models/Course";
 
 class CourseController {
   async show(req: Request, res: Response): Promise<Response> {
@@ -30,12 +31,25 @@ class CourseController {
 
     const course = await showCourse.execute(course_id);
 
+    const courseFormatted = {
+      ...course,
+      modules: course.modules.sort((a, b) => {
+        if (a.created_at < b.created_at) {
+          return -1;
+        }
+        if (a.created_at > b.created_at) {
+          return 1;
+        }
+        return 0;
+      }),
+    } as Course;
+
     const days_remaining = differenceInDays(
       userAlreadyContentCourse.expires_in,
       new Date(),
     );
 
-    return res.json({ ...classToClass(course), days_remaining });
+    return res.json({ ...classToClass(courseFormatted), days_remaining });
   }
 }
 

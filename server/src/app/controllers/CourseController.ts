@@ -7,6 +7,7 @@ import DeleteCourseService from "../services/DeleteCourseService";
 import ListAllCoursesService from "../services/ListAllCoursesService";
 import ShowCourseService from "../services/ShowCourseService";
 import UpdateCourseService from "../services/UpdateCourseService";
+import Course from "../models/Course";
 
 class CourseController {
   async index(req: Request, res: Response): Promise<Response> {
@@ -66,7 +67,20 @@ class CourseController {
 
     const course = await showCourse.execute(course_id);
 
-    return res.json(classToClass(course));
+    const courseFormatted = {
+      ...course,
+      modules: course.modules.sort((a, b) => {
+        if (a.created_at < b.created_at) {
+          return -1;
+        }
+        if (a.created_at > b.created_at) {
+          return 1;
+        }
+        return 0;
+      }),
+    } as Course;
+
+    return res.json(classToClass(courseFormatted));
   }
 
   async update(req: Request, res: Response): Promise<Response> {
