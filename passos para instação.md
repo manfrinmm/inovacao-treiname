@@ -88,9 +88,14 @@ server {
     - `vim .env`
 - Docker compose (Replicar os dados inseridos dentro do `.env | ormconfig.json` do `Server`):
   - `docker-compose.yml`
-- Alterando permissões de arquivos para armazenar os dados dos BD's:
+  <!-- - Alterando permissões de arquivos para armazenar os dados dos BD's:
   - `cd pasta_da_aplicação`
-  - `sudo chown -R 1001:1001 <volumepath>(docker)`
+  - `sudo chown -R 1001:1001 <volumepath>(docker)` -->
+
+## Configurando Backups
+
+- Verificar os caminhos no arquivo `backup_databases.sh`
+- Setar o contrab para executar o backup todos os dias às 00hrs `crontab 0 0 * * * ./backup_databases.sh`
 
 ## Iniciando serviços
 

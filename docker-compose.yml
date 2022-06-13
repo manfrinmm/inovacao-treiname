@@ -52,7 +52,7 @@ services:
       POSTGRESQL_PASSWORD: "${PG_PASS}"
       POSTGRESQL_DATABASE: "${PG_DATABASE}"
     volumes:
-      - ./docker/volumes/pgdata:/bitnami/postgresql
+      - inovacao-treinamentos-db-postgres:/bitnami/postgresql
 
   inovacao-treinamentos-db-mongodb:
     image: "bitnami/mongodb:latest"
@@ -65,7 +65,7 @@ services:
       MONGODB_PASSWORD: "${MG_PASS}"
       MONGODB_DATABASE: "${MG_DATABASE}"
     volumes:
-      - ./docker/volumes/mgdata:/bitnami/mongodb
+      - inovacao-treinamentos-db-mongodb:/bitnami/mongodb
 
   inovacao-treinamentos-db-redis:
     image: "redis:alpine"
@@ -73,3 +73,7 @@ services:
     container_name: inovacao-treinamentos-db-redis
     ports:
       - "${REDIS_PORT}:6379"
+
+volumes:
+  inovacao-treinamentos-db-postgres:
+  inovacao-treinamentos-db-mongodb:
